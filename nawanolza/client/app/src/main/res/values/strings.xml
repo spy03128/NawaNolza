@@ -3,5 +3,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login">간편하게 로그인하고\n다양한 서비스를 이용해보세요.</string>
-    <string name="kakao_login">         카카오로 로그인하기</string>
+    <string name="kakao_login">          카카오로 로그인하기</string>
+    <string name="home">이용하실 서비스를 선택해주세요.</string>
 </resources>

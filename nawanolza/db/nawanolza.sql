@@ -50,7 +50,7 @@ DROP TABLE IF EXISTS `histories`;
 CREATE TABLE `histories` (
   `history_id` bigint NOT NULL AUTO_INCREMENT,
   `collection_id` bigint NOT NULL,
-  `level` bigint NOT NULL,
+  `level` tinyint NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`history_id`),
   CONSTRAINT `histories_fk_collection` FOREIGN KEY (`collection_id`) REFERENCES `collection` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT

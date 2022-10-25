@@ -50,7 +50,7 @@ DROP TABLE IF EXISTS `histories`;
 CREATE TABLE `histories` (
   `history_id` bigint NOT NULL AUTO_INCREMENT,
   `collection_id` bigint NOT NULL,
-  `level` bigint NOT NULL,
+  `level` tinyint NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`history_id`),
   CONSTRAINT `histories_fk_collection` FOREIGN KEY (`collection_id`) REFERENCES `collection` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
@@ -69,10 +69,10 @@ DROP TABLE IF EXISTS `character_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `character_type` (
-  `history_id` bigint NOT NULL AUTO_INCREMENT,
+  `character_type_id` bigint NOT NULL AUTO_INCREMENT,
   `character_id` bigint NOT NULL,
   `type_id` bigint NOT NULL,
-  PRIMARY KEY (`history_id`),
+  PRIMARY KEY (`character_type_id`),
   CONSTRAINT `histories_fk_characters` FOREIGN KEY (`character_id`) REFERENCES `characters` (`character_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `histories_fk_types` FOREIGN KEY (`type_id`) REFERENCES `types` (`type_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

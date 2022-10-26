@@ -1,4 +1,4 @@
-package ssafy.nawanolza.server.domain.entity.dto.member;
+package ssafy.nawanolza.server.oauth.dto;
 
 import lombok.Data;
 

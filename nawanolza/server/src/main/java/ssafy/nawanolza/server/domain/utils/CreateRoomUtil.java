@@ -12,11 +12,10 @@ public class CreateRoomUtil {
 
     private static final Map<String, Boolean> entryCodes = new ConcurrentHashMap<>();
     private static final Random rand = new Random();
-
     private final int AVAILABLE_ENTRYCODE_COUNT = 10000;
 
     @PostConstruct
-    public void init() {
+    private void init() {
         for(int i = 0; i < 10000; i++) {
             entryCodes.put(makeCode(i), null);
         }
@@ -30,20 +29,28 @@ public class CreateRoomUtil {
         return numStr;
     }
 
-    // 방코드 발행
-    public String issueEntryCode() {
-        String tempCode = makeEntryCode();
-        while(isAvailableEntryCode(tempCode))
-            tempCode = makeEntryCode();
-        entryCodes.remove(tempCode);
-        return tempCode;
-    }
-
     // 입장코드 랜덤 생성
-    public String makeEntryCode() {
+    private String makeCode() {
         StringBuilder entryCode = new StringBuilder();
         for(int i = 0; i < 4; i++) entryCode.append(rand.nextInt(10));
         return entryCode.toString();
+    }
+
+    // 방코드 발행
+    public String issueEntryCode() {
+        if (!isAvailableIssue())
+            throw new ImpossibleCreateRoomException();
+        String tempCode = makeEntryCode();
+        return tempCode;
+    }
+    
+    // 입장코드 생성
+    private String makeEntryCode() {
+        String tempCode = makeCode();
+        while(isAvailableEntryCode(tempCode))
+            tempCode = makeCode();
+        entryCodes.remove(tempCode);
+        return tempCode;
     }
 
     // 방코드 회수

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/gameRoomIntro">
 
     <fragment
         android:id="@+id/loadingFragment"
@@ -11,7 +11,7 @@
         android:label="fragment_loading"
         tools:layout="@layout/fragment_loading" >
         <action
-            android:id="@+id/action_loadingFragment_to_loginFragment3"
+            android:id="@+id/action_loadingFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment
@@ -27,7 +27,14 @@
         android:id="@+id/gameRoomIntro"
         android:name="com.example.nawanolza.fragment.GameRoomIntro"
         android:label="fragment_game_room_intro"
-        tools:layout="@layout/fragment_game_room_intro" />
+        tools:layout="@layout/fragment_game_room_intro" >
+        <action
+            android:id="@+id/action_gameRoomIntro_to_hideAndSeek"
+            app:destination="@id/hideAndSeek" />
+        <action
+            android:id="@+id/action_gameRoomIntro_to_selectGame"
+            app:destination="@id/selectGame" />
+    </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.nawanolza.fragment.HomeFragment"
@@ -37,4 +44,14 @@
             android:id="@+id/action_homeFragment_to_gameRoomIntro"
             app:destination="@id/gameRoomIntro" />
     </fragment>
+    <fragment
+        android:id="@+id/hideAndSeek"
+        android:name="com.example.nawanolza.fragment.HideAndSeek"
+        android:label="fragment_hide_and_seek"
+        tools:layout="@layout/fragment_hide_and_seek" />
+    <fragment
+        android:id="@+id/selectGame"
+        android:name="com.example.nawanolza.fragment.SelectGame"
+        android:label="fragment_select_game"
+        tools:layout="@layout/fragment_select_game" />
 </navigation>

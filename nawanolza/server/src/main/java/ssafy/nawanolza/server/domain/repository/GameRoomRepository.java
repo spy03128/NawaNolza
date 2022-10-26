@@ -43,4 +43,8 @@ public class GameRoomRepository {
             throw e;
         }
     }
+
+    public boolean isCreatableGameRoom() {
+        return gameRoomMap.size() <= 100;
+    }
 }

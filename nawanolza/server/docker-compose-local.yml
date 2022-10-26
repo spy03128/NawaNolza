@@ -16,4 +16,4 @@ services:
       - 3307:3306
     restart: always
     volumes:
-      - ./db:/var/lib/mysql
+      - ../db/docker-volume-mysql:/var/lib/mysql

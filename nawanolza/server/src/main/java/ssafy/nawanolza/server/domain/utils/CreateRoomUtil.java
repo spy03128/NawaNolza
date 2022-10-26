@@ -17,7 +17,7 @@ public class CreateRoomUtil {
     @PostConstruct
     private void init() {
         for(int i = 0; i < 10000; i++) {
-            entryCodes.put(makeCode(i), null);
+            entryCodes.put(makeCode(i), Boolean.TRUE);
         }
     }
 

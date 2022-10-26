@@ -36,3 +36,13 @@ spring:
 server:
   servlet:
     context-path: /api
+
+security:
+  jwt:
+    token:
+      secret-key: nawanolza
+      expire-length: 1800000
+
+kakao:
+  client_id: 79a60227e8d4d465f7b303d472b3cd99
+  redirect_uri: http://localhost:8080/api/auth/kakao/callback

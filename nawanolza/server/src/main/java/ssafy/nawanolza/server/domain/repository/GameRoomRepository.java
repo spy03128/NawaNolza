@@ -31,16 +31,16 @@ public class GameRoomRepository {
     }
 
     public GameRoom save(GameRoom room) {
-        gameRoomMap.put(room.getRoomId(), room);
+        gameRoomMap.put(room.getEntryCode(), room);
         return room;
     }
 
-    public void remove(String roomId) {
-        GameRoom room = null;
+    public void remove(GameRoom room) {
         try {
-            gameRoomMap.remove(roomId);
+            gameRoomMap.remove(room.getEntryCode());
         } catch (NullPointerException e) {
             log.error("등록되지 않은 방정보입니다.");
+            throw e;
         }
     }
 }

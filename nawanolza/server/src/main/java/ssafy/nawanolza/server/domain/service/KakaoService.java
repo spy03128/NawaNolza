@@ -1,5 +1,6 @@
 package ssafy.nawanolza.server.domain.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -7,11 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import ssafy.nawanolza.server.domain.entity.dto.member.KakaoProfile;
-import ssafy.nawanolza.server.domain.entity.dto.member.OAuthToken;
+import ssafy.nawanolza.server.oauth.dto.KakaoProfile;
+import ssafy.nawanolza.server.oauth.dto.OAuthToken;
 
 @Service
 public class KakaoService {
+    @Value("${kakao.client_id}")
+    private String clientId;
+    @Value("${kakao.redirect_uri}")
+    private String redirectUrl;
 
     public OAuthToken tokenRequest(String code) {
 
@@ -25,8 +30,8 @@ public class KakaoService {
         //HttpBody
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "79a60227e8d4d465f7b303d472b3cd99");
-        body.add("redirect_uri", "http://localhost:8080/api/auth/kakao/callback");
+        body.add("client_id", clientId);
+        body.add("redirect_uri", redirectUrl);
         body.add("code", code);
 
         //HttpHeader와 HttpBody 담기기

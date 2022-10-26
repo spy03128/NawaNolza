@@ -4,9 +4,9 @@ spring:
       on-profile: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/nawanolza?serverTimezone=Asia/Seoul
-    username: ${database-user}
-    password: ${database-password}
+    url: jdbc:mysql://localhost:3307/nawanolza?serverTimezone=Asia/Seoul
+    username: root
+    password: nawanolza1234
     hikari:
       pool-name: jpa-hikari-pool
       maximum-pool-size: 5

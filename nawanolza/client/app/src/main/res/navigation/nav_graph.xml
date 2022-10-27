@@ -58,17 +58,17 @@
         android:label="fragment_select_game"
         tools:layout="@layout/fragment_select_game" >
         <action
-            android:id="@+id/action_selectGame_to_setHideAndSeek"
-            app:destination="@id/setHideAndSeek" />
+            android:id="@+id/action_selectGame_to_settingActivity"
+            app:destination="@id/settingActivity" />
     </fragment>
-    <fragment
-        android:id="@+id/setHideAndSeek"
-        android:name="com.example.nawanolza.fragment.SetHideAndSeek"
-        android:label="fragment_set_hide_and_seek"
-        tools:layout="@layout/fragment_set_hide_and_seek" />
     <activity
         android:id="@+id/mapActivity"
         android:name="com.example.nawanolza.MapActivity"
         android:label="activity_map"
         tools:layout="@layout/activity_map" />
+    <activity
+        android:id="@+id/settingActivity"
+        android:name="com.example.nawanolza.SettingActivity"
+        android:label="activity_setting"
+        tools:layout="@layout/activity_setting" />
 </navigation>

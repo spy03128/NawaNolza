@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
         }
 
         characterButton.setOnClickListener {
-            navController.navigate(R.id.action_homeFragment_to_characterHomeFragment)
+            navController.navigate(R.id.action_homeFragment_to_mapActivity)
         }
     }
 

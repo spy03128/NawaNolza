@@ -66,7 +66,7 @@ class GameRoomIntro : Fragment() {
         var enterRoomService = retrofit.create(EnterRoomService::class.java)
 
         create_room.setOnClickListener {
-//            navController.navigate(R.id.action_gameRoomIntro_to_setGameFragment)
+            navController.navigate(R.id.action_gameRoomIntro_to_selectGame)
         }
 
         enter_room.setOnClickListener {

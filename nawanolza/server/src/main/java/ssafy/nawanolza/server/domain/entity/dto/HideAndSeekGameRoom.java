@@ -3,6 +3,7 @@ package ssafy.nawanolza.server.domain.entity.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import ssafy.nawanolza.server.domain.utils.CreateRoomUtil;
 
 import java.util.UUID;
 
@@ -10,11 +11,14 @@ import java.util.UUID;
 public class HideAndSeekGameRoom extends GameRoom {
 
     @Builder
-    private HideAndSeekGameRoom(String roomId, Long hostId) {
-        super(roomId, hostId);
+    private HideAndSeekGameRoom(Long hostId, String entryCode) {
+        super(hostId, entryCode);
     }
 
-    public static HideAndSeekGameRoom create(Long hostId) {
-        return HideAndSeekGameRoom.builder().roomId(UUID.randomUUID().toString()).hostId(hostId).build();
+    public static HideAndSeekGameRoom create(Long hostId, CreateRoomUtil createRoomUtil) {
+        return HideAndSeekGameRoom.builder()
+                .hostId(hostId)
+                .entryCode(createRoomUtil.issueEntryCode())
+                .build();
     }
 }

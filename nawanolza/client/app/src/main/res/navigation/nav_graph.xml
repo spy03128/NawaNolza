@@ -44,8 +44,8 @@
             android:id="@+id/action_homeFragment_to_gameRoomIntro"
             app:destination="@id/gameRoomIntro" />
         <action
-            android:id="@+id/action_homeFragment_to_characterHomeFragment"
-            app:destination="@id/characterHomeFragment" />
+            android:id="@+id/action_homeFragment_to_mapActivity"
+            app:destination="@id/mapActivity" />
     </fragment>
     <fragment
         android:id="@+id/hideAndSeek"
@@ -66,9 +66,9 @@
         android:name="com.example.nawanolza.fragment.SetHideAndSeek"
         android:label="fragment_set_hide_and_seek"
         tools:layout="@layout/fragment_set_hide_and_seek" />
-    <fragment
-        android:id="@+id/characterHomeFragment"
-        android:name="com.example.nawanolza.fragment.CharacterHomeFragment"
-        android:label="fragment_character_home"
-        tools:layout="@layout/fragment_character_home" />
+    <activity
+        android:id="@+id/mapActivity"
+        android:name="com.example.nawanolza.MapActivity"
+        android:label="activity_map"
+        tools:layout="@layout/activity_map" />
 </navigation>

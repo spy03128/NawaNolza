@@ -4,9 +4,9 @@ spring:
       on-profile: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/nawanolza?serverTimezone=Asia/Seoul
-    username: ${database-user}
-    password: ${database-password}
+    url: jdbc:mysql://localhost:3307/nawanolza?serverTimezone=Asia/Seoul
+    username: root
+    password: nawanolza1234
     hikari:
       pool-name: jpa-hikari-pool
       maximum-pool-size: 5
@@ -21,7 +21,7 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -36,3 +36,13 @@ spring:
 server:
   servlet:
     context-path: /api
+
+security:
+  jwt:
+    token:
+      secret-key: nawanolza
+      expire-length: 1800000
+
+kakao:
+  client_id: 79a60227e8d4d465f7b303d472b3cd99
+  redirect_uri: http://localhost:8080/api/auth/kakao/callback

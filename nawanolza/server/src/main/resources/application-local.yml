@@ -21,7 +21,7 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
@@ -33,9 +33,10 @@ spring:
         order_inserts: true
         order_updates: true
         format_sql: true
-server:
-  servlet:
-    context-path: /api
+    defer-datasource-initialization: true
+#server:
+#  servlet:
+#    context-path: /api
 
 security:
   jwt:

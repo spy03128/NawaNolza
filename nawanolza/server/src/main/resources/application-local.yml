@@ -16,6 +16,9 @@ spring:
       driver-class-name: ${spring.datasource.driver-class-name}
       data-source-properties:
         rewriteBatchedStatements: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
 
   # JPA ??
   jpa:

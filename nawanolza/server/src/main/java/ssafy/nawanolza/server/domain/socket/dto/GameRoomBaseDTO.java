@@ -2,12 +2,16 @@ package ssafy.nawanolza.server.domain.socket.dto;
 
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class GameRoomBaseDTO {
+@NoArgsConstructor
+public abstract class GameRoomBaseDTO {
 
+    private String gameRoomId;
+    private Long senderId;
     private Type type;
-    protected static enum Type {
+    protected enum Type {
         GPS, CHATTING
     }
 

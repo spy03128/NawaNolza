@@ -7,10 +7,10 @@ import lombok.Data;
  * lng: 경도
  * memberId: 멤버 Id
  */
+@Data
 public class GameRoomGpsDTO extends GameRoomBaseDTO {
     private Double lat;
     private Double lng;
-    private Long senderId;
 
     public GameRoomGpsDTO() {
         super(Type.GPS);

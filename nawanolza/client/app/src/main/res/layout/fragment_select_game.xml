@@ -22,21 +22,13 @@
             android:layout_marginTop="100dp"
             />
 
-        <ImageView
-            android:id="@+id/hideandseekimg"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:src="@drawable/logo"
-            android:layout_gravity="center"
-            android:layout_marginTop="100dp"
-            />
-        <TextView
+        <Button
+            android:id="@+id/hideSeekButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hide_seek"
             android:layout_gravity="center"
-            android:textSize="20dp"
-            />
+            android:text="숨바꼭질"
+            android:layout_marginTop="20dp"/>
 
     </LinearLayout>
 

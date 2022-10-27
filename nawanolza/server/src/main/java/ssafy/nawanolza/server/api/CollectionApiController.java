@@ -1,11 +1,10 @@
 package ssafy.nawanolza.server.api;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssafy.nawanolza.server.domain.entity.Collection;
+import ssafy.nawanolza.server.domain.entity.dto.Marker;
 import ssafy.nawanolza.server.domain.service.CollectionService;
 
 import java.util.ArrayList;
@@ -19,12 +18,17 @@ public class CollectionApiController {
 
     @GetMapping("/{memberId}")
     public ResponseEntity<CollectionResponseDto> getCollection(@PathVariable Long memberId,
-                              @RequestParam(name = "type",required = false) String type,
-                              @RequestParam(name = "sort",required = false) String sort){
+                                                               @RequestParam(name = "type",required = false) String type,
+                                                               @RequestParam(name = "sort",required = false) String sort){
         return ResponseEntity.ok(CollectionResponseDto.of(collectionService.getCollection(memberId, type, sort)));
     }
 
-    @Getter
+    @GetMapping("/map")
+    public ResponseEntity<List<Marker>> getMapCharacters(@ModelAttribute MapCharactersRequest mapCharactersRequest){
+        return ResponseEntity.ok(collectionService.getMapCharacters());
+    }
+
+    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CollectionResponseDto{
@@ -47,5 +51,13 @@ public class CollectionApiController {
             }
             return collectionResponseDto;
         }
+
+    }
+    @Getter
+    @Setter
+    public static class  MapCharactersRequest{
+        double lat;
+        double lng;
+        int level;
     }
 }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/setHideAndSeek">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/loadingFragment"
@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_homeFragment_to_gameRoomIntro"
             app:destination="@id/gameRoomIntro" />
+        <action
+            android:id="@+id/action_homeFragment_to_characterHomeFragment"
+            app:destination="@id/characterHomeFragment" />
     </fragment>
     <fragment
         android:id="@+id/hideAndSeek"
@@ -63,4 +66,9 @@
         android:name="com.example.nawanolza.fragment.SetHideAndSeek"
         android:label="fragment_set_hide_and_seek"
         tools:layout="@layout/fragment_set_hide_and_seek" />
+    <fragment
+        android:id="@+id/characterHomeFragment"
+        android:name="com.example.nawanolza.fragment.CharacterHomeFragment"
+        android:label="fragment_character_home"
+        tools:layout="@layout/fragment_character_home" />
 </navigation>

@@ -1,16 +1,16 @@
 package ssafy.nawanolza.server.chat.handler;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatController {
-
     private final ChatService chatService;
 
     // 채팅 리스트 화면

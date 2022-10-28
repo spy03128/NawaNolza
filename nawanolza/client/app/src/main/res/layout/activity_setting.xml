@@ -4,15 +4,161 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingActivity">
+    tools:context=".SettingActivity"
+    android:background="@color/background">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
         android:name="com.naver.maps.map.MapFragment"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.187">
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="영역 설정"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.24" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="숨는 시간"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.048" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.057"
+        tools:layout_editor_absoluteX="0dp">
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/minusButton"
+            android:layout_width="33dp"
+            android:layout_height="30dp"
+            android:text="-"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="133dp"
+            tools:layout_editor_absoluteY="547dp" />
+
+        <TextView
+            android:id="@+id/hideTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1:00"
+            android:textSize="20dp"
+            tools:layout_editor_absoluteX="188dp"
+            tools:layout_editor_absoluteY="547dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/plusButton"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:text="+"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="246dp"
+            tools:layout_editor_absoluteY="547dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.305"
+        tools:layout_editor_absoluteX="0dp">
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/gameMinus"
+            android:layout_width="33dp"
+            android:layout_height="30dp"
+            android:text="-"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="133dp"
+            tools:layout_editor_absoluteY="547dp" />
+
+        <TextView
+            android:id="@+id/gameTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5:00"
+            android:textSize="20dp"
+            tools:layout_editor_absoluteX="188dp"
+            tools:layout_editor_absoluteY="547dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/gamePlus"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:text="+"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="246dp"
+            tools:layout_editor_absoluteY="547dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="게임 시간"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.051" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/createButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round"
+        android:backgroundTint="@color/dark_background"
+        android:text="방 만들기"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.205" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,13 +1,16 @@
 package ssafy.nawanolza.server.domain.socket.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * lat: 위도
  * lng: 경도
  * memberId: 멤버 Id
  */
-@Data
+@Getter
+@Setter
 public class GameRoomGpsDTO extends GameRoomBaseDTO {
     private Double lat;
     private Double lng;

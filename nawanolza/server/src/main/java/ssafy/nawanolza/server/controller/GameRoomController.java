@@ -19,7 +19,7 @@ public class GameRoomController {
 
     @MessageMapping("/gps")
     public void gpsSend(GameRoomGpsDTO gameRoomGpsDTO) {
-        simpMessageSendingOperations.convertAndSend("/sub/room/" + gameRoomGpsDTO.getGameRoomId() + "/gps", gameRoomGpsDTO);
+        simpMessageSendingOperations.convertAndSend("/sub/gps/" + gameRoomGpsDTO.getGameRoomId() , gameRoomGpsDTO);
     }
 
 }

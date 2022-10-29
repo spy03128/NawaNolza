@@ -47,7 +47,7 @@ public class KakaoService {
 
         //HttpHeader
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + oAuthToken.getAccess_token());
+        headers.add("Authorization", "Bearer " + oAuthToken.getAccessToken());
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         //HttpHeader와 HttpBody 담기기

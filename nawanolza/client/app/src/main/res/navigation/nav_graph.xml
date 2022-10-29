@@ -71,4 +71,13 @@
         android:name="com.example.nawanolza.MapActivity"
         android:label="activity_map"
         tools:layout="@layout/activity_map" />
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.nawanolza.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" >
+        <action
+            android:id="@+id/action_loginActivity_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </activity>
 </navigation>

@@ -16,6 +16,12 @@ spring:
       driver-class-name: ${spring.datasource.driver-class-name}
       data-source-properties:
         rewriteBatchedStatements: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
   # JPA ??
   jpa:

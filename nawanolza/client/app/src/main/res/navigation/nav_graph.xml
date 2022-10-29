@@ -1,76 +1,92 @@
-<?xml version="1.0" encoding="utf-8"?>
+박지현
+    #2581
+
+    권도현 — 오늘 오후 10:28
+    가능
+    박지현 — 오늘 오후 10:32
+    도혀나
+    manifest
+    파일수정하고도
+    reload
+    해야대?
+    권도현 — 오늘 오후 10:32
+    아니 그거는
+    gradle이 아니잖아
+    박지현 — 오늘 오후 10:32
+    그래들 수정하고나서만
+    하는거야?
+    권도현 — 오늘 오후 10:33
+    응
+    npm install
+    이라고 생각하면돼
+    박지현 — 오늘 오후 10:34
+    나는쓰레기야
+    나한테 욕좀해줄래
+    권도현 — 오늘 오후 10:35
+    you are genius
+    지현아
+    현우형
+    gradle 추가하고
+    박지현 — 오늘 오후 10:37
+    앙
+    권도현 — 오늘 오후 10:37
+    상단에보면
+    sync now인가
+    그거 나오거든
+    그거 누르면 reload 돼
+    박지현 — 오늘 오후 10:37
+    웅
+    땡큐
+    근데잇잖아
+    나로그인못하게성
+    아니야 11시까지만
+    다시해볼게..
+    권도현 — 오늘 오후 10:38
+    뭐가 문제야
+    노현우 — 오늘 오후 10:38
+    이미지
+    오른쪽 위에 코끼리 누르면
+    가능
+    리로드
+    박지현 — 오늘 오후 10:38
+    내가문제야그냥
+    야
+    도현아
+    카톡좀
+    박지현 — 오늘 오후 10:55
+    AuthError(statusCode=302, reason=Unknown, response=AuthErrorResponse(error=NotSupportError, errorDescription=KakaoTalk is installed but not connected to Kakao account.))
+    박지현 — 오늘 오후 11:03
+    @변수경
+    @변수경
+    수경아
+    ㅜㅜㅜㅜㅜㅜㅜㅜ
+    변수경 — 오늘 오후 11:03
+    응ㅇ?????
+    박지현 — 오늘 오후 11:03
+    들어아ㅘ조
+    들어와줘
+    박지현 — 오늘 오후 11:19
+    OAuthToken(accessToken=22pRXfoYmTziPMJQpyx45J_CiUNRD0NFhgzuXttfCj1zmgAAAYQkHJjy, accessTokenExpiresAt=Sun Oct 30 11:19:25 GMT+09:00 2022, refreshToken=_atxAsSb7eaCJ7jqINGIeOWZKPRgtEFcxEF37PIdCj1zmgAAAYQkHJjw, refreshTokenExpiresAt=Wed Dec 28 23:19:25 GMT+09:00 2022, idToken=null, scopes=[account_email, profile_image, profile_nickname])
+    D/AndroidRuntime: Shutting down VM
+    권도현 — 오늘 오후 11:55
+    plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android-extensions'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    }
+    확장
+    message.txt
+    3KB
+    <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
-
-    <fragment
-        android:id="@+id/loadingFragment"
-        android:name="com.example.nawanolza.fragment.LoadingFragment"
-        android:label="fragment_loading"
-        tools:layout="@layout/fragment_loading" >
-        <action
-            android:id="@+id/action_loadingFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.nawanolza.fragment.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/gameRoomIntro"
-        android:name="com.example.nawanolza.fragment.GameRoomIntro"
-        android:label="fragment_game_room_intro"
-        tools:layout="@layout/fragment_game_room_intro" >
-        <action
-            android:id="@+id/action_gameRoomIntro_to_hideAndSeek"
-            app:destination="@id/hideAndSeek" />
-        <action
-            android:id="@+id/action_gameRoomIntro_to_selectGame"
-            app:destination="@id/selectGame" />
-    </fragment>
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.nawanolza.fragment.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment_to_gameRoomIntro"
-            app:destination="@id/gameRoomIntro" />
-        <action
-            android:id="@+id/action_homeFragment_to_mapActivity"
-            app:destination="@id/mapActivity" />
-    </fragment>
-    <fragment
-        android:id="@+id/hideAndSeek"
-        android:name="com.example.nawanolza.fragment.HideAndSeek"
-        android:label="fragment_hide_and_seek"
-        tools:layout="@layout/fragment_hide_and_seek" />
-    <fragment
-        android:id="@+id/selectGame"
-        android:name="com.example.nawanolza.fragment.SelectGame"
-        android:label="fragment_select_game"
-        tools:layout="@layout/fragment_select_game" >
-        <action
-            android:id="@+id/action_selectGame_to_setHideAndSeek"
-            app:destination="@id/setHideAndSeek" />
-    </fragment>
-    <fragment
-        android:id="@+id/setHideAndSeek"
-        android:name="com.example.nawanolza.fragment.SetHideAndSeek"
-        android:label="fragment_set_hide_and_seek"
-        tools:layout="@layout/fragment_set_hide_and_seek" />
-    <activity
-        android:id="@+id/mapActivity"
-        android:name="com.example.nawanolza.MapActivity"
-        android:label="activity_map"
-        tools:layout="@layout/activity_map" />
+    확장
+    message.txt
+    4KB
     <activity
         android:id="@+id/loginActivity"
         android:name="com.example.nawanolza.LoginActivity"
@@ -80,4 +96,87 @@
             android:id="@+id/action_loginActivity_to_homeFragment"
             app:destination="@id/homeFragment" />
     </activity>
-</navigation>
+    <?xml version="1.0" encoding="utf-8"?>
+    <navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_graph"
+        app:startDestination="@id/homeFragment">
+
+        <fragment
+            android:id="@+id/loadingFragment"
+            android:name="com.example.nawanolza.fragment.LoadingFragment"
+            android:label="fragment_loading"
+            tools:layout="@layout/fragment_loading" >
+            <action
+                android:id="@+id/action_loadingFragment_to_loginFragment"
+                app:destination="@id/loginFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/loginFragment"
+            android:name="com.example.nawanolza.fragment.LoginFragment"
+            android:label="fragment_login"
+            tools:layout="@layout/fragment_login" >
+            <action
+                android:id="@+id/action_loginFragment_to_homeFragment"
+                app:destination="@id/homeFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/gameRoomIntro"
+            android:name="com.example.nawanolza.fragment.GameRoomIntro"
+            android:label="fragment_game_room_intro"
+            tools:layout="@layout/fragment_game_room_intro" >
+            <action
+                android:id="@+id/action_gameRoomIntro_to_hideAndSeek"
+                app:destination="@id/hideAndSeek" />
+            <action
+                android:id="@+id/action_gameRoomIntro_to_selectGame"
+                app:destination="@id/selectGame" />
+        </fragment>
+        <fragment
+            android:id="@+id/homeFragment"
+            android:name="com.example.nawanolza.fragment.HomeFragment"
+            android:label="fragment_home"
+            tools:layout="@layout/fragment_home" >
+            <action
+                android:id="@+id/action_homeFragment_to_gameRoomIntro"
+                app:destination="@id/gameRoomIntro" />
+            <action
+                android:id="@+id/action_homeFragment_to_mapActivity"
+                app:destination="@id/mapActivity" />
+        </fragment>
+        <fragment
+            android:id="@+id/hideAndSeek"
+            android:name="com.example.nawanolza.fragment.HideAndSeek"
+            android:label="fragment_hide_and_seek"
+            tools:layout="@layout/fragment_hide_and_seek" />
+        <fragment
+            android:id="@+id/selectGame"
+            android:name="com.example.nawanolza.fragment.SelectGame"
+            android:label="fragment_select_game"
+            tools:layout="@layout/fragment_select_game" >
+            <action
+                android:id="@+id/action_selectGame_to_settingActivity"
+                app:destination="@id/settingActivity" />
+        </fragment>
+        <activity
+            android:id="@+id/mapActivity"
+            android:name="com.example.nawanolza.MapActivity"
+            android:label="activity_map"
+            tools:layout="@layout/activity_map" />
+        <activity
+            android:id="@+id/settingActivity"
+            android:name="com.example.nawanolza.SettingActivity"
+            android:label="activity_setting"
+            tools:layout="@layout/activity_setting" />
+
+        <activity
+            android:id="@+id/loginActivity"
+            android:name="com.example.nawanolza.LoginActivity"
+            android:label="activity_login"
+            tools:layout="@layout/activity_login" >
+            <action
+                android:id="@+id/action_loginActivity_to_homeFragment"
+                app:destination="@id/homeFragment" />
+        </activity>
+    </navigation>

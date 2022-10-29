@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
+        android:name=".GlobalApplication"
         android:allowBackup="true"
         android:appComponentFactory="whateverString"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -24,6 +25,20 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+        </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <meta-data
@@ -53,13 +68,23 @@
             android:value="YOUR_API_KEY" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
+                <data
+                    android:host="oauth"
+                    android:scheme="kakao5cb74336aa2cf69e85258d7ae5939538" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="false">
 
             <!-- <meta-data -->
             <!-- android:name="com.kakao.sdk.AppKey" -->

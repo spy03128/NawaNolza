@@ -3,9 +3,7 @@ package ssafy.nawanolza.server.api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ssafy.nawanolza.server.oauth.dto.KakaoProfile;
 import ssafy.nawanolza.server.oauth.dto.OAuthToken;
 import ssafy.nawanolza.server.domain.entity.Member;
@@ -20,10 +18,8 @@ public class MemberApiController {
     private final KakaoService kakaoService;
     private final MemberService memberService;
 
-    @GetMapping("/auth/kakao/callback")
-    public ResponseEntity<AuthorizationResponse> getCode(HttpServletResponse response, @RequestParam String code){
-
-        OAuthToken oAuthToken = kakaoService.tokenRequest(code); // 토큰 가져오기
+    @PostMapping("/auth/kakao/callback")
+    public ResponseEntity<AuthorizationResponse> getCode(@RequestBody OAuthToken oAuthToken){
         KakaoProfile kakaoProfile = kakaoService.userInfoRequest(oAuthToken); // 유저정보 가져오기
 
         Member kakaoUser = Member.builder()

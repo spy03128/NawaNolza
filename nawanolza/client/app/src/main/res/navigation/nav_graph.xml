@@ -71,4 +71,14 @@
         android:name="com.example.nawanolza.SettingActivity"
         android:label="activity_setting"
         tools:layout="@layout/activity_setting" />
+
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.nawanolza.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" >
+        <action
+            android:id="@+id/action_loginActivity_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </activity>
 </navigation>

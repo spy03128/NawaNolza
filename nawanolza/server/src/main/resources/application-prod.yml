@@ -30,6 +30,13 @@ spring:
         order_inserts: true
         order_updates: true
         format_sql: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  redis:
+    host: k7d103.p.ssafy.io
+    port: 6379
+
 server:
   servlet:
     context-path: /api

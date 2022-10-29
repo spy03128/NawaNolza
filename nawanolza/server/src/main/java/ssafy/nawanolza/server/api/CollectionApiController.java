@@ -28,6 +28,14 @@ public class CollectionApiController {
         return ResponseEntity.ok(collectionService.getMapCharacters());
     }
 
+    /*
+     * 테스트용 마커 생성 API -> 개발 완료시 삭제해야함
+     * */
+    @PostMapping("/marker")
+    public void createMarker(){
+        collectionService.makeMarker();
+    }
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

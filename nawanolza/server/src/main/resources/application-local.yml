@@ -20,14 +20,14 @@ spring:
     serialization:
       fail-on-empty-beans: false
   redis:
-    host: 127.0.0.1
-    port: 6379
+    host: localhost
+    port: 6380
 
   # JPA ??
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:

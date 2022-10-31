@@ -4,32 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.SetHideAndSeek">
+    tools:context=".hideandseek.ParticipantsFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/role"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="영역 설정"
-        android:textSize="25dp"
+        android:text="1분동안 숨으세요!"
+        android:textColor="@color/black"
+        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.121" />
+        app:layout_constraintVertical_bias="0.104" />
 
-
-    <fragment
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:name="com.naver.maps.map.MapFragment"
-        app:layout_constraintStart_toStartOf="parent"
+    <ImageView
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:src="@drawable/ic_baseline_timer_24"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
-
-
+        app:layout_constraintVertical_bias="0.229" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

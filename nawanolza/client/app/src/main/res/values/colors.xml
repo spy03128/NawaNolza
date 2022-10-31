@@ -10,5 +10,6 @@
     <color name="dark_background">#D6E6F2</color>
     <color name="background">#F7FBFC</color>
     <color name="button">#769FCD</color>
+    <color name="green">#3B6032</color>
 
 </resources>

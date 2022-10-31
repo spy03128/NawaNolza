@@ -68,7 +68,7 @@
         tools:layout="@layout/activity_map" />
     <activity
         android:id="@+id/settingActivity"
-        android:name="com.example.nawanolza.SettingActivity"
+        android:name="com.example.nawanolza.createGame.SettingActivity"
         android:label="activity_setting"
         tools:layout="@layout/activity_setting" />
 

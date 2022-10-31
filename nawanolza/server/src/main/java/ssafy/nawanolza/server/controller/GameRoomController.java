@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
+import ssafy.nawanolza.server.domain.socket.dto.GameEventDTO;
 import ssafy.nawanolza.server.domain.socket.dto.GameRoomGpsDTO;
 
 @Controller
@@ -20,6 +21,11 @@ public class GameRoomController {
     @MessageMapping("/gps")
     public void gpsSend(GameRoomGpsDTO gameRoomGpsDTO) {
         simpMessageSendingOperations.convertAndSend("/sub/gps/" + gameRoomGpsDTO.getGameRoomId() , gameRoomGpsDTO);
+    }
+
+    @MessageMapping("/event")
+    public void eventBroadCast(GameEventDTO gameEventDTO) {
+        simpMessageSendingOperations.convertAndSend("/sub/event" + gameEventDTO.getGameRoomId(), gameEventDTO);
     }
 
 }

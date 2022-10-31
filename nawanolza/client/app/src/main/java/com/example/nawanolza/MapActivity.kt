@@ -24,6 +24,11 @@ import com.google.android.gms.location.*
 
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
@@ -43,8 +48,34 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
 
 
         //캐릭터 받아오기
+        var retrofit = Retrofit.Builder()
+            .baseUrl("https://k7d103.p.ssafy.io/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        var service = retrofit.create(GetCharacterService::class.java)
 
 
+
+        service.GetCharacter().enqueue(object:Callback<List<Map<String, String>>> {
+
+            override fun onResponse(
+                call: Call<List<Map<String, String>>>,
+                response: Response<List<Map<String, String>>>
+            ) {
+                val body = response.body()
+
+
+                println(body)
+                println("okay")
+            }
+
+            override fun onFailure(call: Call<List<Map<String, String>>>, t: Throwable) {
+                println(call)
+                println(t)
+            }
+
+        })
     }
 
     fun isPermitted(): Boolean {

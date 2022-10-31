@@ -3,7 +3,9 @@ package ssafy.nawanolza.server.api;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ssafy.nawanolza.server.domain.entity.Character;
 import ssafy.nawanolza.server.domain.entity.Collection;
+import ssafy.nawanolza.server.domain.entity.History;
 import ssafy.nawanolza.server.domain.entity.dto.Marker;
 import ssafy.nawanolza.server.domain.service.CollectionService;
 
@@ -21,6 +23,18 @@ public class CollectionApiController {
                                                                @RequestParam(name = "type",required = false) String type,
                                                                @RequestParam(name = "sort",required = false) String sort){
         return ResponseEntity.ok(CollectionResponseDto.of(collectionService.getCollection(memberId, type, sort)));
+    }
+
+    @GetMapping("/{memberId}/detail/{characterId}")
+    public ResponseEntity<CharacterDetailResponseDto> getCharacterDetail(@PathVariable Long memberId, @PathVariable Long characterId){
+        Character character = collectionService.getCharacterDetail(characterId);
+        Collection collection = collectionService.getCollectionDetail(memberId, characterId);
+
+        return ResponseEntity.ok(CharacterDetailResponseDto.of(
+                character,
+                collection,
+                collectionService.getTypesDetail(character),
+                collectionService.getHistoryDetail(collection)));
     }
 
     @GetMapping("/map")
@@ -67,5 +81,38 @@ public class CollectionApiController {
         double lat;
         double lng;
         int level;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class CharacterDetailResponseDto{
+        String name;
+        String description;
+        boolean rare;
+        int level;
+        List<String> type;
+        List<Histories> history;
+
+        @Getter
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class Histories{
+            String createdAt;
+            int level;
+        }
+
+        public static CharacterDetailResponseDto of(Character character, Collection collection, List<String> type, List<History> historyList){
+            List<Histories> histories = new ArrayList<>();
+            historyList.forEach(s -> histories.add(new Histories(String.valueOf(s.getCreatedAt()).substring(0,10), s.getLevel())));
+            return CharacterDetailResponseDto.builder()
+                    .name(character.getName())
+                    .description(character.getDescription())
+                    .rare(character.isRare())
+                    .level(collection.getCurrentLevel())
+                    .type(type)
+                    .history(histories).build();
+        }
     }
 }

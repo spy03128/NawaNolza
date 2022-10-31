@@ -1,30 +1,25 @@
-package com.example.nawanolza
+package com.example.nawanolza.createGame
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.nawanolza.R
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import android.os.Looper
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.example.nawanolza.databinding.ActivityMainBinding
-import com.example.nawanolza.databinding.ActivitySettingBinding
+import com.example.nawanolza.TestRequest
+import com.example.nawanolza.TestResponse
+import com.example.nawanolza.TestService
+import com.example.nawanolza.databinding.ActivitySettingHideSeekBinding
 import com.google.android.gms.location.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.Overlay
-import com.naver.maps.map.overlay.OverlayImage
-import kotlinx.android.synthetic.main.activity_setting.*
+import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
 import kotlinx.android.synthetic.main.fragment_game_room_intro.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,15 +27,14 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
-class SettingActivity : OnMapReadyCallback, AppCompatActivity() {
+class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
     val permission_request = 99
     private lateinit var naverMap: NaverMap
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        val binding = ActivitySettingBinding.inflate(layoutInflater)
+        val binding = ActivitySettingHideSeekBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         var time = 60
@@ -50,15 +44,15 @@ class SettingActivity : OnMapReadyCallback, AppCompatActivity() {
             var minute = if(time%60==0) "00" else time%60
             binding.hideTime.text = "${time/60}:${minute}"
         }
-            minusButton.setOnClickListener {
-                if(time > 10){
-                    time -= 10
-                    var minute = if(time%60==0) "00" else time%60
-                    binding.hideTime.text = "${time/60}:${minute}"
-                }
-                else{
-                    binding.hideTime.text = "0:10"
-                }
+        minusButton.setOnClickListener {
+            if(time > 10){
+                time -= 10
+                var minute = if(time%60==0) "00" else time%60
+                binding.hideTime.text = "${time/60}:${minute}"
+            }
+            else{
+                binding.hideTime.text = "0:10"
+            }
         }
 
         gamePlus.setOnClickListener {
@@ -98,7 +92,6 @@ class SettingActivity : OnMapReadyCallback, AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<TestResponse>, t: Throwable) {
-
                     println(call)
                     println(t)
                 }
@@ -205,3 +198,4 @@ class SettingActivity : OnMapReadyCallback, AppCompatActivity() {
 
     }
 }
+

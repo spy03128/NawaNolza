@@ -44,7 +44,7 @@ INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("인간의 뇌세포는 재생이 안 되는 신체 세포이다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("사람의 5가지 (시각, 후각, 미각, 청각, 촉각) 충에서 가장 먼저 나빠지는 감각기관은 시각이다.", 1);
+VALUES("사람의 5가지 감각(시각, 후각, 미각, 청각, 촉각) 중에서 가장 먼저 나빠지는 감각기관은 시각이다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("물고기도 기침을 한다.", 1);

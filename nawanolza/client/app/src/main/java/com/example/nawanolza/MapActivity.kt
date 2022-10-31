@@ -32,14 +32,18 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_map)
 
+        setContentView(R.layout.activity_map)
 
         if (isPermitted()) {
             startProcess()
         } else {
             ActivityCompat.requestPermissions(this, permissions, permission_request)
         }//권한 확인
+
+
+        //캐릭터 받아오기
+
 
     }
 
@@ -65,7 +69,7 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
     override fun onMapReady(naverMap: NaverMap){
 
         val cameraPosition = CameraPosition(
-            LatLng(37.5666102, 126.9783881),  // 위치 지정
+            LatLng(36.1071562, 128.4164185),  // 위치 지정
             16.0 // 줌 레벨
         )
         naverMap.cameraPosition = cameraPosition
@@ -112,13 +116,24 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
         val marker = Marker()
         marker.position = myLocation
 
-        marker.map = naverMap
-        //마커
+
+        marker.map = null
+//        마커
         val cameraUpdate = CameraUpdate.scrollTo(myLocation)
         naverMap.moveCamera(cameraUpdate)
         naverMap.maxZoom = 18.0
         naverMap.minZoom = 5.0
+        updateLocationOverlay(location)
 
-        //marker.map = null
+//        marker.map = null
+    }
+
+    private fun updateLocationOverlay(location: Location){
+        val myLocation = LatLng(location.latitude, location.longitude)
+
+        naverMap.locationOverlay.position = LatLng(myLocation.latitude, myLocation.longitude)
+        naverMap.locationOverlay.isVisible = true
+//        naverMap.locationOverlay.circleRadius = (100 / naverMap.projection.metersPerPixel).toInt()
+
     }
 }

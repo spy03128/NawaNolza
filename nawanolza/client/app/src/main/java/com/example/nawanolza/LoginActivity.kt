@@ -14,6 +14,11 @@ import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.util.helper.Utility
 import kotlinx.android.synthetic.main.activity_login.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class LoginActivity : AppCompatActivity() {
@@ -75,9 +80,36 @@ class LoginActivity : AppCompatActivity() {
             else if (token != null) {
                 Toast.makeText(this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show()
                 println("토큰  " + token)
-//                val intent = Intent(this, HomeFragment::class.java)
-//                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 //                finish()
+
+                //레트로핏
+                var retrofit = Retrofit.Builder()
+                    .baseUrl("https://k7d103.p.ssafy.io/api/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+
+                var service = retrofit.create(LoginService::class.java)
+
+                val loginRequest = LoginRequest(
+                    token.accessToken
+                )
+
+
+                service.Login(loginRequest).enqueue(object: Callback<TestResponse> {
+                    override fun onResponse(call: Call<TestResponse>, response: Response<TestResponse>) {
+                        println(response)
+                        println("okay")
+                    }
+
+                    override fun onFailure(call: Call<TestResponse>, t: Throwable) {
+
+                        println(call)
+                        println(t)
+                    }
+
+                })
 
             }
         }

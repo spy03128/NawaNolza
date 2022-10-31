@@ -1,8 +1,8 @@
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("놀이터에 있는 놀이기구에는 쇳가루나 페인트 가루 속에 몸에 해로운 물질이 섞여 들어 있다.", 1);
+VALUES("놀이기구에 묻어있는 쇳가루나 페인트 가루 속에는 몸에 해로운 물질이 섞여 들어 있다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("음식을 담은 플라스틱 용기를 높은 온도로 데우면 나오는 물질은 우리 몸이 더욱 건강할 수 있게 도와준다.", 0);
+VALUES("플라스틱 용기를 높은 온도로 데울 때 나오는 물질은 우리 몸이 더욱 건강할 수 있게 도와준다.", 0);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("중금속이 몸 안에 많이 쌓이면 병을 이겨낼 수 있는 면역력이 좋아진다.", 0);
@@ -35,13 +35,13 @@ INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("병아리도 배꼽이 있다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("밀물과 썰물 현상은 하루 2번씩 일어난다.", 1);
+VALUES("밀물과 썰물 현상은 하루에 2번씩 일어난다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("조선시대 호패는 (주민등록증) 16세 이상 모든 남녀가 소지했다.", 0);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("인간의 뇌 세포는 재생이 안 되는 신체세포이다.", 1);
+VALUES("인간의 뇌세포는 재생이 안 되는 신체 세포이다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("사람의 5가지 (시각, 후각, 미각, 청각, 촉각) 충에서 가장 먼저 나빠지는 감각기관은 시각이다.", 1);
@@ -62,7 +62,7 @@ INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("남극에도 우편번호가 있다.", 0);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("닭도 왼발잡이 , 오른발잡이가 있다.", 1);
+VALUES("닭도 왼발잡이, 오른발잡이가 있다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("색맹도 색깔이 있는 꿈을 꿀 수가 있다.", 0);
@@ -200,7 +200,7 @@ INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("날개를 가진 새 중에 가장 빠른 새는 송골매이다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("북극곰은 겨울잠을 자는 동물니다.", 0);
+VALUES("북극곰은 겨울잠을 자는 동물이다.", 0);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("고래도 생선이다.", 0);
@@ -209,7 +209,7 @@ INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("얼룩말 줄무늬는 하얀색이다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("사자는 혀예 뻐가 있다.", 1);
+VALUES("사자는 혀에 뼈가 있다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("개구리는 겨울잠을 자는 동안 숨을 쉬지 않는다.", 1);
@@ -221,7 +221,7 @@ INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("우리나라 첫 번재 지정된 국립공원은 지리산이다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("개미는 작은 곤충을 잡아 먹을때 독물을 뿌려서 상대를 죽인다.", 1);
+VALUES("개미는 작은 곤충을 잡아 먹을 때, 독물을 뿌려서 상대를 죽인다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("바나나의 씨는 없다.", 1);
@@ -230,7 +230,7 @@ INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("용은 십장생의 하나다.", 0);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("사슴뿔은 매년 빠졌다 다시 난다.", 1);
+VALUES("사슴뿔은 매년 빠졌다가 다시 난다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("유관순 열사가 3.1 운동을 펼쳤던 장소는 천안 아우내 장터이다.", 1);
@@ -251,16 +251,13 @@ INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("북한의 초등학생들도 학교에서 영어를 배운다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("대도여지도를 작성한사람은 김정호이다.", 1);
+VALUES("대동여지도를 작성한사람은 김정호이다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("안네의일기에 나온 배경은 1차세계대전이다.", 0);
+VALUES("안네의 일기에 나온 배경은 1차 세계대전이다.", 0);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("미국에는 스님이 없다.", 0);
-
-INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("을미사변은 명성황후께서 살인 된 사건을 뜻한다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("독립 운동이 처음 일어난 날은 3월 1일이다.", 0);
@@ -272,7 +269,7 @@ INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("달팽이의 이빨은 25000개 정도 된다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("현재 육지에서는 코끼리가 가장 크다, 그럼 바다에서는 고래가 제일 크다.", 1);
+VALUES("현재 육지에서는 코끼리가 가장 크다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("잠이 오지 않을 때 카레 가루를 맡으면 잠이 잘 온다.", 1);
@@ -302,7 +299,7 @@ INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("고양이의 수염을 자르면 쥐를 잡지 못한다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
-VALUES("여러 번을 강조할 때 골백번이라고 한다. 골은 10,000을 뜻한다.", 1);
+VALUES("여러 번을 강조할 때 골백번이라고 한다. 여기서 골은 10,000을 뜻한다.", 1);
 
 INSERT INTO `nawanolza`.`quiz`(`context`,`answer`)
 VALUES("<미운오리새끼>에서 미운오리새끼는 오리이다.", 0);

@@ -75,9 +75,13 @@ class LoginActivity : AppCompatActivity() {
             else if (token != null) {
                 Toast.makeText(this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show()
                 println("토큰  " + token)
-//                val intent = Intent(this, HomeFragment::class.java)
-//                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 //                finish()
+
+                //레트로핏
+
+
 
             }
         }

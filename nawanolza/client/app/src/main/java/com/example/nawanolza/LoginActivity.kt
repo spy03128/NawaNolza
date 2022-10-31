@@ -14,6 +14,11 @@ import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.util.helper.Utility
 import kotlinx.android.synthetic.main.activity_login.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class LoginActivity : AppCompatActivity() {
@@ -80,8 +85,31 @@ class LoginActivity : AppCompatActivity() {
 //                finish()
 
                 //레트로핏
+                var retrofit = Retrofit.Builder()
+                    .baseUrl("https://k7d103.p.ssafy.io/api/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+
+                var service = retrofit.create(LoginService::class.java)
+
+                val loginRequest = LoginRequest(
+                    token.accessToken
+                )
 
 
+                service.Login(loginRequest).enqueue(object: Callback<TestResponse> {
+                    override fun onResponse(call: Call<TestResponse>, response: Response<TestResponse>) {
+                        println(response)
+                        println("okay")
+                    }
+
+                    override fun onFailure(call: Call<TestResponse>, t: Throwable) {
+
+                        println(call)
+                        println(t)
+                    }
+
+                })
 
             }
         }

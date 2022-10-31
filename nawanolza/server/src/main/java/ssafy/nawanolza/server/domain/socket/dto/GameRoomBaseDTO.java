@@ -12,7 +12,7 @@ public abstract class GameRoomBaseDTO {
     private Long senderId;
     private Type type;
     protected enum Type {
-        GPS, CHATTING
+        GPS, CHAT, EVENT
     }
 
     public GameRoomBaseDTO(Type type) {

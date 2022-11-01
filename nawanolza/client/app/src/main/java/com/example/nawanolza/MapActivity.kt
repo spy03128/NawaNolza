@@ -12,6 +12,8 @@ import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.example.nawanolza.retrofit.Member
+import com.example.nawanolza.retrofit.MemberResponse
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -33,17 +35,27 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+private const val TAG = "MapActivity_맵에서"
 
 class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
     val permission_request = 99
     private lateinit var naverMap: NaverMap
-    val url = "https://cdn.pixabay.com/photo/2021/08/03/07/03/orange-6518675_960_720.jpg"
+
 
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         setContentView(R.layout.activity_map)
+
+        val memberInfo: MemberResponse = intent.getSerializableExtra("memberInfo") as MemberResponse
+        val url = memberInfo.member.image
+
+
+        Log.d(TAG, "init: ${memberInfo.member.image}")
+
 
         if (isPermitted()) {
             startProcess()

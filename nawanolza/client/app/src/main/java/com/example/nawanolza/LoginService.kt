@@ -1,5 +1,6 @@
 package com.example.nawanolza
 
+import com.example.nawanolza.retrofit.MemberResponse
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -9,5 +10,5 @@ interface LoginService{
     @POST("auth/kakao/callback")
     fun Login(
         @Body data: Map<String, String>
-    ) : Call<Map<String, String>> //아웃풋 정의
+    ) : Call<MemberResponse> //아웃풋 정의
 }

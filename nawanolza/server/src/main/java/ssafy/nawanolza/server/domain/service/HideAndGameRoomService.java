@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ssafy.nawanolza.server.domain.entity.dto.GameRoom;
 import ssafy.nawanolza.server.domain.entity.dto.HideAndSeekGameRoom;
+import ssafy.nawanolza.server.domain.entity.dto.HideAndSeekProperties;
 import ssafy.nawanolza.server.domain.exception.CreateGameRoomLimitException;
 import ssafy.nawanolza.server.domain.exception.GameRoomNotFoundException;
 import ssafy.nawanolza.server.domain.repository.GameRoomRepository;
@@ -16,11 +17,16 @@ public class HideAndGameRoomService {
     private final CreateRoomUtil createRoomUtill;
     private final GameRoomRepository gameRoomRepository;
 
-    public HideAndSeekGameRoom createGameRoom(Long hostId) {
+    public HideAndSeekGameRoom createGameRoom(Long hostId, HideAndSeekProperties hideAndSeekProperties) {
         if (!gameRoomRepository.isCreatableGameRoom())
             throw new CreateGameRoomLimitException();
-        HideAndSeekGameRoom createGameRoom = HideAndSeekGameRoom.create(hostId, createRoomUtill);
+        HideAndSeekGameRoom createGameRoom = HideAndSeekGameRoom.create(hostId, hideAndSeekProperties, createRoomUtill);
         return (HideAndSeekGameRoom) gameRoomRepository.save(createGameRoom);
+    }
+
+    public HideAndSeekGameRoom paticipateGameRoom(Long memberId, String entryCode) {
+        HideAndSeekGameRoom hideAndSeekGameRoom = (HideAndSeekGameRoom) gameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
+        return hideAndSeekGameRoom.participateMember(memberId);
     }
 
     public void deleteGameRoom(String entryCode) {

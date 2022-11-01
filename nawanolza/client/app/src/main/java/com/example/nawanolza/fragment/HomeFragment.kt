@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.nawanolza.R
-import kotlinx.android.synthetic.main.fragment_game_room_intro.*
-import kotlinx.android.synthetic.main.fragment_home.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -52,13 +50,7 @@ class HomeFragment : Fragment() {
 
 
 
-        gameButton.setOnClickListener {
-            navController.navigate(R.id.action_homeFragment_to_gameRoomIntro)
-        }
 
-        characterButton.setOnClickListener {
-            navController.navigate(R.id.action_homeFragment_to_mapActivity)
-        }
     }
 
     companion object {

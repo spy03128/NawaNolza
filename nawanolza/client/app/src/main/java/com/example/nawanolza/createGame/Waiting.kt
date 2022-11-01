@@ -19,5 +19,6 @@ class Waiting : AppCompatActivity() {
             val intent = Intent(this, RoleCheckActivity::class.java )
             startActivity(intent)
         }
+
     }
 }

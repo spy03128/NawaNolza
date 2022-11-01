@@ -1,5 +1,6 @@
 package com.example.nawanolza.hideandseek
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.fragment.app.Fragment
@@ -35,24 +36,6 @@ class ParticipantsFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        binding = FragmentParticipantsBinding.inflate(layoutInflater)
-
-        object : CountDownTimer(61000, 1000) {
-
-            override fun onTick(millisUntilFinished: Long) {
-                var time = (millisUntilFinished / 1000).toInt()
-                tv_test.setText(time.toString())
-                countDown.progress = (60-time)*100/60
-            }
-
-            override fun onFinish() {
-                // 다음으로 가는 로직
-            }
-        }.start()
-
-
-
-
     }
 
     override fun onCreateView(

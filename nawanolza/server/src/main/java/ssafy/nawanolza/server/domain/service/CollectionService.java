@@ -12,6 +12,7 @@ import ssafy.nawanolza.server.domain.exception.MemberNotFountException;
 import ssafy.nawanolza.server.domain.repository.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -49,8 +50,9 @@ public class CollectionService {
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFountException(memberId));
 
-        return collectionRepository.findByMemberIdAndCharacterId(findMember.getId(), characterId)
-                .orElseThrow(() -> new CollectionNotFountException(memberId,characterId));
+        Optional<Collection> collection = collectionRepository.findByMemberIdAndCharacterId(findMember.getId(), characterId);
+
+        return collection.isEmpty() ? null : collection.get();
     }
 
     public List<String> getTypesDetail(Character character){

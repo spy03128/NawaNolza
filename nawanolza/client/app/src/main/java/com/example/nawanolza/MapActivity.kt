@@ -1,6 +1,7 @@
 package com.example.nawanolza
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import android.util.Log
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -24,16 +26,24 @@ import com.google.android.gms.location.*
 
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import kotlinx.android.synthetic.main.activity_map.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
     val permission_request = 99
     private lateinit var naverMap: NaverMap
+    val url = "https://cdn.pixabay.com/photo/2021/08/03/07/03/orange-6518675_960_720.jpg"
+
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_map)
 
+        setContentView(R.layout.activity_map)
 
         if (isPermitted()) {
             startProcess()
@@ -41,6 +51,46 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
             ActivityCompat.requestPermissions(this, permissions, permission_request)
         }//권한 확인
 
+        Glide.with(this)
+            .load(url) // 불러올 이미지 url
+            .circleCrop() // 동그랗게 자르기
+            .into(CircleImageView) // 이미지를 넣을 뷰
+
+
+        //캐릭터 받아오기
+        var retrofit = Retrofit.Builder()
+            .baseUrl("https://k7d103.p.ssafy.io/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        var service = retrofit.create(GetCharacterService::class.java)
+
+
+
+        service.GetCharacter().enqueue(object:Callback<List<Map<String, String>>> {
+
+            override fun onResponse(
+                call: Call<List<Map<String, String>>>,
+                response: Response<List<Map<String, String>>>
+            ) {
+                val body = response.body()
+
+
+                println(body)
+                println("okay")
+            }
+
+            override fun onFailure(call: Call<List<Map<String, String>>>, t: Throwable) {
+                println(call)
+                println(t)
+            }
+
+        })
+
+        CircleImageView.setOnClickListener{
+            val intent = Intent(this, CharacterActivity::class.java)
+            startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        }
     }
 
     fun isPermitted(): Boolean {
@@ -65,7 +115,7 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
     override fun onMapReady(naverMap: NaverMap){
 
         val cameraPosition = CameraPosition(
-            LatLng(37.5666102, 126.9783881),  // 위치 지정
+            LatLng(36.1071562, 128.4164185),  // 위치 지정
             16.0 // 줌 레벨
         )
         naverMap.cameraPosition = cameraPosition
@@ -112,13 +162,24 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
         val marker = Marker()
         marker.position = myLocation
 
-        marker.map = naverMap
-        //마커
+
+        marker.map = null
+//        마커
         val cameraUpdate = CameraUpdate.scrollTo(myLocation)
         naverMap.moveCamera(cameraUpdate)
         naverMap.maxZoom = 18.0
         naverMap.minZoom = 5.0
+        updateLocationOverlay(location)
 
-        //marker.map = null
+//        marker.map = null
+    }
+
+    private fun updateLocationOverlay(location: Location){
+        val myLocation = LatLng(location.latitude, location.longitude)
+
+        naverMap.locationOverlay.position = LatLng(myLocation.latitude, myLocation.longitude)
+        naverMap.locationOverlay.isVisible = true
+//        naverMap.locationOverlay.circleRadius = (100 / naverMap.projection.metersPerPixel).toInt()
+
     }
 }

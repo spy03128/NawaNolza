@@ -110,7 +110,7 @@ public class CollectionApiController {
                     .name(character.getName())
                     .description(character.getDescription())
                     .rare(character.isRare())
-                    .level(collection.getCurrentLevel())
+                    .level(collection != null ? collection.getCurrentLevel() : 0)
                     .type(type)
                     .history(histories).build();
         }

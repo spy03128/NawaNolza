@@ -5,9 +5,9 @@ import org.springframework.stereotype.Repository;
 import ssafy.nawanolza.server.domain.entity.dto.GameRoom;
 
 import javax.annotation.PostConstruct;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Repository
@@ -17,7 +17,7 @@ public class GameRoomRepository {
 
     @PostConstruct
     private void init() {
-        gameRoomMap = new LinkedHashMap<>();
+        gameRoomMap = new ConcurrentHashMap<>();
     }
 
     public Optional<GameRoom> findById(String entryCode) {

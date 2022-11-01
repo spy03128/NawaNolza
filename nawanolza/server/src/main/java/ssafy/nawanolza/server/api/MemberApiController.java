@@ -27,8 +27,7 @@ public class MemberApiController {
                 .email(kakaoProfile.getKakao_account().getEmail())
                 .image(kakaoProfile.getKakao_account().getProfile().getProfile_image_url())
                 .build();
-
-        System.out.println(memberService.getLoginMember(kakaoUser));
+        
         return ResponseEntity.ok(LoginResponse.of(memberService.getAccessToken(kakaoUser), memberService.getLoginMember(kakaoUser)));
     }
 

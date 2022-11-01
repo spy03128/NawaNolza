@@ -36,6 +36,7 @@ spring:
   redis:
     host: k7d103.p.ssafy.io
     port: 6379
+    password: ${spring.redis.password}
 server:
   servlet:
     context-path: /api

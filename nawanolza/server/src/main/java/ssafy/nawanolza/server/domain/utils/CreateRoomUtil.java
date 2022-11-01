@@ -38,8 +38,6 @@ public class CreateRoomUtil {
 
     // 방코드 발행
     public String issueEntryCode() {
-        if (!isAvailableIssue())
-            throw new ImpossibleCreateRoomException();
         String tempCode = makeEntryCode();
         return tempCode;
     }
@@ -56,11 +54,6 @@ public class CreateRoomUtil {
     // 방코드 회수
     public void retrieveEntryCode(String entryCode) {
         entryCodes.put(entryCode, null);
-    }
-
-    // 방코드가 발급 가능한지 확인하는 메서드
-    public boolean isAvailableIssue() {
-        return AVAILABLE_ENTRYCODE_COUNT - entryCodes.size() > 0;
     }
 
     // 생성한 방코드가 사용가능한지 확인하는 메서드

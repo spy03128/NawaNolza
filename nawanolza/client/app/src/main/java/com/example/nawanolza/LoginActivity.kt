@@ -9,11 +9,14 @@ import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.nawanolza.fragment.HomeFragment
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.JsonObject
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.util.helper.Utility
 import kotlinx.android.synthetic.main.activity_login.*
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,6 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
     lateinit var navController: NavController
+    val objectMapper : ObjectMapper = ObjectMapper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,19 +96,22 @@ class LoginActivity : AppCompatActivity() {
 
                 var service = retrofit.create(LoginService::class.java)
 
-                val loginRequest = LoginRequest(
-                    token.accessToken
-                )
 
 
-                service.Login(loginRequest).enqueue(object: Callback<TestResponse> {
-                    override fun onResponse(call: Call<TestResponse>, response: Response<TestResponse>) {
-                        println(response)
+                service.Login(mapOf("accessToken" to token.accessToken)).enqueue(object: Callback<Map<String, String>> {
+
+                    override fun onResponse(
+                        call: Call<Map<String, String>>,
+                        response: Response<Map<String, String>>
+                    ) {
+                        val body = response.body()
+                        val get = body?.get("authorization")
+
+                        println(get)
                         println("okay")
                     }
 
-                    override fun onFailure(call: Call<TestResponse>, t: Throwable) {
-
+                    override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                         println(call)
                         println(t)
                     }

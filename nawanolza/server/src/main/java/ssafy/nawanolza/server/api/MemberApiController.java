@@ -3,14 +3,14 @@ package ssafy.nawanolza.server.api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import ssafy.nawanolza.server.oauth.dto.KakaoProfile;
-import ssafy.nawanolza.server.oauth.dto.OAuthToken;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import ssafy.nawanolza.server.domain.entity.Member;
 import ssafy.nawanolza.server.domain.service.KakaoService;
 import ssafy.nawanolza.server.domain.service.MemberService;
-
-import javax.servlet.http.HttpServletResponse;
+import ssafy.nawanolza.server.oauth.dto.KakaoProfile;
+import ssafy.nawanolza.server.oauth.dto.OAuthToken;
 
 @RestController
 @AllArgsConstructor
@@ -19,7 +19,7 @@ public class MemberApiController {
     private final MemberService memberService;
 
     @PostMapping("/auth/kakao/callback")
-    public ResponseEntity<AuthorizationResponse> getCode(@RequestBody OAuthToken oAuthToken){
+    public ResponseEntity<LoginResponse> login(@RequestBody OAuthToken oAuthToken){
         KakaoProfile kakaoProfile = kakaoService.userInfoRequest(oAuthToken); // 유저정보 가져오기
 
         Member kakaoUser = Member.builder()
@@ -28,16 +28,18 @@ public class MemberApiController {
                 .image(kakaoProfile.getKakao_account().getProfile().getProfile_image_url())
                 .build();
 
-        return ResponseEntity.ok(AuthorizationResponse.of(memberService.join(kakaoUser)));
+        System.out.println(memberService.getLoginMember(kakaoUser));
+        return ResponseEntity.ok(LoginResponse.of(memberService.getAccessToken(kakaoUser), memberService.getLoginMember(kakaoUser)));
     }
 
     @Getter
     @AllArgsConstructor
-    public static class AuthorizationResponse{
+    public static class LoginResponse{
         private String Authorization;
+        private Member member;
 
-        public static AuthorizationResponse of(String token) {
-            return new AuthorizationResponse(token);
+        public static LoginResponse of(String token, Member member) {
+            return new LoginResponse(token, member);
         }
     }
 }

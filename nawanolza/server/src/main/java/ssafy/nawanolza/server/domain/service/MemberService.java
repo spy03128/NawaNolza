@@ -17,18 +17,19 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public String join(Member member){
+    public Member getLoginMember(Member member){
         if(!kakaoValidateDuplicateUser(member).isPresent()){
             memberRepository.save(member);
         }
 
-        Member findMember = memberRepository.findByEmail(member.getEmail())
+        return memberRepository.findByEmail(member.getEmail())
                 .orElseThrow(() -> new MemberNotFountException(member.getEmail()));
-
-        return jwtTokenProvider.createToken(findMember.getId());
     }
 
-    @Transactional(readOnly = true)
+    public String getAccessToken(Member member){
+        return jwtTokenProvider.createToken(member.getId());
+    }
+
     public Optional<Member> kakaoValidateDuplicateUser(Member member){
         return memberRepository.findByEmail(member.getEmail());
     }

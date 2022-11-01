@@ -1,6 +1,7 @@
 package com.example.nawanolza
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import android.util.Log
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -24,6 +26,7 @@ import com.google.android.gms.location.*
 
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import kotlinx.android.synthetic.main.activity_map.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,6 +37,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
     val permission_request = 99
     private lateinit var naverMap: NaverMap
+    val url = "https://cdn.pixabay.com/photo/2021/08/03/07/03/orange-6518675_960_720.jpg"
+
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +50,11 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
         } else {
             ActivityCompat.requestPermissions(this, permissions, permission_request)
         }//권한 확인
+
+        Glide.with(this)
+            .load(url) // 불러올 이미지 url
+            .circleCrop() // 동그랗게 자르기
+            .into(CircleImageView) // 이미지를 넣을 뷰
 
 
         //캐릭터 받아오기
@@ -76,6 +86,11 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
             }
 
         })
+
+        CircleImageView.setOnClickListener{
+            val intent = Intent(this, CharacterActivity::class.java)
+            startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        }
     }
 
     fun isPermitted(): Boolean {

@@ -9,6 +9,7 @@ import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.nawanolza.fragment.HomeFragment
+import com.example.nawanolza.retrofit.MemberResponse
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.JsonObject
 import com.kakao.sdk.auth.model.OAuthToken
@@ -16,6 +17,7 @@ import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.util.helper.Utility
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_map.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -84,8 +86,7 @@ class LoginActivity : AppCompatActivity() {
             else if (token != null) {
                 Toast.makeText(this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show()
                 println("토큰  " + token)
-                val intent = Intent(this, HomeActivity::class.java)
-                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+
 //                finish()
 
                 //레트로핏
@@ -98,20 +99,27 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-                service.Login(mapOf("accessToken" to token.accessToken)).enqueue(object: Callback<Map<String, String>> {
+                service.Login(mapOf("accessToken" to token.accessToken)).enqueue(object: Callback<MemberResponse> {
 
                     override fun onResponse(
-                        call: Call<Map<String, String>>,
-                        response: Response<Map<String, String>>
+                        call: Call<MemberResponse>,
+                        response: Response<MemberResponse>
                     ) {
-                        val body = response.body()
-                        val get = body?.get("authorization")
+//                        response.body()?.let { updateMember(it) }
 
-                        println(get)
-                        println("okay")
+                        var memberInfo = response.body() ?: MemberResponse()
+
+                        val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                        intent.apply {
+                            putExtra("memberInfo", memberInfo)
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        }
+                        startActivity(intent)
+
+
                     }
 
-                    override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
+                    override fun onFailure(call: Call<MemberResponse>, t: Throwable) {
                         println(call)
                         println(t)
                     }
@@ -138,4 +146,11 @@ class LoginActivity : AppCompatActivity() {
 
         }
     }
+//
+//    private fun updateMember(MemberData: MemberResponse) {
+//        println("==========멤버 데이터=======")
+//        println(MemberData.member)
+//
+//
+//    }
 }

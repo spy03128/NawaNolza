@@ -1,9 +1,13 @@
 package com.example.nawanolza.hideandseek
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import com.example.nawanolza.R
 import com.example.nawanolza.databinding.ActivityRoleCheckAcitivityBinding
+import kotlinx.android.synthetic.main.activity_role_check_acitivity.*
+import kotlinx.android.synthetic.main.fragment_participants.*
 
 class RoleCheckActivity : AppCompatActivity() {
 
@@ -18,6 +22,20 @@ class RoleCheckActivity : AppCompatActivity() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentFrame, ParticipantsFragment())
         fragmentTransaction.commit()
+
+        object : CountDownTimer(61000, 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+                var time = (millisUntilFinished / 1000).toInt()
+                tvCountDown.setText(time.toString())
+                countDown.progress = (60-time)*100/60
+            }
+
+            override fun onFinish() {
+                val intent = Intent(this@RoleCheckActivity, MainHideSeek::class.java )
+                startActivity(intent)
+            }
+        }.start()
     }
 
 }

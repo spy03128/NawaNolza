@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.nawanolza.R
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Looper
@@ -87,8 +88,11 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
         createButton.setOnClickListener {
             service.Test(testRequest).enqueue(object: Callback<TestResponse> {
                 override fun onResponse(call: Call<TestResponse>, response: Response<TestResponse>) {
-                    println(response)
-                    println("okay")
+                    val intent = Intent(this@SettingHideSeek, Waiting::class.java)
+//                    val data = LocationData()
+//                    intent.putExtra("location", data)
+//                    startActivity(intent)
+
                 }
 
                 override fun onFailure(call: Call<TestResponse>, t: Throwable) {
@@ -197,5 +201,6 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
         naverMap.locationOverlay.circleRadius = (100 / naverMap.projection.metersPerPixel).toInt()
 
     }
+
 }
 

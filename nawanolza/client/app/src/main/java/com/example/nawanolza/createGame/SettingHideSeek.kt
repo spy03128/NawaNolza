@@ -21,7 +21,6 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
-import kotlinx.android.synthetic.main.fragment_game_room_intro.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -72,6 +71,22 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
             }
         }
 
+        var range = 100
+        rangeMinus.setOnClickListener {
+            if(range <= 50) {
+            }else{
+                range -= 50
+                binding.rangeText.text = range.toString()
+            }
+        }
+        rangePlus.setOnClickListener {
+            if(range <= 150){
+                range += 50
+                binding.rangeText.text = range.toString()
+            }else{
+            }
+        }
+
         var retrofit = Retrofit.Builder()
             .baseUrl("https://k7d103.p.ssafy.io/api/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -85,13 +100,13 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
             "노현우"
         )
 
-        createButton.setOnClickListener {
+        btnCreateRoom.setOnClickListener {
             service.Test(testRequest).enqueue(object: Callback<TestResponse> {
                 override fun onResponse(call: Call<TestResponse>, response: Response<TestResponse>) {
                     val intent = Intent(this@SettingHideSeek, Waiting::class.java)
 //                    val data = LocationData()
 //                    intent.putExtra("location", data)
-//                    startActivity(intent)
+                    startActivity(intent)
 
                 }
 
@@ -195,12 +210,13 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
     private fun updateLocationOverlay(location: Location){
         val myLocation = LatLng(location.latitude, location.longitude)
+        val range = Integer.parseInt(rangeText.text as String)
 
         naverMap.locationOverlay.position = LatLng(myLocation.latitude, myLocation.longitude)
         naverMap.locationOverlay.isVisible = true
-        naverMap.locationOverlay.circleRadius = (100 / naverMap.projection.metersPerPixel).toInt()
-
+        naverMap.locationOverlay.circleRadius = ( range / naverMap.projection.metersPerPixel).toInt()
     }
+
 
 }
 

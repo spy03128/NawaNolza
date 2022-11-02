@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.example.nawanolza.createGame.GameIntro
 import com.example.nawanolza.retrofit.MemberResponse
 import com.kakao.sdk.user.UserApiClient
 import kotlinx.android.synthetic.main.activity_home.*
@@ -30,6 +31,13 @@ class HomeActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
+
+        gameButton.setOnClickListener{
+            val intent = Intent(this@HomeActivity, GameIntro::class.java)
+            startActivity(intent)
+        }
+
+
 
 
 

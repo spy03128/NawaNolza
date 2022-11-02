@@ -8,6 +8,7 @@ import ssafy.nawanolza.server.domain.entity.Collection;
 import ssafy.nawanolza.server.domain.entity.History;
 import ssafy.nawanolza.server.domain.entity.dto.Marker;
 import ssafy.nawanolza.server.domain.service.CollectionService;
+import ssafy.nawanolza.server.domain.service.MarkerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CollectionApiController {
     private final CollectionService collectionService;
+    private final MarkerService markerService;
 
     @GetMapping("/{memberId}")
     public ResponseEntity<CollectionResponseDto> getCollection(@PathVariable Long memberId,
@@ -47,7 +49,7 @@ public class CollectionApiController {
      * */
     @PostMapping("/marker")
     public void createMarker(){
-        collectionService.makeMarker();
+        markerService.insertMarker();
     }
 
     @Data

@@ -3,16 +3,22 @@ package ssafy.nawanolza.server.domain.entity.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 import ssafy.nawanolza.server.domain.exception.GameRoomOverflowException;
 import ssafy.nawanolza.server.domain.exception.UnderstaffedException;
-import ssafy.nawanolza.server.domain.utils.CreateRoomUtil;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Getter @Setter
-public class HideAndSeekGameRoom extends GameRoom {
+@RedisHash("HideAndSeekGameRoom")
+@ToString
+public class HideAndSeekGameRoom {
 
+    @Id
+    private String entryCode;
+    private Long hostId;
     private Map<Long, Role> roles = new HashMap<>();        // 시작할때
     private Map<Long, Boolean> status = new HashMap<>();    // 시작할때
     private HideAndSeekProperties hideAndSeekProperties;    // 방 참가시
@@ -28,14 +34,16 @@ public class HideAndSeekGameRoom extends GameRoom {
 
     @Builder
     private HideAndSeekGameRoom(Long hostId, String entryCode, HideAndSeekProperties hideAndSeekProperties) {
-        super(hostId, entryCode);
+        this.hostId = hostId;
+        this.entryCode = entryCode;
         this.hideAndSeekProperties = hideAndSeekProperties;
+        participants.add(hostId);
     }
 
-    public static HideAndSeekGameRoom create(Long hostId, HideAndSeekProperties hideAndSeekProperties, CreateRoomUtil createRoomUtil) {
+    public static HideAndSeekGameRoom create(Long hostId, HideAndSeekProperties hideAndSeekProperties, String entryCode) {
         return HideAndSeekGameRoom.builder()
                 .hostId(hostId)
-                .entryCode(createRoomUtil.issueEntryCode())
+                .entryCode(entryCode)
                 .hideAndSeekProperties(hideAndSeekProperties)
                 .build();
     }

@@ -7,6 +7,7 @@ import ssafy.nawanolza.server.domain.entity.Character;
 import ssafy.nawanolza.server.domain.entity.Collection;
 import ssafy.nawanolza.server.domain.entity.History;
 import ssafy.nawanolza.server.domain.entity.dto.Marker;
+import ssafy.nawanolza.server.domain.repository.CollectionCharacterRepository;
 import ssafy.nawanolza.server.domain.service.CollectionService;
 
 import java.util.ArrayList;
@@ -20,8 +21,8 @@ public class CollectionApiController {
 
     @GetMapping("/{memberId}")
     public ResponseEntity<CollectionResponseDto> getCollection(@PathVariable Long memberId,
-                                                               @RequestParam(name = "type",required = false) String type,
-                                                               @RequestParam(name = "sort",required = false) String sort){
+                                                                                              @RequestParam(name = "type",required = false) String type,
+                                                                                              @RequestParam(name = "sort",required = false) String sort){
         return ResponseEntity.ok(CollectionResponseDto.of(collectionService.getCollection(memberId, type, sort)));
     }
 
@@ -54,24 +55,10 @@ public class CollectionApiController {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CollectionResponseDto{
-        List<CollectionItems> collection = new ArrayList<>();
+        List<CollectionCharacterRepository.CollectionCharacterDto> collection = new ArrayList<>();
 
-        @Getter
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class CollectionItems{
-            Long characterId;
-            boolean rare;
-            int level;
-        }
-
-        public static CollectionResponseDto of(List<Collection> collections){
-            CollectionResponseDto collectionResponseDto = new CollectionResponseDto();
-            for(int i=0; i<collections.size(); i++){
-                Collection collection = collections.get(i);
-                collectionResponseDto.getCollection().add(new CollectionItems(collection.getCharacter().getId(), collection.getCharacter().isRare(), collection.getCurrentLevel()));
-            }
-            return collectionResponseDto;
+        public static CollectionResponseDto of(List<CollectionCharacterRepository.CollectionCharacterDto> collections){
+            return new CollectionResponseDto(collections);
         }
 
     }

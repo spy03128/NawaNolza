@@ -3,12 +3,9 @@ package ssafy.nawanolza.server.domain.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ssafy.nawanolza.server.domain.entity.Character;
-import ssafy.nawanolza.server.domain.entity.Collection;
-import ssafy.nawanolza.server.domain.entity.History;
-import ssafy.nawanolza.server.domain.entity.Member;
+import ssafy.nawanolza.server.domain.entity.*;
 import ssafy.nawanolza.server.domain.entity.dto.Marker;
 import ssafy.nawanolza.server.domain.exception.CharacterNotFountException;
-import ssafy.nawanolza.server.domain.exception.CollectionNotFountException;
 import ssafy.nawanolza.server.domain.exception.MemberNotFountException;
 import ssafy.nawanolza.server.domain.repository.*;
 
@@ -20,7 +17,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class CollectionService {
     private final MemberRepository memberRepository;
-    private final CollectionCustomRepositoryImpl collectionCustomRepository;
+    private final CollectionCharacterRepository collectionCharacterRepository;
     private final CollectionRepository collectionRepository;
     private final TypeRepository typeRepository;
     private final CharacterTypeRepository characterTypeRepository;
@@ -30,11 +27,25 @@ public class CollectionService {
 
 
 
-    public List<Collection> getCollection(Long memberId, String type, String sort){
+    public List<CollectionCharacterRepository.CollectionCharacterDto> getCollection(Long memberId, String type, String sort){
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFountException(memberId));
 
-        return collectionCustomRepository.getCollection(memberId, type, sort);
+        boolean filterType = type == null || type.equals("전체") || type.equals("");
+
+        if(sort!=null && sort.equals("level")){
+            if(filterType){
+                return collectionCharacterRepository.findAllSortByLevel();
+            }
+            return collectionCharacterRepository.findAllSortByLevelFilterByType(type);
+
+        }else{
+            if(filterType){
+                return collectionCharacterRepository.findAllSortByCharacterId();
+            }
+            return collectionCharacterRepository.findAllSortByCharacterIdFilterByType(type);
+
+        }
     }
 
     public Character getCharacterDetail(Long characterId){

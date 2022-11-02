@@ -3,7 +3,6 @@ package ssafy.nawanolza.server.domain.service;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ssafy.nawanolza.server.config.MarkerConfig;
@@ -24,13 +23,11 @@ public class MarkerService {
 
     private final GameService gameService;
     private final CharacterService characterService;
-    private final RedisTemplate<byte[], byte[]> redisTemplate;
     private final MapCharacterRedisRepository mapCharacterRedisRepository;
 
 
     /*
      * 마커 만들기
-     * 성능 최적화 필요
      * */
     @Scheduled(cron = "0 0 6,18 * * *", zone = "Asia/Seoul")
     public void insertMarker(){

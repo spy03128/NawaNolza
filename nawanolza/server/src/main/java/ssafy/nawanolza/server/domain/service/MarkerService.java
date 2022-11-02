@@ -3,9 +3,7 @@ package ssafy.nawanolza.server.domain.service;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ssafy.nawanolza.server.config.MarkerConfig;
@@ -14,6 +12,7 @@ import ssafy.nawanolza.server.domain.entity.Game;
 import ssafy.nawanolza.server.domain.entity.dto.Marker;
 import ssafy.nawanolza.server.domain.repository.MapCharacterRedisRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -55,30 +54,27 @@ public class MarkerService {
     }
 
     public void makeMarkers(List<Character> normalCharacters, List<Character> rareCharacters, List<Game> games) {
-        RedisSerializer valueSerializer = redisTemplate.getValueSerializer();
-        redisTemplate.executePipelined((RedisCallback<Object>) RedisConnection -> {
-            for (long markerId = 1; markerId <= MarkerConfig.MAX_COUNT_MARKERS; markerId++) {
-                Character selectCharacter = randomCharacter(rareCharacters, normalCharacters);
-                int quest = randomQuest(games.size());
+        List<Marker> markerList = new ArrayList<>();
+        for (int i = 1; i <= MarkerConfig.MAX_COUNT_MARKERS; i++) {
+            Character selectCharacter = randomCharacter(rareCharacters, normalCharacters);
+            int quest = randomQuest(games.size());
 
-                // 게임이면 게임시간 설정
-                int gameTime = 0;
-                if (quest > 0)
-                    gameTime = games.get(quest).getTime();
+            // 게임이면 게임시간 설정
+            int gameTime = 0;
+            if (quest > 0)
+                gameTime = games.get(quest).getTime();
 
-                // 랜덤 좌표 생성
-                LatLng location = getRandomLocation();
+            // 랜덤 좌표 생성
+            LatLng location = getRandomLocation();
 
-                // 마커 생성
-                Marker newMarker = Marker.builder().markerId(markerId).characterId(selectCharacter.getId())
-                        .rare(selectCharacter.isRare()).questType(quest)
-                        .time(gameTime).lat(location.lat).lng(location.lng).build();
+            // 마커 생성
+            Marker newMarker = Marker.builder().characterId(selectCharacter.getId())
+                    .rare(selectCharacter.isRare()).questType(quest)
+                    .time(gameTime).lat(location.lat).lng(location.lng).build();
 
-                RedisConnection.rPush(longToByteArray(markerId), valueSerializer.serialize(newMarker));
-            }
-            return null;
-        });
-
+            markerList.add(newMarker);
+        }
+        mapCharacterRedisRepository.saveAll(markerList);
     }
 
     /*

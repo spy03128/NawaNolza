@@ -12,6 +12,7 @@ import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.example.nawanolza.retrofit.CharacterLocationResponse
 import com.example.nawanolza.retrofit.Member
 import com.example.nawanolza.retrofit.MemberResponse
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -28,6 +29,8 @@ import com.google.android.gms.location.*
 
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
+import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_map.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,6 +47,7 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
 
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
 
+    var characterInfo = CharacterLocationResponse()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -79,22 +83,26 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
 
 
 
-        service.GetCharacter().enqueue(object:Callback<List<Map<String, String>>> {
+        service.GetCharacter().enqueue(object:Callback<CharacterLocationResponse> {
 
             override fun onResponse(
-                call: Call<List<Map<String, String>>>,
-                response: Response<List<Map<String, String>>>
+                call: Call<CharacterLocationResponse>,
+                response: Response<CharacterLocationResponse>
             ) {
                 val body = response.body()
 
+                characterInfo = response.body() ?: CharacterLocationResponse()
+//                println(characterInfo)
 
-                println(body)
-                println("okay")
+                println(characterInfo)
+                updateMapMarkers(characterInfo)
+                println("=====okay======")
             }
 
-            override fun onFailure(call: Call<List<Map<String, String>>>, t: Throwable) {
+            override fun onFailure(call: Call<CharacterLocationResponse>, t: Throwable) {
                 println(call)
                 println(t)
+                println("====ㅇ[러디===")
             }
 
         })
@@ -102,6 +110,22 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
         CircleImageView.setOnClickListener{
             val intent = Intent(this, CharacterActivity::class.java)
             startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        }
+    }
+
+    private fun updateMapMarkers(characterInfo: CharacterLocationResponse) {
+        if(characterInfo != null  && characterInfo.size>0){
+            for(current in characterInfo){
+                val marker = Marker()
+                marker.position= LatLng(current.lat, current.lng)
+                marker.width  = 250
+                marker.height = 250
+
+
+                marker.icon = OverlayImage.fromResource(MarkerImageUtil.getImage(current.characterId) as Int)
+                marker.map = naverMap
+
+            }
         }
     }
 
@@ -176,9 +200,10 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
 
 
         marker.map = null
+
 //        마커
-        val cameraUpdate = CameraUpdate.scrollTo(myLocation)
-        naverMap.moveCamera(cameraUpdate)
+//        val cameraUpdate = CameraUpdate.scrollTo(myLocation)
+//        naverMap.moveCamera(cameraUpdate)
         naverMap.maxZoom = 18.0
         naverMap.minZoom = 5.0
         updateLocationOverlay(location)

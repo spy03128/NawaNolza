@@ -23,7 +23,7 @@ class RoleCheckActivity : AppCompatActivity() {
         fragmentTransaction.replace(R.id.fragmentFrame, ParticipantsFragment())
         fragmentTransaction.commit()
 
-        object : CountDownTimer(5000, 1000) {
+        object : CountDownTimer(2000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 var time = (millisUntilFinished / 1000).toInt()

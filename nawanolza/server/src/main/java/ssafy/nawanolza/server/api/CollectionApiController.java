@@ -41,7 +41,7 @@ public class CollectionApiController {
     }
 
     @GetMapping("/map")
-    public ResponseEntity<List<Marker>> getMapCharacters(@ModelAttribute MapCharactersRequest mapCharactersRequest){
+    public ResponseEntity<List<Marker>> getMapCharacters(){
         return ResponseEntity.ok(collectionService.getMapCharacters());
     }
 
@@ -64,14 +64,6 @@ public class CollectionApiController {
         }
 
     }
-    @Getter
-    @Setter
-    public static class  MapCharactersRequest{
-        double lat;
-        double lng;
-        int level;
-    }
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

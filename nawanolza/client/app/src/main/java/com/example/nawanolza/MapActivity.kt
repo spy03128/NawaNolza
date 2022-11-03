@@ -108,8 +108,12 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
         })
 
         CircleImageView.setOnClickListener{
-            val intent = Intent(this, CharacterActivity::class.java)
-            startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+            val intent = Intent(this@MapActivity, CharacterActivity::class.java)
+            intent.apply {
+                putExtra("memberInfo", memberInfo)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+            startActivity(intent)
         }
     }
 

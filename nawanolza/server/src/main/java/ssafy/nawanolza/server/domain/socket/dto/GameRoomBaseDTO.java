@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class GameRoomBaseDTO {
 
-    private String gameRoomId;
+    private String entryCode;
     private Long senderId;
     private Type type;
     protected enum Type {

@@ -1,18 +1,19 @@
 package ssafy.nawanolza.server.domain.entity.dto;
 
-import lombok.*;
-import org.springframework.web.socket.WebSocketSession;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import javax.persistence.Id;
 
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class GameRoom {
+
+    @Id
     private String entryCode;
     private Long hostId;
-    private Set<WebSocketSession> sessions = new HashSet<>();
 
     public GameRoom(Long hostId, String entryCode) {
         this.hostId = hostId;

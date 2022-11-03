@@ -1,29 +1,30 @@
 package com.example.nawanolza.hideandseek
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.nawanolza.R
 import com.example.nawanolza.createGame.WaitingMember
-import com.example.nawanolza.databinding.ActivityMainHideSeekBinding
+import com.example.nawanolza.databinding.ActivityMainHideSeekParticipantBinding
 import com.google.android.gms.location.*
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.*
+import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.MapFragment
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
-import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
-import java.lang.reflect.Member
 
-class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
+class MainHideSeekParticipant : OnMapReadyCallback, AppCompatActivity() {
+    lateinit var binding: ActivityMainHideSeekParticipantBinding
+    lateinit var adapter: HideSeekRvAdapter
 
     // 네이버 맵 권한 요청
     private val permission_request = 99
@@ -31,9 +32,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     private lateinit var naverMap: NaverMap
 
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-
-    lateinit var binding: ActivityMainHideSeekBinding
-    lateinit var adapter: HideSeekRvAdapter
 
     private var waitingMember = arrayListOf(
         WaitingMember(1,"노현우","1"),
@@ -46,19 +44,15 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         WaitingMember(3,"노땡땡","3"),
     )
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainHideSeekBinding.inflate(layoutInflater)
+        binding = ActivityMainHideSeekParticipantBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         adapter = HideSeekRvAdapter(waitingMember)
         binding.mRecyclerView.adapter = adapter
         binding.mRecyclerView.layoutManager = GridLayoutManager(this, 4)
-
-        binding.memberDetail.setOnClickListener {
-            val intent = Intent(this@MainHideSeek, MemberDetail::class.java )
-            startActivity(intent)
-        }
 
         if (isPermitted()) {
             startProcess()
@@ -88,20 +82,20 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap){
-        this.naverMap = naverMap
 
         val cameraPosition = CameraPosition(
-            LatLng(36.1071562, 128.4164185),  // 위치 지정
+            LatLng(37.5666102, 126.9783881),  // 위치 지정
             16.0 // 줌 레벨
         )
         naverMap.cameraPosition = cameraPosition
-
+        this.naverMap = naverMap
         val uiSettings = naverMap.uiSettings
         uiSettings.isLocationButtonEnabled = true //위치 버튼 활성화
         naverMap.locationSource = locationSource // 좌표 눌렀을때 현재 위치로 이동
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(this) //gps 자동으로 받아오기
         setUpdateLocationListener() //내위치를 가져오는 코드
+
     }
 
     //내 위치를 가져오는 코드
@@ -158,8 +152,9 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         val myLocation = LatLng(location.latitude, location.longitude)
         val locationOverlay = naverMap.locationOverlay
 
-        locationOverlay.position = LatLng(36.1071562, 128.4164185)
+//        locationOverlay.position = LatLng(myLocation.latitude, myLocation.longitude)
         locationOverlay.isVisible = true
         locationOverlay.circleRadius = (100 / naverMap.projection.metersPerPixel).toInt()
     }
+
 }

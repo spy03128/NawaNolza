@@ -1,31 +1,44 @@
 package ssafy.nawanolza.server.domain.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ssafy.nawanolza.server.domain.entity.dto.GameRoom;
 import ssafy.nawanolza.server.domain.entity.dto.HideAndSeekGameRoom;
+import ssafy.nawanolza.server.domain.entity.dto.HideAndSeekProperties;
 import ssafy.nawanolza.server.domain.exception.CreateGameRoomLimitException;
 import ssafy.nawanolza.server.domain.exception.GameRoomNotFoundException;
-import ssafy.nawanolza.server.domain.repository.GameRoomRepository;
+import ssafy.nawanolza.server.domain.repository.HideAndSeekGameRoomRepository;
 import ssafy.nawanolza.server.domain.utils.CreateRoomUtil;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HideAndGameRoomService {
+    private final HideAndSeekGameRoomRepository hideAndSeekGameRoomRepository;
 
-    private final CreateRoomUtil createRoomUtill;
-    private final GameRoomRepository gameRoomRepository;
 
-    public HideAndSeekGameRoom createGameRoom(Long hostId) {
-        if (!gameRoomRepository.isCreatableGameRoom())
+    public HideAndSeekGameRoom createGameRoom(Long hostId, HideAndSeekProperties hideAndSeekProperties) {
+        if (hideAndSeekGameRoomRepository.count() > 100)
             throw new CreateGameRoomLimitException();
-        HideAndSeekGameRoom createGameRoom = HideAndSeekGameRoom.create(hostId, createRoomUtill);
-        return (HideAndSeekGameRoom) gameRoomRepository.save(createGameRoom);
+        String entryCode = CreateRoomUtil.issueEntryCode(hideAndSeekGameRoomRepository);
+        HideAndSeekGameRoom createGameRoom = HideAndSeekGameRoom.create(hostId, hideAndSeekProperties, entryCode);
+        HideAndSeekGameRoom save = hideAndSeekGameRoomRepository.save(createGameRoom);
+        log.info("createGameRoom = {}", save);
+        return save;
+    }
+
+    public HideAndSeekGameRoom paticipateGameRoom(Long memberId, String entryCode) {
+        HideAndSeekGameRoom hideAndSeekGameRoom = hideAndSeekGameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
+        HideAndSeekGameRoom updateGameRoom = hideAndSeekGameRoom.participateMember(memberId);
+        hideAndSeekGameRoomRepository.save(hideAndSeekGameRoom);
+        return updateGameRoom;
     }
 
     public void deleteGameRoom(String entryCode) {
-        GameRoom gameRoom = gameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
-        gameRoomRepository.remove(gameRoom);
-        createRoomUtill.retrieveEntryCode(entryCode);
+        HideAndSeekGameRoom hideAndSeekGameRoom = hideAndSeekGameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
+        hideAndSeekGameRoomRepository.delete(hideAndSeekGameRoom);
+    }
+
+    public void catchMember(String entryCode, Long memberId) {
     }
 }

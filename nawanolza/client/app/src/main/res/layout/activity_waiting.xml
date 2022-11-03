@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".createGame.Waiting"
-    android:background="@drawable/hide_seek_background">
+    android:background="@drawable/hide_seek_background_img">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline1"
@@ -21,15 +21,16 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.9"/>
 
+
     <LinearLayout
         android:id="@+id/title"
         android:layout_width="118dp"
         android:layout_height="34dp"
-        tools:layout_editor_absoluteX="146dp"
-        tools:layout_editor_absoluteY="48dp"
+        android:layout_marginTop="44dp"
         android:gravity="center"
-        app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -37,7 +38,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="숨바꼭질"
+            android:textColor="@color/black"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,53 +48,72 @@
             app:layout_constraintVertical_bias="0.066" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/codeTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="방 코드"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <LinearLayout
+        android:id="@+id/codeLinearLayout"
+        android:layout_width="139dp"
+        android:layout_height="68dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/round"
+        android:elevation="20dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/mRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        app:layout_constraintVertical_bias="0.031" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/codeNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1212"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/codeTitle"
-        app:layout_constraintVertical_bias="0.023" />
+        <TextView
+            android:id="@+id/codeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="방 코드"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:layout_constraintVertical_bias="0.031" />
 
+        <TextView
+            android:id="@+id/codeNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1212"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/codeTitle"
+            app:layout_constraintVertical_bias="0.023" />
+
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mRecyclerView"
         android:layout_width="325dp"
-        android:layout_height="392dp"
+        android:layout_height="400dp"
+        android:layout_marginBottom="48dp"
+        android:background="@drawable/round"
+        android:elevation="20dp"
+        android:padding="3dp"
         app:layout_constraintBottom_toTopOf="@+id/btnStart"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@+id/codeNumber"
-        app:layout_constraintVertical_bias="0.494" />
+        app:layout_constraintStart_toStartOf="@+id/guideline1" />
 
     <Button
         android:id="@+id/btnStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
         android:backgroundTint="@color/green"
         android:text="시작하기"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.836" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

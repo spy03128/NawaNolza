@@ -19,20 +19,34 @@
         android:theme="@style/Theme.Nawanolza"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory"
-        tools:targetApi="31"
-        >
-        <activity android:name=".createGame.GameIntro"
+        tools:targetApi="31">
+        <activity
+            android:name=".hideandseek.MemberDetail"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".hideandseek.MainHideSeek"
+        <activity
+            android:name=".hideandseek.MainHideSeekParticipant"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
+        </activity>
+        <activity
+            android:name=".createGame.GameIntro"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".hideandseek.MainHideSeek"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
         </activity>
         <activity
             android:name=".createGame.Waiting"
@@ -40,12 +54,12 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".createGame.SettingHideSeek"
@@ -67,8 +81,6 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
-
         </activity>
         <activity
             android:name=".HomeActivity"
@@ -84,14 +96,12 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".LoginActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
         </activity>
 
         <meta-data

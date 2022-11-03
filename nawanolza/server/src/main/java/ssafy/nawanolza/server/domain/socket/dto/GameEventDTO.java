@@ -1,14 +1,20 @@
 package ssafy.nawanolza.server.domain.socket.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter @Setter
-public class GameEventDTO extends GameRoomBaseDTO {
+@Data
+public class GameEventDTO {
 
+    private String entryCode;
+    private Long senderId;
+    private Type type;
     private EventType eventType;
 
-    protected enum EventType {
-        ALARM
+    public enum Type {
+        GPS, CHAT, EVENT
+    }
+
+    public enum EventType {
+        ALARM, CATCH
     }
 }

@@ -8,11 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.nawanolza.retrofit.CharacterLocationResponse
+import com.example.nawanolza.retrofit.CharacterLocationResponseItem
 import com.example.nawanolza.retrofit.Member
 import com.example.nawanolza.retrofit.MemberResponse
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -30,6 +32,7 @@ import com.google.android.gms.location.*
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
+import com.naver.maps.map.overlay.Overlay.OnClickListener
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_map.*
 import retrofit2.Call
@@ -40,7 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 private const val TAG = "MapActivity_맵에서"
 
-class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
+class MapActivity :OnMapReadyCallback, AppCompatActivity() {
     val permission_request = 99
     private lateinit var naverMap: NaverMap
 
@@ -128,7 +131,14 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
 
                 marker.icon = OverlayImage.fromResource(MarkerImageUtil.getImage(current.characterId) as Int)
                 marker.map = naverMap
+                marker.tag = current
 
+                marker.setOnClickListener { o ->
+                    Toast.makeText(this.applicationContext, "${(marker.tag as CharacterLocationResponseItem).markerId}번 마커입니다.", Toast.LENGTH_LONG).show()
+                    println("=======================")
+                    println(marker.tag)
+                    true
+                }
             }
         }
     }
@@ -223,4 +233,5 @@ class MapActivity :OnMapReadyCallback ,AppCompatActivity() {
 //        naverMap.locationOverlay.circleRadius = (100 / naverMap.projection.metersPerPixel).toInt()
 
     }
+
 }

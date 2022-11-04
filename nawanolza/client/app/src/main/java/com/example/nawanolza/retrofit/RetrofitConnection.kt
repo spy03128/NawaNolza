@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitConnection {
 
     companion object {
-        private const val BASE_URL = "https://k7d103.p.ssafy.io/"
+        private const val BASE_URL = "https://k7d103.p.ssafy.io/api/"
         private var INSTANCE: Retrofit? = null
 
         fun getInstance(): Retrofit {

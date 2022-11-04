@@ -2,34 +2,46 @@ package com.example.nawanolza.createGame
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.nawanolza.R
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.nawanolza.TestRequest
-import com.example.nawanolza.TestResponse
-import com.example.nawanolza.TestService
+import com.example.nawanolza.*
+import com.example.nawanolza.R
 import com.example.nawanolza.databinding.ActivitySettingHideSeekBinding
+import com.example.nawanolza.retrofit.RetrofitConnection
+import com.example.nawanolza.retrofit.createroom.CreateRoomHideResponse
+import com.example.nawanolza.retrofit.createroom.CreateRoomHideService
+import com.example.nawanolza.retrofit.createroom.CreateRoomRequest
 import com.google.android.gms.location.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
+import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.Marker
 import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+
 
 class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
     val permission_request = 99
+    var check: Boolean = false
+    var circle = CircleOverlay()
+    var lat: Double? = null
+    var lng: Double? = null
+
+
     private lateinit var naverMap: NaverMap
+    private lateinit var createRoomRequest: CreateRoomRequest
+
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -71,51 +83,47 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
             }
         }
 
-        var range = 100
+        var range = 100.0
         rangeMinus.setOnClickListener {
-            if(range <= 50) {
+            if(range <= 50.0) {
             }else{
-                range -= 50
+                range -= 50.0
                 binding.rangeText.text = range.toString()
             }
         }
         rangePlus.setOnClickListener {
-            if(range <= 150){
-                range += 50
+            if(range <= 150.0){
+                range += 50.0
                 binding.rangeText.text = range.toString()
-            }else{
             }
         }
 
-        var retrofit = Retrofit.Builder()
-            .baseUrl("https://k7d103.p.ssafy.io/api/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        var service = retrofit.create(TestService::class.java)
-
-
-        val testRequest = TestRequest(
-            100,
-            "노현우"
+        val retrofitAPI = RetrofitConnection.getInstance().create(
+            CreateRoomHideService::class.java
         )
 
         btnCreateRoom.setOnClickListener {
-            service.Test(testRequest).enqueue(object: Callback<TestResponse> {
-                override fun onResponse(call: Call<TestResponse>, response: Response<TestResponse>) {
-                    val intent = Intent(this@SettingHideSeek, Waiting::class.java)
-//                    val data = LocationData()
-//                    intent.putExtra("location", data)
-                    startActivity(intent)
+            if(check){
+                createRoomRequest = CreateRoomRequest(lat, lng, gameTime, time, 100, 4)
+                retrofitAPI.postCreateRoomHide(createRoomRequest).enqueue(object:Callback<CreateRoomHideResponse> {
+                    override fun onResponse(
+                        call: Call<CreateRoomHideResponse>,
+                        response: Response<CreateRoomHideResponse>
+                    ) {
+                        val intent = Intent(this@SettingHideSeek, Waiting::class.java)
+                        intent.putExtra("code", "${response.body()?.entryCode}" )
+                        startActivity(intent)
+                    }
 
-                }
+                    override fun onFailure(call: Call<CreateRoomHideResponse>, t: Throwable) {
+                        println(call)
+                        println(t)
+                    }
+                } )
+            }else{
+                Toast.makeText(this,"영역을 설정해주세요", Toast.LENGTH_LONG).show()
+            }
 
-                override fun onFailure(call: Call<TestResponse>, t: Throwable) {
-                    println(call)
-                    println(t)
-                }
-
-            })
         }
 
         if (isPermitted()) {
@@ -155,7 +163,14 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(this) //gps 자동으로 받아오기
-        setUpdateLocationListner() //내위치를 가져오는 코드
+        setUpdateLocationListener() //내위치를 가져오는 코드
+
+        naverMap.setOnMapClickListener { point, coord ->
+            val latLng = LatLng(coord.latitude, coord.longitude)
+            lat = coord.latitude
+            lng = coord.longitude
+            setPolyline(latLng)
+        }
     }
     //내 위치를 가져오는 코드
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient //자동으로 gps값을 받아온다.
@@ -163,7 +178,7 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
     //lateinit: 나중에 초기화 해주겠다는 의미
 
     @SuppressLint("MissingPermission")
-    fun setUpdateLocationListner() {
+    fun setUpdateLocationListener() {
         val locationRequest = LocationRequest.create()
         locationRequest.run {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY //높은 정확도
@@ -192,31 +207,30 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
         val myLocation = LatLng(location.latitude, location.longitude)
         val marker = Marker()
         marker.position = LatLng(myLocation.latitude, myLocation.longitude)
-        println(LatLng(location.latitude, location.longitude))
-//        marker.position = LatLng(
-//            naverMap.cameraPosition.target.latitude,
-//            naverMap.cameraPosition.target.longitude
-//        )
         marker.map = naverMap
         //마커
         val cameraUpdate = CameraUpdate.scrollTo(myLocation)
         naverMap.moveCamera(cameraUpdate)
         naverMap.maxZoom = 18.0
         naverMap.minZoom = 5.0
-        updateLocationOverlay(location)
-
         //marker.map = null
     }
 
-    private fun updateLocationOverlay(location: Location){
-        val myLocation = LatLng(location.latitude, location.longitude)
-        val range = Integer.parseInt(rangeText.text as String)
 
-        naverMap.locationOverlay.position = LatLng(myLocation.latitude, myLocation.longitude)
-        naverMap.locationOverlay.isVisible = true
-        naverMap.locationOverlay.circleRadius = ( range / naverMap.projection.metersPerPixel).toInt()
+
+     private fun setPolyline(latLng:LatLng){
+         if(!check){
+             circle.center = latLng
+             val color = Color.parseColor("#ef5350")
+             circle.outlineWidth = 1
+             circle.outlineColor = color
+             circle.radius = 100.0
+             circle.map = naverMap
+             check = true
+         }else{
+             circle.map = null
+             check = false
+         }
     }
-
-
 }
 

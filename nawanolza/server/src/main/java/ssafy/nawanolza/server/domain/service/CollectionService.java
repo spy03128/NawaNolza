@@ -36,15 +36,15 @@ public class CollectionService {
 
         if(sort!=null && sort.equals("level")){
             if(filterType){
-                return collectionCharacterRepository.findAllSortByLevel();
+                return collectionCharacterRepository.findAllSortByLevel(memberId);
             }
-            return collectionCharacterRepository.findAllSortByLevelFilterByType(type);
+            return collectionCharacterRepository.findAllSortByLevelFilterByType(type, memberId);
 
         }else{
             if(filterType){
-                return collectionCharacterRepository.findAllSortByCharacterId();
+                return collectionCharacterRepository.findAllSortByCharacterId(memberId);
             }
-            return collectionCharacterRepository.findAllSortByCharacterIdFilterByType(type);
+            return collectionCharacterRepository.findAllSortByCharacterIdFilterByType(type, memberId);
 
         }
     }

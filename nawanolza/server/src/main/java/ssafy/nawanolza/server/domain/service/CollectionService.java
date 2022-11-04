@@ -3,7 +3,9 @@ package ssafy.nawanolza.server.domain.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ssafy.nawanolza.server.domain.entity.Character;
-import ssafy.nawanolza.server.domain.entity.*;
+import ssafy.nawanolza.server.domain.entity.Collection;
+import ssafy.nawanolza.server.domain.entity.History;
+import ssafy.nawanolza.server.domain.entity.Member;
 import ssafy.nawanolza.server.domain.entity.dto.Marker;
 import ssafy.nawanolza.server.domain.exception.CharacterNotFountException;
 import ssafy.nawanolza.server.domain.exception.MemberNotFountException;
@@ -11,7 +13,6 @@ import ssafy.nawanolza.server.domain.repository.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor

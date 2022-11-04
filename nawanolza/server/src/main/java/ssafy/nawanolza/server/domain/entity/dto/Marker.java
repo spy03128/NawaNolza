@@ -17,7 +17,6 @@ public class Marker {
     int time;
     double lng;
     double lat;
-    int isPlayGame;
 
     @Builder
     public Marker(Long markerId, Long characterId, boolean rare, int questType, int time, double lng, double lat) {
@@ -28,9 +27,5 @@ public class Marker {
         this.time = time;
         this.lng = lng;
         this.lat = lat;
-    }
-
-    public void increase() {
-        isPlayGame++;
     }
 }

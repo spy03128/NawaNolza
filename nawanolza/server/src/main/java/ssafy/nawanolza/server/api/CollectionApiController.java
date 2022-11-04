@@ -54,21 +54,18 @@ public class CollectionApiController {
     }
 
     @PostMapping("/quest/start")
-    public void startQuest(@RequestBody MarkerRequestDto marker) throws InterruptedException {
-        boolean result = markerService.questStart(marker.getMarkerId());
-        System.out.println("start 완료!   " + result);
+    public boolean startQuest(@RequestBody MarkerRequestDto marker) throws InterruptedException {
+        return markerService.questStart(marker.getMarkerId());
     }
 
     @PostMapping("/quest/success")
-    public void questSuccess(@RequestBody MarkerRequestDto marker) throws InterruptedException {
-        markerService.questSuccess(marker.getMarkerId());
-        System.out.println("success 완료!");
+    public boolean questSuccess(@RequestBody MarkerRequestDto marker) throws InterruptedException {
+        return markerService.questSuccess(marker.getMarkerId());
     }
 
     @PostMapping("/quest/fail")
-    public void questFail(@RequestBody MarkerRequestDto marker){
-        markerService.questFail(marker.getMarkerId());
-        System.out.println("fail 완료!");
+    public boolean questFail(@RequestBody MarkerRequestDto marker){
+        return markerService.questFail(marker.getMarkerId());
     }
 
     @Data

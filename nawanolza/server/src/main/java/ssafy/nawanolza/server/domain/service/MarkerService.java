@@ -3,7 +3,6 @@ package ssafy.nawanolza.server.domain.service;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ssafy.nawanolza.server.config.MarkerConfig;
@@ -27,23 +26,17 @@ public class MarkerService {
     private final CharacterService characterService;
     private final MapCharacterRedisRepository mapCharacterRedisRepository;
     private final RedisLockRepository redisLockRepository;
-//    static int flag = 0;
 
     /*
      * true : 퀘스트 시작, 해당 마커 락 걸림
      * false : 퀘스트 시작 X, 해당 마커 다른 사람이 락 걸어놓음
      * */
     public boolean questStart(Long key) throws InterruptedException {
-
-        while (!redisLockRepository.lock(key)) {
-            Thread.sleep(100);
+        // 이미 락이 걸려 있으면 접근 불가
+        if (!redisLockRepository.lock(key)) {
+            return false;
         }
-        Marker marker = mapCharacterRedisRepository.findById(key).orElseThrow();
-        marker.increase();
-        mapCharacterRedisRepository.save(marker);
-        System.out.println("저장 후 : " + marker.getIsPlayGame());
-        redisLockRepository.unLock(key);
-        return false;
+        return true;
     }
 
     /*
@@ -51,9 +44,6 @@ public class MarkerService {
      * false : 락이 이미 해제됨, 에러반환 해야함
      * */
     public boolean questSuccess(Long key) throws InterruptedException {
-        redisLockRepository.lock(key);
-        Thread.sleep(1000);
-        redisLockRepository.unLock(key);
         return redisLockRepository.unLock(key);
     }
 

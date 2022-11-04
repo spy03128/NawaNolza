@@ -3,6 +3,7 @@ package ssafy.nawanolza.server.domain.service;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ssafy.nawanolza.server.config.MarkerConfig;
@@ -10,6 +11,7 @@ import ssafy.nawanolza.server.domain.entity.Character;
 import ssafy.nawanolza.server.domain.entity.Game;
 import ssafy.nawanolza.server.domain.entity.dto.Marker;
 import ssafy.nawanolza.server.domain.repository.MapCharacterRedisRepository;
+import ssafy.nawanolza.server.domain.repository.RedisLockRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,44 @@ public class MarkerService {
     private final GameService gameService;
     private final CharacterService characterService;
     private final MapCharacterRedisRepository mapCharacterRedisRepository;
+    private final RedisLockRepository redisLockRepository;
+//    static int flag = 0;
 
+    /*
+     * true : 퀘스트 시작, 해당 마커 락 걸림
+     * false : 퀘스트 시작 X, 해당 마커 다른 사람이 락 걸어놓음
+     * */
+    public boolean questStart(Long key) throws InterruptedException {
+
+        while (!redisLockRepository.lock(key)) {
+            Thread.sleep(100);
+        }
+        Marker marker = mapCharacterRedisRepository.findById(key).orElseThrow();
+        marker.increase();
+        mapCharacterRedisRepository.save(marker);
+        System.out.println("저장 후 : " + marker.getIsPlayGame());
+        redisLockRepository.unLock(key);
+        return false;
+    }
+
+    /*
+     * true : 락 해제
+     * false : 락이 이미 해제됨, 에러반환 해야함
+     * */
+    public boolean questSuccess(Long key) throws InterruptedException {
+        redisLockRepository.lock(key);
+        Thread.sleep(1000);
+        redisLockRepository.unLock(key);
+        return redisLockRepository.unLock(key);
+    }
+
+    /*
+     * true : 락 해제
+     * false : 락이 이미 해제됨, 에러반환 해야함
+     * */
+    public boolean questFail(Long key) {
+        return redisLockRepository.unLock(key);
+    }
 
     /*
      * 마커 만들기

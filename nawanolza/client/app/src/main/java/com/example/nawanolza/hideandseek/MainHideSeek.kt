@@ -3,11 +3,13 @@ package com.example.nawanolza.hideandseek
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,7 +20,9 @@ import com.example.nawanolza.databinding.ActivityMainHideSeekBinding
 import com.google.android.gms.location.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
+import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
 import java.lang.reflect.Member
@@ -101,7 +105,17 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         naverMap.locationSource = locationSource // 좌표 눌렀을때 현재 위치로 이동
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(this) //gps 자동으로 받아오기
+//        val marker = Marker()
+//        marker.position = LatLng(36.1071562, 128.4164185)
+//        marker.map = naverMap
+        setLocationOverlay() // overlay 설정
         setUpdateLocationListener() //내위치를 가져오는 코드
+        setPolyline(LatLng(36.1071562, 128.4164185))
+
+//        naverMap.setOnMapClickListener { point, coord ->
+//            val latLng = LatLng(coord.latitude, coord.longitude)
+//            setPolyline(latLng)
+//        }
     }
 
     //내 위치를 가져오는 코드
@@ -114,7 +128,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         val locationRequest = LocationRequest.create()
         locationRequest.run {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY //높은 정확도
-            interval = 1000 //1초에 한번씩 GPS 요청
+//            interval = 1000 //1초에 한번씩 GPS 요청
         }
 
         locationCallback = object : LocationCallback() {
@@ -138,28 +152,52 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
     fun setLastLocation(location: Location) {
         val myLocation = LatLng(location.latitude, location.longitude)
-        val marker = Marker()
-        marker.position = LatLng(myLocation.latitude, myLocation.longitude)
-        marker.position = LatLng(
-            naverMap.cameraPosition.target.latitude,
-            naverMap.cameraPosition.target.longitude
-        )
-        marker.map = naverMap
+
+
+//        marker.position = LatLng(
+//            naverMap.cameraPosition.target.latitude,
+//            naverMap.cameraPosition.target.longitude
+//        )
         //마커
 //        val cameraUpdate = CameraUpdate.scrollTo(myLocation)
 //        naverMap.moveCamera(cameraUpdate)
         naverMap.maxZoom = 18.0
         naverMap.minZoom = 5.0
-        updateLocationOverlay(location)
-        marker.map = null
+//        marker.map = null
     }
 
-    private fun updateLocationOverlay(location: Location){
-        val myLocation = LatLng(location.latitude, location.longitude)
+    private fun setLocationOverlay(){
+//        val myLocation = LatLng(location.latitude, location.longitude)
         val locationOverlay = naverMap.locationOverlay
+
 
         locationOverlay.position = LatLng(36.1071562, 128.4164185)
         locationOverlay.isVisible = true
-        locationOverlay.circleRadius = (100 / naverMap.projection.metersPerPixel).toInt()
+
+    }
+
+    //좌표간 거리 구하기
+    private fun calDist(lat1:Double, lon1:Double, lat2:Double, lon2:Double) : Long{
+        val EARTH_R = 6371000.0
+        val rad = Math.PI / 180
+        val radLat1 = rad * lat1
+        val radLat2 = rad * lat2
+        val radDist = rad * (lon1 - lon2)
+
+        var distance = Math.sin(radLat1) * Math.sin(radLat2)
+        distance = distance + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radDist)
+        val ret = EARTH_R * Math.acos(distance)
+
+        return Math.round(ret) // 미터 단위
+    }
+
+        private fun setPolyline(latLng: LatLng) {
+        val circle = CircleOverlay()
+        circle.center = latLng
+        val color = Color.parseColor("#ef5350")
+        circle.outlineColor = color
+        circle.outlineWidth = 1
+        circle.radius = 100.0
+        circle.map = naverMap
     }
 }

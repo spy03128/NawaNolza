@@ -34,5 +34,6 @@ class Waiting : AppCompatActivity() {
         adapter =WaitingRvAdapter(waitingMember)
         binding.mRecyclerView.adapter = adapter
         binding.mRecyclerView.layoutManager =GridLayoutManager(this, 3)
+        binding.codeNumber.text = intent.getStringExtra("code")
     }
 }

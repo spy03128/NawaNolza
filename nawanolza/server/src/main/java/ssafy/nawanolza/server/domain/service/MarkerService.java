@@ -31,19 +31,15 @@ public class MarkerService {
      * true : 퀘스트 시작, 해당 마커 락 걸림
      * false : 퀘스트 시작 X, 해당 마커 다른 사람이 락 걸어놓음
      * */
-    public boolean questStart(Long key) throws InterruptedException {
-        // 이미 락이 걸려 있으면 접근 불가
-        if (!redisLockRepository.lock(key)) {
-            return false;
-        }
-        return true;
+    public boolean questStart(Long key) {
+        return redisLockRepository.lock(key);
     }
 
     /*
      * true : 락 해제
      * false : 락이 이미 해제됨, 에러반환 해야함
      * */
-    public boolean questSuccess(Long key) throws InterruptedException {
+    public boolean questSuccess(Long key) {
         return redisLockRepository.unLock(key);
     }
 
@@ -151,18 +147,5 @@ public class MarkerService {
     static class LatLng {
         double lat;
         double lng;
-    }
-
-    public static byte[] longToByteArray(long data) {
-        return new byte[] {
-            (byte)((data >> 56) & 0xff),
-            (byte)((data >> 48) & 0xff),
-            (byte)((data >> 40) & 0xff),
-            (byte)((data >> 32) & 0xff),
-            (byte)((data >> 24) & 0xff),
-            (byte)((data >> 16) & 0xff),
-            (byte)((data >> 8 ) & 0xff),
-            (byte)((data >> 0) & 0xff),
-        };
     }
 }

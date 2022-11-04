@@ -6,11 +6,15 @@ import org.springframework.web.bind.annotation.*;
 import ssafy.nawanolza.server.domain.entity.Character;
 import ssafy.nawanolza.server.domain.entity.Collection;
 import ssafy.nawanolza.server.domain.entity.History;
+import ssafy.nawanolza.server.domain.entity.Quiz;
 import ssafy.nawanolza.server.domain.entity.dto.Marker;
 import ssafy.nawanolza.server.domain.repository.CollectionCharacterRepository;
 import ssafy.nawanolza.server.domain.service.CollectionService;
 import ssafy.nawanolza.server.domain.service.MarkerService;
+import ssafy.nawanolza.server.domain.service.QuizService;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +24,12 @@ import java.util.List;
 public class CollectionApiController {
     private final CollectionService collectionService;
     private final MarkerService markerService;
+    private final QuizService quizService;
 
     @GetMapping("/{memberId}")
     public ResponseEntity<CollectionResponseDto> getCollection(@PathVariable Long memberId,
-                                                                                              @RequestParam(name = "type",required = false) String type,
-                                                                                              @RequestParam(name = "sort",required = false) String sort){
+                                                               @RequestParam(name = "type",required = false) String type,
+                                                               @RequestParam(name = "sort",required = false) String sort){
         return ResponseEntity.ok(CollectionResponseDto.of(collectionService.getCollection(memberId, type, sort)));
     }
 
@@ -54,8 +59,10 @@ public class CollectionApiController {
     }
 
     @PostMapping("/quest/start")
-    public boolean startQuest(@RequestBody MarkerRequestDto marker) throws InterruptedException {
-        return markerService.questStart(marker.getMarkerId());
+    public ResponseEntity<QuestResponseDto> startQuest(@Valid @RequestBody MarkerRequestDto marker){
+        boolean isLock = markerService.questStart(marker.getMarkerId());
+        Quiz quiz = isLock ? quizService.getQuiz(marker.questType) : null;
+        return ResponseEntity.ok(QuestResponseDto.builder().accessible(isLock).quiz(quiz).build());
     }
 
     @PostMapping("/quest/success")
@@ -113,8 +120,17 @@ public class CollectionApiController {
     }
 
     @Getter
-    public static class MarkerRequestDto{
+    private static class MarkerRequestDto{
+        @NotNull
         private Long markerId;
+        @NotNull
         private int questType;
+    }
+
+    @Builder
+    @Data
+    private static class QuestResponseDto {
+        private boolean accessible;
+        private Quiz quiz;
     }
 }

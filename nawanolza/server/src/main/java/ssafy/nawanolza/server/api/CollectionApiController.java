@@ -53,6 +53,21 @@ public class CollectionApiController {
         markerService.insertMarker();
     }
 
+    @PostMapping("/quest/start")
+    public boolean startQuest(@RequestBody MarkerRequestDto marker) throws InterruptedException {
+        return markerService.questStart(marker.getMarkerId());
+    }
+
+    @PostMapping("/quest/success")
+    public boolean questSuccess(@RequestBody MarkerRequestDto marker) throws InterruptedException {
+        return markerService.questSuccess(marker.getMarkerId());
+    }
+
+    @PostMapping("/quest/fail")
+    public boolean questFail(@RequestBody MarkerRequestDto marker){
+        return markerService.questFail(marker.getMarkerId());
+    }
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -95,5 +110,11 @@ public class CollectionApiController {
                     .type(type)
                     .history(histories).build();
         }
+    }
+
+    @Getter
+    public static class MarkerRequestDto{
+        private Long markerId;
+        private int questType;
     }
 }

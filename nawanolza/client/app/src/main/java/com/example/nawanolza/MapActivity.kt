@@ -51,6 +51,8 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
 
     var characterInfo = CharacterLocationResponse()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -133,10 +135,25 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                 marker.map = naverMap
                 marker.tag = current
 
+
                 marker.setOnClickListener { o ->
                     Toast.makeText(this.applicationContext, "${(marker.tag as CharacterLocationResponseItem).markerId}번 마커입니다.", Toast.LENGTH_LONG).show()
                     println("=======================")
                     println(marker.tag)
+
+                    if((marker.tag as CharacterLocationResponseItem).questType==1){
+                        val intent = Intent(this@MapActivity, QuizActivity::class.java)
+                        intent.putExtra("result", false)
+                        startActivity(intent)
+
+                        if (intent.getBooleanExtra("result", false))
+                            Toast.makeText(this.applicationContext, "퀘스트를 성공하였습니다.", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(this.applicationContext, "퀘스트를 실패하였습니다,", Toast.LENGTH_LONG).show()
+                    }
+
+
+
                     true
                 }
             }

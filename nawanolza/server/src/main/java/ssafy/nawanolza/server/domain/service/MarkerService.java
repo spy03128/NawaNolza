@@ -40,7 +40,10 @@ public class MarkerService {
      * false : 락이 이미 해제됨, 에러반환 해야함
      * */
     public boolean questSuccess(Long key) {
-        return redisLockRepository.unLock(key);
+        // 마커 삭제
+        Boolean aBoolean = redisLockRepository.unLock(key);
+        mapCharacterRedisRepository.deleteById(key);
+        return aBoolean;
     }
 
     /*

@@ -3,6 +3,8 @@ package ssafy.nawanolza.server.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity @Getter
 @Table(name = "collection")
@@ -24,4 +26,18 @@ public class Collection {
 
     @Column(name = "current_level", columnDefinition = "TINYINT")
     private int currentLevel;
+
+    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<History> historyList = new ArrayList<>();
+
+    public Collection(Member member, Character character) {
+        this.member = member;
+        this.character = character;
+        levelUp();
+    }
+
+    public void levelUp() {
+        currentLevel++;
+        historyList.add(new History(this, this.currentLevel));
+    }
 }

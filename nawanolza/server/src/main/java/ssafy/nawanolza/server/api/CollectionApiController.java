@@ -1,6 +1,7 @@
 package ssafy.nawanolza.server.api;
 
 import lombok.*;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssafy.nawanolza.server.domain.entity.Character;
@@ -12,6 +13,8 @@ import ssafy.nawanolza.server.domain.repository.CollectionCharacterRepository;
 import ssafy.nawanolza.server.domain.service.CollectionService;
 import ssafy.nawanolza.server.domain.service.MarkerService;
 import ssafy.nawanolza.server.domain.service.QuizService;
+import ssafy.nawanolza.server.dto.ResponseDto;
+import ssafy.nawanolza.server.handler.event.MarkerRemoveEvent;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -22,9 +25,12 @@ import java.util.List;
 @RequestMapping("/collection")
 @AllArgsConstructor
 public class CollectionApiController {
+
     private final CollectionService collectionService;
     private final MarkerService markerService;
     private final QuizService quizService;
+    private final ApplicationEventPublisher publisher;
+
 
     @GetMapping("/{memberId}")
     public ResponseEntity<CollectionResponseDto> getCollection(@PathVariable Long memberId,
@@ -66,8 +72,11 @@ public class CollectionApiController {
     }
 
     @PostMapping("/quest/success")
-    public boolean questSuccess(@RequestBody MarkerRequestDto marker) throws InterruptedException {
-        return markerService.questSuccess(marker.getMarkerId());
+    public ResponseEntity<QuestSuccessResponse> questSuccess(@RequestBody QuestSuccessDto marker) throws InterruptedException {
+        markerService.questSuccess(marker.getMarkerId());
+        Collection collection = collectionService.saveCollection(marker.getMemberId(), marker.getCharacterId());
+        publisher.publishEvent(new MarkerRemoveEvent(marker.getMarkerId()));
+        return ResponseEntity.ok().body(new QuestSuccessResponse(collection));
     }
 
     @PostMapping("/quest/fail")
@@ -132,5 +141,29 @@ public class CollectionApiController {
     private static class QuestResponseDto {
         private boolean accessible;
         private Quiz quiz;
+    }
+
+    @Getter
+    private static class QuestSuccessDto {
+        @NotNull
+        private Long memberId;
+        @NotNull
+        private Long markerId;
+        @NotNull
+        private Long characterId;
+    }
+
+    @Getter
+    private class QuestSuccessResponse extends ResponseDto {
+
+        private boolean isSuccess = true;
+        private Long getCharacterId;
+        private String characterName;
+
+        public QuestSuccessResponse(Collection collection) {
+            super("퀘스트를 완료했습니다.");
+            this.getCharacterId = collection.getCharacter().getId();
+            this.characterName = collection.getCharacter().getName();
+        }
     }
 }

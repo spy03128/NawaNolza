@@ -27,7 +27,15 @@
         android:text="X"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="97dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="660dp"
+        android:layout_marginEnd="156dp"
+        android:text="뒤로가기"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/title"
         android:layout_width="61dp"
@@ -37,4 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

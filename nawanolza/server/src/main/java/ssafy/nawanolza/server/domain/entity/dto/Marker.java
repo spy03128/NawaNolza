@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 @Getter
-@RedisHash("marker")
+@RedisHash(value = "marker")
 public class Marker {
 
     @Id

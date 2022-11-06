@@ -7,6 +7,22 @@
     android:background="@drawable/background_character"
     tools:context=".CharacterActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.07"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.93"/>
+
 
     <ImageView
         android:id="@+id/close"
@@ -22,31 +38,35 @@
 
     <LinearLayout
         android:id="@+id/category_all"
-        android:layout_width="354dp"
+        android:layout_width="0dp"
         android:layout_height="112dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:background="@drawable/category"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
         app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.163">
+        app:layout_constraintVertical_bias="0.163"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp">
 
         <ImageView
-            android:layout_width="142dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="121dp"
             android:src="@drawable/category_all"
             tools:layout_editor_absoluteX="63dp"
-            tools:layout_editor_absoluteY="71dp" />
+            tools:layout_editor_absoluteY="71dp"
+            android:layout_weight="1"/>
 
         <LinearLayout
             android:id="@+id/category_each"
-            android:layout_width="200dp"
+            android:layout_width="0dp"
             android:layout_height="100dp"
             android:gravity="center"
             android:orientation="vertical"
+            android:layout_weight="1.7"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.202"
@@ -56,7 +76,7 @@
 
             <LinearLayout
                 android:id="@+id/category_1"
-                android:layout_width="200dp"
+                android:layout_width="190dp"
                 android:layout_height="50dp"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -65,26 +85,29 @@
                 app:layout_constraintHorizontal_bias="0.202"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.087">
+                app:layout_constraintVertical_bias="0.087"
+                >
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="50dp"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/category_1"
                     tools:layout_editor_absoluteX="63dp"
-                    tools:layout_editor_absoluteY="71dp" />
+                    tools:layout_editor_absoluteY="71dp"
+                    android:layout_weight="1"/>
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/category_2"
                     tools:layout_editor_absoluteX="63dp"
-                    tools:layout_editor_absoluteY="71dp" />
+                    tools:layout_editor_absoluteY="71dp"
+                    android:layout_weight="1"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/category_2"
-                android:layout_width="200dp"
+                android:layout_width="190dp"
                 android:layout_height="50dp"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -96,18 +119,20 @@
                 app:layout_constraintVertical_bias="0.087">
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="50dp"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:src="@drawable/category_3"
                     tools:layout_editor_absoluteX="104dp"
                     tools:layout_editor_absoluteY="160dp" />
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/category_4"
                     tools:layout_editor_absoluteX="204dp"
-                    tools:layout_editor_absoluteY="163dp" />
+                    tools:layout_editor_absoluteY="163dp"
+                    android:layout_weight="1" />
             </LinearLayout>
 
         </LinearLayout>
@@ -117,13 +142,14 @@
 
 
     <ImageView
+        android:id="@+id/imageView5"
         android:layout_width="73dp"
         android:layout_height="29dp"
         android:src="@drawable/dogam_on"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.112"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView4"
+        app:layout_constraintHorizontal_bias="0.736"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintTop_toBottomOf="@+id/category_all"
         app:layout_constraintVertical_bias="0.01" />
 
@@ -139,21 +165,19 @@
         app:layout_constraintTop_toBottomOf="@+id/category_all"
         app:layout_constraintVertical_bias="0.011" />
 
-    <LinearLayout
-        android:id="@+id/character_all"
-        android:layout_width="348dp"
-        android:layout_height="451dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/charRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/category"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:elevation="20dp"
+        android:padding="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintTop_toBottomOf="@+id/imageView4"
-        app:layout_constraintVertical_bias="0.112">
-
-    </LinearLayout>
+        app:layout_constraintVertical_bias="0.115" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

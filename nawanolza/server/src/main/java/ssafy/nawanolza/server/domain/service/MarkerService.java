@@ -3,7 +3,6 @@ package ssafy.nawanolza.server.domain.service;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ssafy.nawanolza.server.config.MarkerConfig;
@@ -11,6 +10,7 @@ import ssafy.nawanolza.server.domain.entity.Character;
 import ssafy.nawanolza.server.domain.entity.Game;
 import ssafy.nawanolza.server.domain.entity.dto.Marker;
 import ssafy.nawanolza.server.domain.repository.MapCharacterRedisRepository;
+import ssafy.nawanolza.server.domain.repository.RedisLockRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +24,38 @@ public class MarkerService {
 
     private final GameService gameService;
     private final CharacterService characterService;
-    private final RedisTemplate<byte[], byte[]> redisTemplate;
     private final MapCharacterRedisRepository mapCharacterRedisRepository;
+    private final RedisLockRepository redisLockRepository;
 
+    /*
+     * true : 퀘스트 시작, 해당 마커 락 걸림
+     * false : 퀘스트 시작 X, 해당 마커 다른 사람이 락 걸어놓음
+     * */
+    public boolean questStart(Long key) {
+        return redisLockRepository.lock(key);
+    }
+
+    /*
+     * true : 락 해제
+     * false : 락이 이미 해제됨, 에러반환 해야함
+     * */
+    public boolean questSuccess(Long key) {
+        // 마커 삭제
+        Boolean aBoolean = redisLockRepository.unLock(key);
+        mapCharacterRedisRepository.deleteById(key);
+        return aBoolean;
+    }
+
+    /*
+     * true : 락 해제
+     * false : 락이 이미 해제됨, 에러반환 해야함
+     * */
+    public boolean questFail(Long key) {
+        return redisLockRepository.unLock(key);
+    }
 
     /*
      * 마커 만들기
-     * 성능 최적화 필요
      * */
     @Scheduled(cron = "0 0 6,18 * * *", zone = "Asia/Seoul")
     public void insertMarker(){
@@ -125,18 +150,5 @@ public class MarkerService {
     static class LatLng {
         double lat;
         double lng;
-    }
-
-    public static byte[] longToByteArray(long data) {
-        return new byte[] {
-            (byte)((data >> 56) & 0xff),
-            (byte)((data >> 48) & 0xff),
-            (byte)((data >> 40) & 0xff),
-            (byte)((data >> 32) & 0xff),
-            (byte)((data >> 24) & 0xff),
-            (byte)((data >> 16) & 0xff),
-            (byte)((data >> 8 ) & 0xff),
-            (byte)((data >> 0) & 0xff),
-        };
     }
 }

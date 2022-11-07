@@ -1,12 +1,11 @@
 package com.example.nawanolza
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.nawanolza.databinding.ActivityQuizBinding
-import com.example.nawanolza.retrofit.CharacterLocationResponse
-import com.example.nawanolza.retrofit.QuestFailResponse
-import com.example.nawanolza.retrofit.QuestResponse
-import com.example.nawanolza.retrofit.QuestSuccessResponse
+import com.example.nawanolza.retrofit.*
 import kotlinx.android.synthetic.main.activity_quiz.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -105,6 +104,7 @@ class QuizActivity : AppCompatActivity() {
                     val body = response.body()
                     println("====quiz fail 성공 ===")
 
+
                 }
 
                 override fun onFailure(call: Call<QuestFailResponse>, t: Throwable) {
@@ -136,7 +136,10 @@ class QuizActivity : AppCompatActivity() {
             ) {
                 val body = response.body()
                 println("====quiz success 성공 ===")
-
+                val intent = Intent(this@QuizActivity, MapActivity::class.java)
+                intent.putExtra("result",true)
+                setResult(RESULT_OK, intent)
+                finish()
             }
 
             override fun onFailure(call: Call<QuestSuccessResponse>, t: Throwable) {
@@ -147,4 +150,6 @@ class QuizActivity : AppCompatActivity() {
 
         })
     }
+
+
 }

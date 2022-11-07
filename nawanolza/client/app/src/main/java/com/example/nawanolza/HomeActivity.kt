@@ -25,10 +25,7 @@ class HomeActivity : AppCompatActivity() {
 
         characterButton.setOnClickListener{
             val intent = Intent(this@HomeActivity, MapActivity::class.java)
-            intent.apply {
-                putExtra("memberInfo", memberInfo)
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            }
+
             startActivity(intent)
         }
 

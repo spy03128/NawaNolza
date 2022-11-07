@@ -20,6 +20,10 @@ import com.example.nawanolza.retrofit.RetrofitConnection
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideResponse
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideService
 import com.example.nawanolza.retrofit.createroom.CreateRoomRequest
+import com.example.nawanolza.stomp.SocketCommonDto
+import com.example.nawanolza.stomp.SocketType
+import com.example.nawanolza.stomp.StompClient
+import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import com.google.android.gms.location.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -38,9 +42,10 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
     var lat: Double? = null
     var lng: Double? = null
 
-
     private lateinit var naverMap: NaverMap
     private lateinit var createRoomRequest: CreateRoomRequest
+
+
 
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,7 +117,12 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
                     ) {
                         val intent = Intent(this@SettingHideSeek, Waiting::class.java)
                         intent.putExtra("code", "${response.body()?.entryCode}" )
-                        startActivity(intent)
+                        when(response.code()){
+                            200 -> startActivity(intent)
+                            else -> Toast.makeText(this@SettingHideSeek, "잘못된 정보입니다.", Toast.LENGTH_SHORT).show()
+                        }
+
+
                     }
 
                     override fun onFailure(call: Call<CreateRoomHideResponse>, t: Throwable) {
@@ -189,7 +199,7 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
                 for ((i, location) in locationResult.locations.withIndex()) {
-                    Log.d("location: ", "${location.latitude}, ${location.longitude}")
+//                    Log.d("location: ", "${location.latitude}, ${location.longitude}")
                     setLastLocation(location)
                 }
             }
@@ -205,9 +215,9 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
     fun setLastLocation(location: Location) {
         val myLocation = LatLng(location.latitude, location.longitude)
-        val marker = Marker()
-        marker.position = LatLng(myLocation.latitude, myLocation.longitude)
-        marker.map = naverMap
+//        val marker = Marker()
+//        marker.position = LatLng(myLocation.latitude, myLocation.longitude)
+//        marker.map = naverMap
         //마커
         val cameraUpdate = CameraUpdate.scrollTo(myLocation)
         naverMap.moveCamera(cameraUpdate)
@@ -221,9 +231,9 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
      private fun setPolyline(latLng:LatLng){
          if(!check){
              circle.center = latLng
-             val color = Color.parseColor("#ef5350")
+             val color = Color.parseColor("#e3f2fd")
              circle.outlineWidth = 1
-             circle.outlineColor = color
+             circle.color = color
              circle.radius = 100.0
              circle.map = naverMap
              check = true

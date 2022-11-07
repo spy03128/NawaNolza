@@ -1,4 +1,4 @@
-package com.example.sockettest
+package com.example.nawanolza.stomp
 
 import android.util.Log
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -42,7 +42,7 @@ class StompClient {
     }
 
     // 여기서 데이터 받아서 처리하는 코드쓰면 됩니다.
-    fun subcribe(type: SocketType, roomNumber: Number) {
+    fun subscribe(type: SocketType, roomNumber: Number) {
         println("소켓 구독")
         println("방번호 : " + roomNumber)
         println("/sub/" + type.value + "/" + roomNumber)

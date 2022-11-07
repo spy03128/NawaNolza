@@ -48,6 +48,8 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
 
     var characterInfo = CharacterLocationResponse()
 
+    var memberInfo: MemberResponse? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,11 +57,11 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
 
         setContentView(R.layout.activity_map)
 
-        val memberInfo: MemberResponse = intent.getSerializableExtra("memberInfo") as MemberResponse
-        val url = memberInfo.member.image
+        memberInfo = intent.getSerializableExtra("memberInfo") as MemberResponse
+        val url = memberInfo!!.member.image
 
 
-        Log.d(TAG, "init: ${memberInfo.member.image}")
+        Log.d(TAG, "init: ${memberInfo!!.member}")
 
 
         if (isPermitted()) {
@@ -141,7 +143,10 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                         val intent = Intent(this@MapActivity, QuizActivity::class.java)
                         intent.putExtra("result", false)
                         intent.putExtra("markerId",(marker.tag as CharacterLocationResponseItem).markerId)
-                        startActivity(intent)
+                        intent.putExtra("memberId", memberInfo!!.member.id)
+                        intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
+
+                    startActivity(intent)
 
                         if (intent.getBooleanExtra("result", false))
                             Toast.makeText(this.applicationContext, "퀘스트를 성공하였습니다.", Toast.LENGTH_LONG).show();

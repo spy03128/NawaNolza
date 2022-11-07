@@ -24,6 +24,9 @@ public class HideAndSeekGameRoom {
     private HideAndSeekProperties hideAndSeekProperties;    // 방 참가시
     private LocalDateTime startTime;                        // 시작할때
     private List<Long> participants = new ArrayList<>();    // 방 참가시
+    private double lat;
+    private double lng;
+    private int range;
 
     private static final int MAXIMUM_PEOPLE_COUNT = 15;
 
@@ -33,10 +36,14 @@ public class HideAndSeekGameRoom {
     }
 
     @Builder
-    private HideAndSeekGameRoom(Long hostId, String entryCode, HideAndSeekProperties hideAndSeekProperties) {
+    private HideAndSeekGameRoom(Long hostId, String entryCode, HideAndSeekProperties hideAndSeekProperties,
+                                double lat, double lng, int range) {
         this.hostId = hostId;
         this.entryCode = entryCode;
         this.hideAndSeekProperties = hideAndSeekProperties;
+        this.lat = lat;
+        this.lng = lng;
+        this.range = range;
         participants.add(hostId);
     }
 
@@ -45,6 +52,9 @@ public class HideAndSeekGameRoom {
                 .hostId(hostId)
                 .entryCode(entryCode)
                 .hideAndSeekProperties(hideAndSeekProperties)
+                .lat(hideAndSeekProperties.getLat())
+                .lng(hideAndSeekProperties.getLng())
+                .range(hideAndSeekProperties.getRange())
                 .build();
     }
 

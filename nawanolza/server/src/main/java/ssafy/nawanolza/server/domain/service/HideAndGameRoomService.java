@@ -10,6 +10,8 @@ import ssafy.nawanolza.server.domain.exception.GameRoomNotFoundException;
 import ssafy.nawanolza.server.domain.repository.HideAndSeekGameRoomRepository;
 import ssafy.nawanolza.server.domain.utils.CreateRoomUtil;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,8 @@ public class HideAndGameRoomService {
         if (hideAndSeekGameRoomRepository.count() > 100)
             throw new CreateGameRoomLimitException();
         String entryCode = CreateRoomUtil.issueEntryCode(hideAndSeekGameRoomRepository);
-        HideAndSeekGameRoom createGameRoom = HideAndSeekGameRoom.create(hostId, hideAndSeekProperties, entryCode);
+        HideAndSeekGameRoom createGameRoom = HideAndSeekGameRoom.create(hostId, hideAndSeekProperties,
+                entryCode);
         HideAndSeekGameRoom save = hideAndSeekGameRoomRepository.save(createGameRoom);
         log.info("createGameRoom = {}", save);
         return save;
@@ -40,5 +43,31 @@ public class HideAndGameRoomService {
     }
 
     public void catchMember(String entryCode, Long memberId) {
+
+    }
+
+    public boolean checkOutOfRange(String entryCode, double currentLat, double currentLng) {
+        HideAndSeekGameRoom hideAndSeekGameRoom = hideAndSeekGameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
+        if (getDistance(hideAndSeekGameRoom.getLat(), hideAndSeekGameRoom.getLng(), currentLat, currentLng) >
+                hideAndSeekGameRoom.getRange()) return true;
+        return false;
+    }
+
+    public double getDistance(double centerLat, double centerLng, double currentLat, double currentLng) {
+        double radius = 6371; // 지구 반지름(km)
+        double toRadian = Math.PI / 180;
+
+        double deltaLatitude = Math.abs(centerLat - currentLat) * toRadian;
+        double deltaLongitude = Math.abs(centerLng - currentLng) * toRadian;
+
+        double sinDeltaLat = Math.sin(deltaLatitude / 2);
+        double sinDeltaLng = Math.sin(deltaLongitude / 2);
+
+        double squareRoot = Math.sqrt(
+                sinDeltaLat * sinDeltaLat +
+                        Math.cos(centerLat * toRadian) * Math.cos(currentLat * toRadian) * sinDeltaLng * sinDeltaLng);
+
+        double distance = 2 * radius * Math.asin(squareRoot);
+        return distance;
     }
 }

@@ -159,8 +159,8 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 //            naverMap.cameraPosition.target.longitude
 //        )
         //마커
-//        val cameraUpdate = CameraUpdate.scrollTo(myLocation)
-//        naverMap.moveCamera(cameraUpdate)
+        val cameraUpdate = CameraUpdate.scrollTo(myLocation)
+        naverMap.moveCamera(cameraUpdate)
         naverMap.maxZoom = 18.0
         naverMap.minZoom = 5.0
 //        marker.map = null

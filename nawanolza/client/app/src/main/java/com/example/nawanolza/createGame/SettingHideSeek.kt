@@ -20,6 +20,10 @@ import com.example.nawanolza.retrofit.RetrofitConnection
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideResponse
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideService
 import com.example.nawanolza.retrofit.createroom.CreateRoomRequest
+import com.example.nawanolza.stomp.SocketCommonDto
+import com.example.nawanolza.stomp.SocketType
+import com.example.nawanolza.stomp.StompClient
+import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import com.google.android.gms.location.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -38,9 +42,10 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
     var lat: Double? = null
     var lng: Double? = null
 
-
     private lateinit var naverMap: NaverMap
     private lateinit var createRoomRequest: CreateRoomRequest
+
+
 
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,7 +117,12 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
                     ) {
                         val intent = Intent(this@SettingHideSeek, Waiting::class.java)
                         intent.putExtra("code", "${response.body()?.entryCode}" )
-                        startActivity(intent)
+                        when(response.code()){
+                            200 -> startActivity(intent)
+                            else -> Toast.makeText(this@SettingHideSeek, "잘못된 정보입니다.", Toast.LENGTH_SHORT).show()
+                        }
+
+
                     }
 
                     override fun onFailure(call: Call<CreateRoomHideResponse>, t: Throwable) {

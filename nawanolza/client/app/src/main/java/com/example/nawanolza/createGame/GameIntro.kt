@@ -3,6 +3,8 @@ package com.example.nawanolza.createGame
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import com.example.nawanolza.databinding.ActivityGameIntroBinding
 import com.example.nawanolza.databinding.ActivitySelectGameBinding
 import com.example.nawanolza.retrofit.RetrofitConnection
@@ -15,6 +17,8 @@ import retrofit2.Response
 
 class GameIntro : AppCompatActivity() {
     lateinit var binding: ActivityGameIntroBinding
+    private lateinit var enterRoomRequest: EnterRoomRequest
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameIntroBinding.inflate(layoutInflater)
@@ -30,8 +34,8 @@ class GameIntro : AppCompatActivity() {
         )
 
         binding.btnEnterRoom.setOnClickListener {
-            val enterRoomRequest: EnterRoomRequest
-            enterRoomRequest = EnterRoomRequest(2, binding.EditText.toString())
+            enterRoomRequest = EnterRoomRequest(3, binding.EditText.text.toString())
+
             retrofitAPI.postEnterRoom(enterRoomRequest).enqueue(object:
                 Callback<EnterRoomResponse> {
                 override fun onResponse(
@@ -40,7 +44,10 @@ class GameIntro : AppCompatActivity() {
                 ) {
                     val intent = Intent(this@GameIntro, Waiting::class.java)
                     intent.putExtra("code", response.body()?.entryCode)
-                    startActivity(intent)
+                    when(response.code()){
+                        200 -> startActivity(intent)
+                        else -> Toast.makeText(this@GameIntro, "잘못된 정보입니다", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 override fun onFailure(call: Call<EnterRoomResponse>, t: Throwable) {
@@ -48,8 +55,7 @@ class GameIntro : AppCompatActivity() {
                     println(t)
                 }
             })
-            val intent = Intent(this, Waiting::class.java)
-            startActivity(intent)
+
         }
     }
 }

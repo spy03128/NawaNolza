@@ -7,7 +7,7 @@ import retrofit2.http.POST
 
 interface EnterRoomService {
     @Headers("accept: application/json", "content-type: application/json")
-    @POST("room/hide/participant")
+    @POST("room/hide/participation")
     fun postEnterRoom(
         @Body data: EnterRoomRequest
     ): Call<EnterRoomResponse>

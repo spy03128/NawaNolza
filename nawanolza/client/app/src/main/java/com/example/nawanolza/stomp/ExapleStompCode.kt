@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import com.example.nawanolza.R
-import com.example.sockettest.SocketGpsDTO
-import com.example.sockettest.SocketType
-import com.example.sockettest.StompClient
+import com.example.nawanolza.stomp.SocketGpsDTO
+import com.example.nawanolza.stomp.SocketType
+import com.example.nawanolza.stomp.StompClient
 /*
 class ExapleStompCode : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,7 @@ class ExapleStompCode : AppCompatActivity() {
         subButton.setOnClickListener(object: View.OnClickListener {
             override fun onClick(v: View?) {
                 println("소켓구독 버튼클릭")
-                stompClient?.subcribe(SocketType.GPS, 1)
+                stompClient?.subscribe(SocketType.GPS, 1)
             }
         })
 

@@ -21,7 +21,7 @@ class HomeActivity : AppCompatActivity() {
     }
     
     private fun init() {
-        val memberInfo: MemberResponse = intent.getSerializableExtra("memberInfo") as MemberResponse
+        val memberInfo: MemberResponse = LoginUtil.getMemberInfo(this)
 
         characterButton.setOnClickListener{
             val intent = Intent(this@HomeActivity, MapActivity::class.java)
@@ -36,10 +36,6 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this@HomeActivity, GameIntro::class.java)
             startActivity(intent)
         }
-
-
-
-
 
         Log.d(TAG, "init: ${memberInfo}")
     }

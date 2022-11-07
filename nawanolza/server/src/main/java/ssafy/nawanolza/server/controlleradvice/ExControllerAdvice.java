@@ -25,6 +25,7 @@ public class ExControllerAdvice {
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .className(e.getClass().getSimpleName())
                 .message(e.getMessage())
                 .build();
     }
@@ -37,6 +38,7 @@ public class ExControllerAdvice {
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                .className(e.getClass().getSimpleName())
                 .message(e.getMessage())
                 .build();
     }

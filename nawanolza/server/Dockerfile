@@ -1,0 +1,24 @@
+FROM gradle:7.5
+
+WORKDIR /var/jenkins_home/workspace/nawanolza-test/nawanolza/server
+
+COPY ./ ./
+
+ENV SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL} \
+
+SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME} \
+
+SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD} \
+
+SPRING_REDIS_HOST=${SPRING_REDIS_HOST} \
+
+SPRING_REDIS_PORT=${SPRING_REDIS_PORT} \
+
+SPRING_REDIS_PASSWORD=${SPRING_REDIS_PASSWORD} \
+
+ENV_IDLE_PROFILE=${ENV_IDLE_PROFILE}
+
+RUN gradle clean bootJar --no-daemon
+
+CMD ["java", "-jar", "-Dspring.profiles.active=${ENV_IDLE_PROFILE}","-Duser.timezone=Asia/Seoul", "./build/libs/server-0.0.1-SNAPSHOT.jar"]
+

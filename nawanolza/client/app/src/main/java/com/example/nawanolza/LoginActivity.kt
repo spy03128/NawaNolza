@@ -1,24 +1,19 @@
 package com.example.nawanolza
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import com.example.nawanolza.fragment.HomeFragment
 import com.example.nawanolza.retrofit.MemberResponse
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.gson.JsonObject
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.util.helper.Utility
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_map.*
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -98,7 +93,6 @@ class LoginActivity : AppCompatActivity() {
                 var service = retrofit.create(LoginService::class.java)
 
 
-
                 service.Login(mapOf("accessToken" to token.accessToken)).enqueue(object: Callback<MemberResponse> {
 
                     override fun onResponse(
@@ -106,17 +100,12 @@ class LoginActivity : AppCompatActivity() {
                         response: Response<MemberResponse>
                     ) {
 //                        response.body()?.let { updateMember(it) }
-
                         var memberInfo = response.body() ?: MemberResponse()
 
+                        LoginUtil.setMemberInfo(this@LoginActivity, memberInfo)
+
                         val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                        intent.apply {
-                            putExtra("memberInfo", memberInfo)
-                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        }
                         startActivity(intent)
-
-
                     }
 
                     override fun onFailure(call: Call<MemberResponse>, t: Throwable) {

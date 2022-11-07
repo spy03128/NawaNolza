@@ -14,6 +14,7 @@ import ssafy.nawanolza.server.domain.service.HideAndGameRoomService;
 import ssafy.nawanolza.server.domain.socket.dto.GameCatchDTO;
 import ssafy.nawanolza.server.domain.socket.dto.GameEventDTO;
 import ssafy.nawanolza.server.domain.socket.dto.GameRoomGpsDTO;
+import ssafy.nawanolza.server.domain.socket.dto.GameRoomGpsRangeDTO;
 import ssafy.nawanolza.server.dto.CreateGameRequest;
 import ssafy.nawanolza.server.dto.HideAndSeekGameRoomResponse;
 
@@ -35,7 +36,10 @@ public class GameRoomController {
 
     @MessageMapping("/gps")
     public void gpsSend(GameRoomGpsDTO gameRoomGpsDTO) {
-        simpMessageSendingOperations.convertAndSend("/sub/gps/" + gameRoomGpsDTO.getEntryCode() , gameRoomGpsDTO);
+        boolean isItOutRange = hideAndGameRoomService.checkOutOfRange(gameRoomGpsDTO.getEntryCode(),
+                gameRoomGpsDTO.getLat(), gameRoomGpsDTO.getLng());
+        GameRoomGpsRangeDTO gameRoomGpsRangeDTO = new GameRoomGpsRangeDTO(isItOutRange, gameRoomGpsDTO);
+        simpMessageSendingOperations.convertAndSend("/sub/gps/" + gameRoomGpsDTO.getEntryCode() , gameRoomGpsRangeDTO);
     }
 
     @MessageMapping("/event")

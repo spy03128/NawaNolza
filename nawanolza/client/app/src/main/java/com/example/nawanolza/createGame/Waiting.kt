@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nawanolza.R
 import com.example.nawanolza.databinding.ActivityWaitingBinding
 import com.example.nawanolza.hideandseek.RoleCheckActivity
-
+import com.example.nawanolza.stomp.SocketGpsDTO
+import com.example.nawanolza.stomp.SocketType
+import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 
 class Waiting : AppCompatActivity() {
     lateinit var binding: ActivityWaitingBinding
@@ -34,6 +36,11 @@ class Waiting : AppCompatActivity() {
         adapter =WaitingRvAdapter(waitingMember)
         binding.mRecyclerView.adapter = adapter
         binding.mRecyclerView.layoutManager =GridLayoutManager(this, 3)
-        binding.codeNumber.text = intent.getStringExtra("code")
+        val roomCode = intent.getStringExtra("code")
+        binding.codeNumber.text = roomCode
+
+        WaitingStompClient.connect()
+        WaitingStompClient.receive(SocketType.PARTICIPATE, roomCode.toString())
+        WaitingStompClient.send(SocketType.GPS, SocketGpsDTO(roomCode.toString(), 4, 37.5666102, 126.9783881))
     }
 }

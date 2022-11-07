@@ -1,6 +1,7 @@
 package com.example.nawanolza
 
 import android.annotation.SuppressLint
+import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -9,6 +10,8 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -29,6 +32,7 @@ import com.google.android.gms.location.*
 
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_map.*
 import retrofit2.Call
@@ -50,6 +54,8 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
 
     var memberInfo: MemberResponse? = null
 
+    lateinit var activityResult: ActivityResultLauncher<Intent>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +63,7 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
 
         setContentView(R.layout.activity_map)
 
-        memberInfo = intent.getSerializableExtra("memberInfo") as MemberResponse
+        memberInfo = LoginUtil.getMemberInfo(this)
         val url = memberInfo!!.member.image
 
 
@@ -118,6 +124,24 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
             }
             startActivity(intent)
         }
+
+        activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            println("퀘스트 실행 결과")
+            val booleanExtra = it.data?.getBooleanExtra("result", false)
+            println(booleanExtra)
+            if (it.resultCode == RESULT_OK && booleanExtra == true)
+                Toast.makeText(
+                    this.applicationContext,
+                    "퀘스트를 성공하였습니다.",
+                    Toast.LENGTH_LONG
+                ).show();
+            else
+                Toast.makeText(
+                    this.applicationContext,
+                    "퀘스트를 실패하였습니다,",
+                    Toast.LENGTH_LONG
+                ).show()
+        }
     }
 
     private fun updateMapMarkers(characterInfo: CharacterLocationResponse) {
@@ -134,30 +158,34 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                 marker.tag = current
 
 
-                marker.setOnClickListener { o ->
-                    Toast.makeText(this.applicationContext, "${(marker.tag as CharacterLocationResponseItem).markerId}번 마커입니다.", Toast.LENGTH_LONG).show()
+                val function: (Overlay) -> Boolean = { o ->
+                    Toast.makeText(
+                        this.applicationContext,
+                        "${(marker.tag as CharacterLocationResponseItem).markerId}번 마커입니다.",
+                        Toast.LENGTH_LONG
+                    ).show()
                     println("=======================")
                     println(marker.tag)
 
 //                    if((marker.tag as CharacterLocationResponseItem).questType==1){
-                        val intent = Intent(this@MapActivity, QuizActivity::class.java)
-                        intent.putExtra("result", false)
-                        intent.putExtra("markerId",(marker.tag as CharacterLocationResponseItem).markerId)
-                        intent.putExtra("memberId", memberInfo!!.member.id)
-                        intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
+                    val intent = Intent(this@MapActivity, QuizActivity::class.java)
 
-                    startActivity(intent)
-
-                        if (intent.getBooleanExtra("result", false))
-                            Toast.makeText(this.applicationContext, "퀘스트를 성공하였습니다.", Toast.LENGTH_LONG).show();
-                        else
-                            Toast.makeText(this.applicationContext, "퀘스트를 실패하였습니다,", Toast.LENGTH_LONG).show()
-//                    }
+                    intent.putExtra(
+                        "markerId",
+                        (marker.tag as CharacterLocationResponseItem).markerId
+                    )
+                    intent.putExtra("memberId", memberInfo!!.member.id)
+                    intent.putExtra(
+                        "characterId",
+                        (marker.tag as CharacterLocationResponseItem).characterId
+                    )
 
 
+                    activityResult.launch(intent)
 
                     true
                 }
+                marker.setOnClickListener(function)
             }
         }
     }

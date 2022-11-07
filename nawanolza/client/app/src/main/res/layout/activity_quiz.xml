@@ -7,26 +7,27 @@
     tools:context=".QuizActivity">
 
     <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="500dp"
-        android:layout_marginEnd="64dp"
-        android:text="O"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
-        app:layout_constraintHorizontal_bias="0.973"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="97dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="504dp"
+        android:id="@+id/Xbutton"
+        android:layout_width="89dp"
+        android:layout_height="92dp"
+        android:layout_marginTop="488dp"
         android:layout_marginEnd="76dp"
         android:text="X"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/Obutton"
+        android:layout_width="81dp"
+        android:layout_height="89dp"
+        android:layout_marginTop="488dp"
+        android:layout_marginEnd="64dp"
+        android:text="O"
+        app:layout_constraintEnd_toStartOf="@+id/Xbutton"
+        app:layout_constraintHorizontal_bias="0.831"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/exitButton"
         android:layout_width="97dp"
@@ -36,16 +37,19 @@
         android:text="뒤로가기"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/title"
-        android:layout_width="61dp"
-        android:layout_height="23dp"
+        android:layout_width="265dp"
+        android:layout_height="121dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/Xbutton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.575"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.501" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

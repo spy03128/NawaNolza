@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.nawanolza.databinding.ActivityQuizBinding
 import com.example.nawanolza.retrofit.CharacterLocationResponse
+import com.example.nawanolza.retrofit.QuestFailResponse
 import com.example.nawanolza.retrofit.QuestResponse
+import com.example.nawanolza.retrofit.QuestSuccessResponse
 import kotlinx.android.synthetic.main.activity_quiz.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,6 +26,10 @@ class QuizActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val markerId = intent.getLongExtra("markerId",-1)
+        val memberId = intent.getLongExtra("memberId",-1)
+        val characterId = intent.getLongExtra("characterId",-1)
+
+
 
         //퀴즈 받아오기
         var retrofit = Retrofit.Builder()
@@ -49,6 +55,8 @@ class QuizActivity : AppCompatActivity() {
 
                 println(quizInfo)
                 println("=====quiz!!!!======")
+
+                binding.title.text = body?.quiz?.context
             }
 
             override fun onFailure(call: Call<QuestResponse>, t: Throwable) {
@@ -60,10 +68,53 @@ class QuizActivity : AppCompatActivity() {
         })
 
 
+
         exitButton.setOnClickListener{
             finish()
         }
 
+
+        Obutton.setOnClickListener{
+            service.PostSuccess(mapOf("memberId" to memberId.toString(),"markerId" to markerId.toString(), "characterId" to characterId.toString())).enqueue(object: Callback<QuestSuccessResponse> {
+
+                override fun onResponse(
+                    call: Call<QuestSuccessResponse>,
+                    response: Response<QuestSuccessResponse>
+                ) {
+                    val body = response.body()
+                    println("====quiz success 성공 ===")
+
+                }
+
+                override fun onFailure(call: Call<QuestSuccessResponse>, t: Throwable) {
+                    println(call)
+                    println(t)
+                    println("====quiz success 에러 ===")
+                }
+
+            })
+        }
+
+        Xbutton.setOnClickListener{
+            service.PostFail(mapOf("memberId" to memberId.toString())).enqueue(object: Callback<QuestFailResponse> {
+
+                override fun onResponse(
+                    call: Call<QuestFailResponse>,
+                    response: Response<QuestFailResponse>
+                ) {
+                    val body = response.body()
+                    println("====quiz fail 성공 ===")
+
+                }
+
+                override fun onFailure(call: Call<QuestFailResponse>, t: Throwable) {
+                    println(call)
+                    println(t)
+                    println("====quiz fail 에러 ===")
+                }
+
+            })
+        }
 
     }
 }

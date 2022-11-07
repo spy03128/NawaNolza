@@ -80,8 +80,10 @@ public class CollectionApiController {
     }
 
     @PostMapping("/quest/fail")
-    public boolean questFail(@RequestBody MarkerRequestDto marker){
-        return markerService.questFail(marker.getMarkerId());
+    public ResponseEntity<QuestResultResponseDto> questFail(@RequestBody MarkerRequestDto marker){
+        QuestResultResponseDto result = new QuestResultResponseDto();
+        result.setEvent(markerService.questSuccess(marker.getMarkerId()));
+        return ResponseEntity.ok(result);
     }
 
     @Data
@@ -165,5 +167,10 @@ public class CollectionApiController {
             this.getCharacterId = collection.getCharacter().getId();
             this.characterName = collection.getCharacter().getName();
         }
+    }
+
+    @Data
+    private class QuestResultResponseDto {
+        private boolean event;
     }
 }

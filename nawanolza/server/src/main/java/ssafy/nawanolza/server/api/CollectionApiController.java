@@ -66,13 +66,17 @@ public class CollectionApiController {
     }
 
     @PostMapping("/quest/success")
-    public boolean questSuccess(@RequestBody MarkerRequestDto marker) throws InterruptedException {
-        return markerService.questSuccess(marker.getMarkerId());
+    public ResponseEntity<QuestResultResponseDto> questSuccess(@RequestBody MarkerRequestDto marker) throws InterruptedException {
+        QuestResultResponseDto result = new QuestResultResponseDto();
+        result.setEvent(markerService.questSuccess(marker.getMarkerId()));
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/quest/fail")
-    public boolean questFail(@RequestBody MarkerRequestDto marker){
-        return markerService.questFail(marker.getMarkerId());
+    public ResponseEntity<QuestResultResponseDto> questFail(@RequestBody MarkerRequestDto marker){
+        QuestResultResponseDto result = new QuestResultResponseDto();
+        result.setEvent(markerService.questSuccess(marker.getMarkerId()));
+        return ResponseEntity.ok(result);
     }
 
     @Data
@@ -132,5 +136,10 @@ public class CollectionApiController {
     private static class QuestResponseDto {
         private boolean accessible;
         private Quiz quiz;
+    }
+
+    @Data
+    private class QuestResultResponseDto {
+        private boolean event;
     }
 }

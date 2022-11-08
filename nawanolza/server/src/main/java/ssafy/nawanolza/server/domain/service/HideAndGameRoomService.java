@@ -8,9 +8,11 @@ import ssafy.nawanolza.server.domain.entity.dto.HideAndSeekProperties;
 import ssafy.nawanolza.server.domain.exception.CreateGameRoomLimitException;
 import ssafy.nawanolza.server.domain.exception.GameRoomNotFoundException;
 import ssafy.nawanolza.server.domain.repository.HideAndSeekGameRoomRepository;
+import ssafy.nawanolza.server.handler.event.GameStartEvent;
 import ssafy.nawanolza.server.domain.utils.CreateRoomUtil;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -35,6 +37,18 @@ public class HideAndGameRoomService {
         HideAndSeekGameRoom updateGameRoom = hideAndSeekGameRoom.participateMember(memberId);
         hideAndSeekGameRoomRepository.save(hideAndSeekGameRoom);
         return updateGameRoom;
+    }
+
+    /*
+    * 게임 시간 전달, 게임 술래 전달
+    * */
+    public GameStartEvent startGame(String entryCode) {
+        HideAndSeekGameRoom hideAndSeekGameRoom =
+                hideAndSeekGameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
+        Map<String, Object> roles = hideAndSeekGameRoom.startGame();
+        GameStartEvent gameStartDTO = new GameStartEvent(entryCode, (Long) roles.get("tagger"),
+                (List) roles.get("runners"), hideAndSeekGameRoom.getStartTime());
+        return gameStartDTO;
     }
 
     public void deleteGameRoom(String entryCode) {

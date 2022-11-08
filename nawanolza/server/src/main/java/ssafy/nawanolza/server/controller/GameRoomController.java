@@ -2,12 +2,11 @@ package ssafy.nawanolza.server.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ssafy.nawanolza.server.domain.entity.dto.HideAndSeekGameRoom;
 import ssafy.nawanolza.server.domain.repository.MemberRepository;
 import ssafy.nawanolza.server.domain.service.HideAndGameRoomService;
@@ -17,6 +16,7 @@ import ssafy.nawanolza.server.domain.socket.dto.GameRoomGpsDTO;
 import ssafy.nawanolza.server.domain.socket.dto.GameRoomGpsRangeDTO;
 import ssafy.nawanolza.server.dto.CreateGameRequest;
 import ssafy.nawanolza.server.dto.HideAndSeekGameRoomResponse;
+import ssafy.nawanolza.server.handler.event.GameStartEvent;
 
 import java.util.Map;
 
@@ -28,6 +28,8 @@ public class GameRoomController {
     private final SimpMessageSendingOperations simpMessageSendingOperations;
     private final HideAndGameRoomService hideAndGameRoomService;
     private final MemberRepository memberRepository;
+    private final ApplicationEventPublisher publisher;
+
 
     /*
         /sub/gps/{uuid}    - 구독(roomId:UUID)
@@ -69,5 +71,11 @@ public class GameRoomController {
         return ResponseEntity.ok().body(hideAndSeekGameRoomResponse);
     }
 
-
+    @GetMapping("/game/start/{entryCode}")
+    public ResponseEntity<GameStartEvent> gameStart(@PathVariable String entryCode) {
+        GameStartEvent gameStartEvent = hideAndGameRoomService.startGame(entryCode);
+        publisher.publishEvent(gameStartEvent);
+        log.info("{}번 방의 게임이 시작되었습니다.", entryCode);
+        return ResponseEntity.ok(gameStartEvent);
+    }
 }

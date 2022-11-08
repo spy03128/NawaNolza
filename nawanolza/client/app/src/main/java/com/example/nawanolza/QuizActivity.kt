@@ -103,6 +103,10 @@ class QuizActivity : AppCompatActivity() {
                 ) {
                     val body = response.body()
                     println("====quiz fail 성공 ===")
+                    val intent = Intent(this@QuizActivity, MapActivity::class.java)
+//                    intent.putExtra("result",false)
+                    setResult(RESULT_CANCELED, intent)
+                    finish()
 
 
                 }

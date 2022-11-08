@@ -205,23 +205,42 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                     println("=======================")
                     println(marker.tag)
 
-//                    if((marker.tag as CharacterLocationResponseItem).questType==1){
-                    val intent = Intent(this@MapActivity, QuizActivity::class.java)
+                    if((marker.tag as CharacterLocationResponseItem).questType==0) {
+                        val intent = Intent(this@MapActivity, QuizActivity::class.java)
 
-                    intent.putExtra(
-                        "markerId",
-                        (marker.tag as CharacterLocationResponseItem).markerId
-                    )
-                    intent.putExtra("memberId", memberInfo!!.member.id)
-                    intent.putExtra(
-                        "characterId",
-                        (marker.tag as CharacterLocationResponseItem).characterId
-                    )
+                        intent.putExtra(
+                            "markerId",
+                            (marker.tag as CharacterLocationResponseItem).markerId
+                        )
+                        intent.putExtra("memberId", memberInfo!!.member.id)
+                        intent.putExtra(
+                            "characterId",
+                            (marker.tag as CharacterLocationResponseItem).characterId
+                        )
 
 
-                    activityResult.launch(intent)
+                        activityResult.launch(intent)
+                    }else if((marker.tag as CharacterLocationResponseItem).questType==1) {
+                        val intent = Intent(this@MapActivity, GameBoomActivity::class.java)
+
+                        intent.putExtra(
+                            "markerId",
+                            (marker.tag as CharacterLocationResponseItem).markerId
+                        )
+                        intent.putExtra("memberId", memberInfo!!.member.id)
+                        intent.putExtra(
+                            "characterId",
+                            (marker.tag as CharacterLocationResponseItem).characterId
+                        )
+
+
+                        activityResult.launch(intent)
+                    }
+
+
 
                     true
+
                 }
                 marker.setOnClickListener(function)
             }

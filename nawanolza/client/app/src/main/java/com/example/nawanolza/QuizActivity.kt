@@ -75,84 +75,22 @@ class QuizActivity : AppCompatActivity() {
 
         Obutton.setOnClickListener{
             if(quizInfo.quiz.answer==true){
+                QuestUtil.quizSuccess(this, service, memberId, markerId, characterId)
 
-                quizSuccess(service, memberId, markerId, characterId)
             }else{
-                quizFail(service, memberId)
+                QuestUtil.quizFail(this, service, memberId)
             }
         }
 
         Xbutton.setOnClickListener{
             if(quizInfo.quiz.answer==false){
 
-                quizSuccess(service, memberId, markerId, characterId)
+                QuestUtil.quizSuccess(this, service, memberId, markerId, characterId)
             }else{
-                quizFail(service, memberId)
+                QuestUtil.quizFail(this, service, memberId)
             }
         }
 
-    }
-
-    private fun quizFail(service: QuestService, memberId: Long) {
-        service.PostFail(mapOf("memberId" to memberId.toString()))
-            .enqueue(object : Callback<QuestFailResponse> {
-
-                override fun onResponse(
-                    call: Call<QuestFailResponse>,
-                    response: Response<QuestFailResponse>
-                ) {
-                    val body = response.body()
-                    println("====quiz fail 성공 ===")
-                    val intent = Intent(this@QuizActivity, MapActivity::class.java)
-//                    intent.putExtra("result",false)
-                    setResult(RESULT_CANCELED, intent)
-                    finish()
-
-
-                }
-
-                override fun onFailure(call: Call<QuestFailResponse>, t: Throwable) {
-                    println(call)
-                    println(t)
-                    println("====quiz fail 에러 ===")
-                }
-
-            })
-    }
-
-    private fun quizSuccess(
-        service: QuestService,
-        memberId: Long,
-        markerId: Long,
-        characterId: Long
-    ) {
-        service.PostSuccess(
-            mapOf(
-                "memberId" to memberId.toString(),
-                "markerId" to markerId.toString(),
-                "characterId" to characterId.toString()
-            )
-        ).enqueue(object : Callback<QuestSuccessResponse> {
-
-            override fun onResponse(
-                call: Call<QuestSuccessResponse>,
-                response: Response<QuestSuccessResponse>
-            ) {
-                val body = response.body()
-                println("====quiz success 성공 ===")
-                val intent = Intent(this@QuizActivity, MapActivity::class.java)
-                intent.putExtra("result",true)
-                setResult(RESULT_OK, intent)
-                finish()
-            }
-
-            override fun onFailure(call: Call<QuestSuccessResponse>, t: Throwable) {
-                println(call)
-                println(t)
-                println("====quiz success 에러 ===")
-            }
-
-        })
     }
 
 

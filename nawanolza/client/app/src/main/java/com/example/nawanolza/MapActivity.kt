@@ -1,18 +1,22 @@
 package com.example.nawanolza
 
 import android.annotation.SuppressLint
-import android.app.Instrumentation.ActivityResult
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -34,6 +38,7 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
+import kotlinx.android.synthetic.main.activity_main_hide_seek.*
 import kotlinx.android.synthetic.main.activity_map.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -129,18 +134,51 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
             println("퀘스트 실행 결과")
             val booleanExtra = it.data?.getBooleanExtra("result", false)
             println(booleanExtra)
-            if (it.resultCode == RESULT_OK && booleanExtra == true)
-                Toast.makeText(
-                    this.applicationContext,
-                    "퀘스트를 성공하였습니다.",
-                    Toast.LENGTH_LONG
-                ).show();
-            else
-                Toast.makeText(
-                    this.applicationContext,
-                    "퀘스트를 실패하였습니다,",
-                    Toast.LENGTH_LONG
-                ).show()
+            if (it.resultCode == RESULT_OK && booleanExtra == true) {
+//                val builder = AlertDialog.Builder(this)
+//                builder.setTitle("퀘스트를 완료했습니다")
+//                    .setMessage("메세지 내용 부분 입니다.")
+//                    .setPositiveButton("닫기",
+//                        DialogInterface.OnClickListener { dialog, id ->
+//
+//                        })
+//
+//                // 다이얼로그를 띄워주기
+//                builder.show()
+
+                val view = View.inflate(this@MapActivity,R.layout.dialog_success, null)
+                val builder = AlertDialog.Builder(this@MapActivity)
+                builder.setView(view)
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                window!!.setDimAmount(0f)
+
+
+                builder.setPositiveButton("닫기",
+                    DialogInterface.OnClickListener { dialog, id ->
+
+                    })
+
+
+                val dialog = builder.create()
+                builder.show()
+//                dialog.window?.setBackgroundDrawableResource(android.R.color.background_light)
+
+
+            }
+            else{
+                val view = View.inflate(this@MapActivity,R.layout.dialog_fail, null)
+                val builder = AlertDialog.Builder(this@MapActivity)
+                builder.setView(view)
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+                window!!.setDimAmount(0f)
+                builder.setPositiveButton("닫기",
+                    DialogInterface.OnClickListener { dialog, id ->
+
+                    })
+                val dialog = builder.create()
+                builder.show()
+            }
         }
     }
 

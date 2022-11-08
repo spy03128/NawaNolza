@@ -12,6 +12,9 @@ public class ChatDto extends GameRoomBaseDTO{
     @NotNull
     private String senderImage;
 
+    @NotNull
+    private String senderName;
+
     @NotBlank
     private String message;
 

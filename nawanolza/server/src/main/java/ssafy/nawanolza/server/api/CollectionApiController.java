@@ -82,7 +82,7 @@ public class CollectionApiController {
     @PostMapping("/quest/fail")
     public ResponseEntity<QuestResultResponseDto> questFail(@RequestBody MarkerRequestDto marker){
         QuestResultResponseDto result = new QuestResultResponseDto();
-        result.setEvent(markerService.questSuccess(marker.getMarkerId()));
+        result.setEvent(markerService.questFail(marker.getMarkerId()));
         return ResponseEntity.ok(result);
     }
 

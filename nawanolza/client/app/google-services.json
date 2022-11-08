@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "645792483179",
+    "project_id": "nawanolza-9fe2b",
+    "storage_bucket": "nawanolza-9fe2b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645792483179:android:06febc7a27f68558eeae2e",
+        "android_client_info": {
+          "package_name": "com.example.nawanolza"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "645792483179-vmbl93gc7uiq1cdc5ksr5s46vq1ak23v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ8XrAZw8Z_2Uk8iEDOFz2rs3t-p5WTAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "645792483179-vmbl93gc7uiq1cdc5ksr5s46vq1ak23v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

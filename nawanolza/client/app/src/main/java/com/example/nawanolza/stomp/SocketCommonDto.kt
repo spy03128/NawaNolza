@@ -1,6 +1,6 @@
 package com.example.nawanolza.stomp
 
-abstract class SocketCommonDto(gameRoomId: String, senderId: Number) {
-    var gameRoomId = gameRoomId
+abstract class SocketCommonDto(entryCode: String, senderId: Number) {
+    var entryCode = entryCode;
     var senderId = senderId
 }

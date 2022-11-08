@@ -1,26 +1,22 @@
 package com.example.nawanolza.stomp.waitingstomp
 
-import android.annotation.SuppressLint
 import android.util.Log
 import com.example.nawanolza.stomp.SocketCommonDto
 import com.example.nawanolza.stomp.SocketType
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.google.gson.Gson
-import io.reactivex.disposables.Disposable
-import okhttp3.OkHttpClient
+import com.google.gson.GsonBuilder
 import ua.naiksoftware.stomp.Stomp
-import ua.naiksoftware.stomp.StompClient
 import ua.naiksoftware.stomp.dto.LifecycleEvent
+import kotlin.concurrent.timer
 
 class WaitingStompClient {
     companion object {
         val url = "wss://k7d103.p.ssafy.io/api/ws"
         val stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, url)
         val objectMapper = ObjectMapper()
+        var stopFlag = true
 
         lateinit var memberList: ArrayList<waitingMemberData>
-
 //        fun runStomp(roomNumber: String) {
 //            stompClient.connect()
 //            stompClient.topic("/sub/participate/${roomNumber}").subscribe{ topicMessage ->
@@ -33,6 +29,7 @@ class WaitingStompClient {
         // 소켓 연결
         fun connect() {
             stompClient.connect()
+            stopFlag = false
 
             stompClient.lifecycle().subscribe { lifecycleEvent ->
                 when (lifecycleEvent.type) {
@@ -52,17 +49,23 @@ class WaitingStompClient {
                     }
                 }
             }
+            timer(initialDelay = 0L, period = 1000 * 50L) {
+                Log.i("타이머 실행", "타이머 실행")
+                stompClient.send("", "").subscribe()
+                if (stopFlag)   cancel()
+            }
         }
 
 
         // 연결 해제
         fun disconnect() {
             stompClient.disconnect()
+            stopFlag = true
         }
 
         // 구독 후 메세지 받음
-        fun receive(type: SocketType, roomNumber: String){
-            stompClient.topic("/sub/" + type.value + "/" + roomNumber).subscribe { topicMessage ->
+        fun receive(type: SocketType, entryCode: String){
+            stompClient.topic("/sub/" + type.value + "/" + entryCode).subscribe { topicMessage ->
                 Log.i("message Receive", topicMessage.payload)
 //                Gson().fromJson(topicMessage.payload, memberList::class.java)
             }
@@ -70,7 +73,7 @@ class WaitingStompClient {
 
         // 데이터 전송
         fun send(type: SocketType, dto: SocketCommonDto){
-            val data = objectMapper.writeValueAsString(dto)
+            val data = GsonBuilder().create().toJson(dto)
             stompClient.send("/pub/"+type.value, data).subscribe()
         }
     }

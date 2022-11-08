@@ -54,7 +54,7 @@ class StompClient {
     // 여기서 데이터 전송하는 코드쓰면 됩니다.
     fun send(type: SocketType, dto: SocketCommonDto) {
         println("소켓 메시지 전송")
-        println("방번호 : " + dto.gameRoomId)
+        println("방번호 : " + dto.entryCode)
         println("dto : " + objectMapper.writeValueAsString(dto))
         val data = objectMapper.writeValueAsString(dto)
         stompClient.send("/pub" + type.value, data).subscribe()

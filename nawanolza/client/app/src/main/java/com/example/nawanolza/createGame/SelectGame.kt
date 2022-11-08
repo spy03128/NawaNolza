@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.nawanolza.databinding.ActivitySelectGameBinding
+import com.example.nawanolza.hideandseek.TokenActivity
 import com.example.nawanolza.retrofit.RetrofitConnection
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideResponse
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideService
@@ -21,6 +22,10 @@ class SelectGame : AppCompatActivity() {
 
         binding.btnHideSeek.setOnClickListener {
             val intent = Intent(this, SettingHideSeek::class.java)
+            startActivity(intent)
+        }
+        binding.goToken.setOnClickListener {
+            val intent = Intent(this, TokenActivity::class.java )
             startActivity(intent)
         }
     }

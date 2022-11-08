@@ -87,7 +87,7 @@ public class MarkerService {
             // 게임이면 게임시간 설정
             int gameTime = 0;
             if (quest > 0)
-                gameTime = games.get(quest).getTime();
+                gameTime = games.get(quest-1).getTime();
 
             // 랜덤 좌표 생성
             LatLng location = getRandomLocation();
@@ -123,7 +123,7 @@ public class MarkerService {
      * */
     private int randomQuest(int maxCountGame) {
         Random random = new Random();
-        return random.nextInt(maxCountGame);
+        return random.nextInt(maxCountGame+1);
     }
 
     /*

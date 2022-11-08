@@ -28,6 +28,14 @@
             android:text="숨바꼭질"
             android:layout_marginTop="20dp"/>
 
+        <Button
+            android:id="@+id/goToken"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="토큰" />
+
+
     </LinearLayout>
 
 

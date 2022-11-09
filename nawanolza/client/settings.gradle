@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "nawanolza"
 include ':app'
+include ':nawanolza'

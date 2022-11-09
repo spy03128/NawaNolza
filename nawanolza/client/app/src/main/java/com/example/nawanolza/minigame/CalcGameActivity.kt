@@ -1,10 +1,18 @@
 package com.example.nawanolza.minigame
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.nawanolza.MapActivity
+import com.example.nawanolza.QuestService
+import com.example.nawanolza.QuestUtil
 import com.example.nawanolza.databinding.ActivityCalcGameBinding
+import kotlinx.android.synthetic.main.activity_card_game.*
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.ThreadLocalRandom
 
 class CalcGameActivity : AppCompatActivity() {
@@ -16,6 +24,16 @@ class CalcGameActivity : AppCompatActivity() {
     lateinit var binding: ActivityCalcGameBinding
     lateinit var answerButtons: List<Button>
 
+
+    var markerId = 0L
+    var memberId = -1
+    var characterId = 0L
+    var retrofit = Retrofit.Builder()
+        .baseUrl("https://k7d103.p.ssafy.io/api/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    var service = retrofit.create(QuestService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +55,26 @@ class CalcGameActivity : AppCompatActivity() {
 
         setBindingBtnText(firstNumber, secondNumber, operationNumber)
         makeAnswerBtn(makeAnswerList, answer)
+
+
+
+        object : CountDownTimer(7000, 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+                var time = (millisUntilFinished / 1000).toInt()
+                timer.text = time.toString()
+
+            }
+
+            override fun onFinish() {
+                QuestUtil.quizFail(this@CalcGameActivity, service, markerId)
+
+                val intent = Intent(this@CalcGameActivity, MapActivity::class.java)
+//                    intent.putExtra("result",false)
+                setResult(RESULT_CANCELED, intent)
+                finish()
+            }
+        }.start()
     }
 
     private fun setBindingBtnText(
@@ -67,10 +105,20 @@ class CalcGameActivity : AppCompatActivity() {
             println(answer)
             if (button.text.equals(answer.toString())) {
                 println("정답")
-                Toast.makeText(this@CalcGameActivity, "정답입니다.", Toast.LENGTH_LONG)
+                QuestUtil.quizSuccess(this@CalcGameActivity, service, memberId, markerId, characterId)
+
+                val intent = Intent(this@CalcGameActivity, MapActivity::class.java)
+                intent.putExtra("result",true)
+                setResult(RESULT_OK, intent)
+                finish()
             } else {
                 println("오답")
-                Toast.makeText(this@CalcGameActivity, "오답입니다.", Toast.LENGTH_LONG)
+                QuestUtil.quizFail(this@CalcGameActivity, service, markerId)
+
+                val intent = Intent(this@CalcGameActivity, MapActivity::class.java)
+//                    intent.putExtra("result",false)
+                setResult(RESULT_CANCELED, intent)
+                finish()
             }
         }
     }

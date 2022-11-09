@@ -21,7 +21,7 @@
         tools:replace="android:appComponentFactory"
         tools:targetApi="31">
         <activity
-            android:name=".GameBoomActivity"
+            android:name=".minigame.GameBoomActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -35,6 +35,15 @@
                 android:name="android.app.lib_name"
                 android:value="" />
 
+
+        </activity>
+
+        <activity
+            android:name=".minigame.CalcGameActivity"
+            android:exported="false" >
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
 
         </activity>
         <activity

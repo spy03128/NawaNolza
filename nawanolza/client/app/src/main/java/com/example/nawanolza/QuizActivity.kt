@@ -75,7 +75,7 @@ class QuizActivity : AppCompatActivity() {
                 QuestUtil.quizSuccess(this, service, memberId, markerId, characterId)
 
             }else{
-                QuestUtil.quizFail(this, service, memberId)
+                QuestUtil.quizFail(this, service, markerId)
             }
         }
 
@@ -84,7 +84,7 @@ class QuizActivity : AppCompatActivity() {
 
                 QuestUtil.quizSuccess(this, service, memberId, markerId, characterId)
             }else{
-                QuestUtil.quizFail(this, service, memberId)
+                QuestUtil.quizFail(this, service, markerId)
             }
         }
 

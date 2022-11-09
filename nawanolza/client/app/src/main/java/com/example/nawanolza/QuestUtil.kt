@@ -1,7 +1,6 @@
 package com.example.nawanolza
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nawanolza.retrofit.QuestFailResponse
@@ -12,7 +11,8 @@ import retrofit2.Response
 
 class QuestUtil {
     companion object{
-        fun quizFail(context: Activity, service: QuestService, memberId: Long) {
+        fun quizFail(context: Activity, service: QuestService, memberId: Int) {
+
             service.PostFail(mapOf("memberId" to memberId.toString()))
                 .enqueue(object : Callback<QuestFailResponse> {
 
@@ -40,10 +40,12 @@ class QuestUtil {
         fun quizSuccess(
             context: Activity,
             service: QuestService,
-            memberId: Long,
+            memberId: Int,
             markerId: Long,
             characterId: Long
         ) {
+
+
             service.PostSuccess(
                 mapOf(
                     "memberId" to memberId.toString(),

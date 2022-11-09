@@ -5,27 +5,29 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
-import android.widget.Toast
 import androidx.annotation.UiThread
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.nawanolza.R
 import com.example.nawanolza.createGame.WaitingMember
 import com.example.nawanolza.databinding.ActivityMainHideSeekBinding
+import com.example.nawanolza.retrofit.RetrofitConnection
+import com.example.nawanolza.retrofit.enterroom.GetRoomResponse
+import com.example.nawanolza.retrofit.enterroom.GetRoomService
 import com.google.android.gms.location.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.CircleOverlay
-import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
-import java.lang.reflect.Member
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
@@ -38,6 +40,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
     lateinit var binding: ActivityMainHideSeekBinding
     lateinit var adapter: HideSeekRvAdapter
+    lateinit var roomInfo: GetRoomResponse
 
     private var waitingMember = arrayListOf(
         WaitingMember(1,"노현우","1"),
@@ -54,6 +57,31 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainHideSeekBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val entryCode = intent.getStringExtra("entryCode")
+
+        println(entryCode)
+
+        val retrofitAPI = RetrofitConnection.getInstance().create(
+            GetRoomService::class.java
+        )
+//        retrofitAPI.getRoomInfo(entryCode!!).enqueue(object: Callback<GetRoomResponse>{
+//            override fun onResponse(
+//                call: Call<GetRoomResponse>,
+//                response: Response<GetRoomResponse>
+//            ) {
+//                roomInfo = response.body()!!
+//                // 게임시간
+//                // playtime
+//                // tagger
+//                // runners
+//                // starttime
+//            }
+//            override fun onFailure(call: Call<GetRoomResponse>, t: Throwable) {
+//                println(call)
+//                println(t)
+//            }
+//        })
 
         adapter = HideSeekRvAdapter(waitingMember)
         binding.mRecyclerView.adapter = adapter

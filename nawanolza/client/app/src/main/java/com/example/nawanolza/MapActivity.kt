@@ -20,7 +20,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.example.nawanolza.minigame.CalcGameActivity
 import com.example.nawanolza.minigame.CardGameActivity
+import com.example.nawanolza.minigame.GameBoomActivity
 import com.example.nawanolza.retrofit.CharacterLocationResponse
 import com.example.nawanolza.retrofit.CharacterLocationResponseItem
 import com.example.nawanolza.retrofit.MemberResponse
@@ -235,6 +237,15 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                     }
                     else if((marker.tag as CharacterLocationResponseItem).questType==2) {
                         val intent = Intent(this@MapActivity, CardGameActivity::class.java)
+
+                        intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
+
+                        intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
+
+
+                        activityResult.launch(intent)
+                    }else if((marker.tag as CharacterLocationResponseItem).questType==3) {
+                        val intent = Intent(this@MapActivity, CalcGameActivity::class.java)
 
                         intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
 

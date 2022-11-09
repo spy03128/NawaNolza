@@ -6,7 +6,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import com.example.nawanolza.fragment.HomeFragment
 import com.example.nawanolza.retrofit.MemberResponse
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.kakao.sdk.auth.model.OAuthToken
@@ -32,7 +31,6 @@ class LoginActivity : AppCompatActivity() {
         val keyHash = Utility.getKeyHash(this)
         Log.d("Hash", keyHash)
 
-        val fragment_home = HomeFragment()
 
         // 로그인 정보 확인
         UserApiClient.instance.accessTokenInfo { tokenInfo, error ->

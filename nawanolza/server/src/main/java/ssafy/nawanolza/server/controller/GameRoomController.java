@@ -16,8 +16,11 @@ import ssafy.nawanolza.server.domain.socket.dto.GameRoomGpsDTO;
 import ssafy.nawanolza.server.domain.socket.dto.GameRoomGpsRangeDTO;
 import ssafy.nawanolza.server.dto.CreateGameRequest;
 import ssafy.nawanolza.server.dto.HideAndSeekGameRoomResponse;
+import ssafy.nawanolza.server.dto.MemberDto;
 import ssafy.nawanolza.server.handler.event.GameStartEvent;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -67,7 +70,8 @@ public class GameRoomController {
         // 게임 참여
         HideAndSeekGameRoom hideAndSeekGameRoom = hideAndGameRoomService.paticipateGameRoom(memberId, entryCode);
         HideAndSeekGameRoomResponse hideAndSeekGameRoomResponse = HideAndSeekGameRoomResponse.makeEntryResponse(hideAndSeekGameRoom, memberRepository);
-        simpMessageSendingOperations.convertAndSend("/sub/participate/" + entryCode, hideAndSeekGameRoomResponse.getParticipants());
+        Map<String, List<MemberDto>> result = Map.of("participants", hideAndSeekGameRoomResponse.getParticipants());
+        simpMessageSendingOperations.convertAndSend("/sub/participate/" + entryCode, result);
         return ResponseEntity.ok().body(hideAndSeekGameRoomResponse);
     }
 

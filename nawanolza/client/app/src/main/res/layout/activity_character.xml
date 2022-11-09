@@ -53,6 +53,7 @@
         android:paddingRight="4dp">
 
         <ImageView
+            android:id="@+id/cBtnAll"
             android:layout_width="0dp"
             android:layout_height="121dp"
             android:src="@drawable/category_all"
@@ -89,6 +90,7 @@
                 >
 
                 <ImageView
+                    android:id="@+id/cBtn1"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:src="@drawable/category_1"
@@ -97,6 +99,7 @@
                     android:layout_weight="1"/>
 
                 <ImageView
+                    android:id="@+id/cBtn2"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:src="@drawable/category_2"
@@ -119,6 +122,7 @@
                 app:layout_constraintVertical_bias="0.087">
 
                 <ImageView
+                    android:id="@+id/cBtn3"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
@@ -127,6 +131,7 @@
                     tools:layout_editor_absoluteY="160dp" />
 
                 <ImageView
+                    android:id="@+id/cBtn4"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:src="@drawable/category_4"
@@ -142,19 +147,19 @@
 
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/sortDogam"
         android:layout_width="73dp"
         android:layout_height="29dp"
         android:src="@drawable/dogam_on"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView4"
+        app:layout_constraintEnd_toStartOf="@+id/sortLevel"
         app:layout_constraintHorizontal_bias="0.736"
         app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintTop_toBottomOf="@+id/category_all"
         app:layout_constraintVertical_bias="0.01" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/sortLevel"
         android:layout_width="73dp"
         android:layout_height="26dp"
         android:src="@drawable/level_off"
@@ -176,7 +181,7 @@
         app:layout_constraintEnd_toEndOf="@id/guideline2"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/guideline1"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4"
+        app:layout_constraintTop_toBottomOf="@+id/sortLevel"
         app:layout_constraintVertical_bias="0.115" />
 
 

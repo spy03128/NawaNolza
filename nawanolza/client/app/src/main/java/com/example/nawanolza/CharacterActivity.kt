@@ -40,42 +40,92 @@ class CharacterActivity : AppCompatActivity() {
             .build()
 
         var service = retrofit.create(CharacterService::class.java)
-        service.GetCharacter(memberInfo.member.id, type = "", sort = "" )
+
+
+        var typeName = ""
+        var sortName = ""
+
+        displayCollectionBySort(service, memberInfo, typeName, sortName)
+
+
+        sortDogam.setOnClickListener(){
+            sortName = ""
+            displayCollectionBySort(service, memberInfo, typeName, sortName)
+            sortDogam.setImageResource(R.drawable.dogam_on)
+            sortLevel.setImageResource(R.drawable.level_off)
+        }
+
+        sortLevel.setOnClickListener(){
+            sortName = "level"
+            displayCollectionBySort(service, memberInfo, typeName, sortName)
+            sortDogam.setImageResource(R.drawable.dogam_off)
+            sortLevel.setImageResource(R.drawable.level_on)
+        }
+        cBtnAll.setOnClickListener(){
+            typeName = ""
+            displayCollectionBySort(service, memberInfo, typeName, sortName)
+        }
+        cBtn1.setOnClickListener(){
+            typeName = "힘"
+            displayCollectionBySort(service, memberInfo, typeName, sortName)
+        }
+        cBtn2.setOnClickListener(){
+            typeName = "지능"
+            displayCollectionBySort(service, memberInfo, typeName, sortName)
+        }
+        cBtn3.setOnClickListener(){
+            typeName = "민첩"
+            displayCollectionBySort(service, memberInfo, typeName, sortName)
+        }
+        cBtn4.setOnClickListener(){
+            typeName = "방어"
+            displayCollectionBySort(service, memberInfo, typeName, sortName)
+        }
 
 
 
-        service.GetCharacter(memberInfo.member.id,type = "", sort = "").enqueue(object: Callback<CharacterResponse> {
-
-            override fun onResponse(
-                call: Call<CharacterResponse>,
-                response: Response<CharacterResponse>
-            ) {
-                val body = response.body()
-
-                characterInfo = response.body() ?: CharacterResponse()
-                println(memberInfo.member.id)
-                println(characterInfo)
-                println("=====캐릭터 정보======")
-
-
-                adapter = CharacterRvAdapter(characterInfo.collection, application)
-                binding.charRecyclerView.adapter = adapter
-                binding.charRecyclerView.layoutManager = GridLayoutManager(this@CharacterActivity, 3)
-
-
-
-            }
-
-            override fun onFailure(call: Call<CharacterResponse>, t: Throwable) {
-                println(call)
-                println(t)
-                println("====캐릭터 정보 에러===")
-            }
-
-        })
 
 
 
 
+
+    }
+
+    private fun displayCollectionBySort(
+        service: CharacterService,
+        memberInfo: MemberResponse,
+        typeName: String,
+        sortName: String
+    ) {
+        service.GetCharacter(memberInfo.member.id, type = typeName, sort = sortName)
+            .enqueue(object : Callback<CharacterResponse> {
+
+                override fun onResponse(
+                    call: Call<CharacterResponse>,
+                    response: Response<CharacterResponse>
+                ) {
+                    val body = response.body()
+
+                    characterInfo = response.body() ?: CharacterResponse()
+                    println(memberInfo.member.id)
+                    println(characterInfo)
+                    println("=====캐릭터 정보======")
+
+
+                    adapter = CharacterRvAdapter(characterInfo.collection, application)
+                    binding.charRecyclerView.adapter = adapter
+                    binding.charRecyclerView.layoutManager =
+                        GridLayoutManager(this@CharacterActivity, 3)
+
+
+                }
+
+                override fun onFailure(call: Call<CharacterResponse>, t: Throwable) {
+                    println(call)
+                    println(t)
+                    println("====캐릭터 정보 에러===")
+                }
+
+            })
     }
 }

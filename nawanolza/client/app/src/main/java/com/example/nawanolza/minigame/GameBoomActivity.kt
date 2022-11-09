@@ -1,4 +1,4 @@
-package com.example.nawanolza
+package com.example.nawanolza.minigame
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,7 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.view.View
 import android.widget.ImageView
+import com.example.nawanolza.*
 import kotlinx.android.synthetic.main.activity_game_boom.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -48,7 +49,13 @@ class GameBoomActivity : AppCompatActivity() {
                 if(score>=5){
                     println("캐릭터 획득 성공")
 
-                    QuestUtil.quizSuccess(this@GameBoomActivity, service, memberId, markerId, characterId)
+                    QuestUtil.quizSuccess(
+                        this@GameBoomActivity,
+                        service,
+                        memberId,
+                        markerId,
+                        characterId
+                    )
 
                     val intent = Intent(this@GameBoomActivity, MapActivity::class.java)
                     intent.putExtra("result",true)

@@ -202,8 +202,7 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                         "${(marker.tag as CharacterLocationResponseItem).markerId}번 마커입니다.",
                         Toast.LENGTH_LONG
                     ).show()
-                    println("=======================")
-                    println(marker.tag)
+
 
                     if((marker.tag as CharacterLocationResponseItem).questType==0) {
                         val intent = Intent(this@MapActivity, QuizActivity::class.java)
@@ -212,7 +211,7 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                             "markerId",
                             (marker.tag as CharacterLocationResponseItem).markerId
                         )
-                        intent.putExtra("memberId", memberInfo!!.member.id)
+
                         intent.putExtra(
                             "characterId",
                             (marker.tag as CharacterLocationResponseItem).characterId
@@ -223,15 +222,9 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                     }else if((marker.tag as CharacterLocationResponseItem).questType==1) {
                         val intent = Intent(this@MapActivity, GameBoomActivity::class.java)
 
-                        intent.putExtra(
-                            "markerId",
-                            (marker.tag as CharacterLocationResponseItem).markerId
-                        )
-                        intent.putExtra("memberId", memberInfo!!.member.id)
-                        intent.putExtra(
-                            "characterId",
-                            (marker.tag as CharacterLocationResponseItem).characterId
-                        )
+                        intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
+
+                        intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
 
 
                         activityResult.launch(intent)

@@ -1,9 +1,7 @@
 package com.example.nawanolza
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
 import com.example.nawanolza.databinding.ActivityQuizBinding
 import com.example.nawanolza.retrofit.*
 import kotlinx.android.synthetic.main.activity_quiz.*
@@ -25,7 +23,7 @@ class QuizActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val markerId = intent.getLongExtra("markerId",-1)
-        val memberId = intent.getLongExtra("memberId",-1)
+        val memberId = LoginUtil.getMember(this)!!.id
         val characterId = intent.getLongExtra("characterId",-1)
 
 
@@ -39,8 +37,7 @@ class QuizActivity : AppCompatActivity() {
         var service = retrofit.create(QuestService::class.java)
 
 
-        println("===markerId")
-        println(markerId)
+
         service.GetQuiz(mapOf("markerId" to markerId.toString(), "questType" to "0")).enqueue(object: Callback<QuestResponse> {
 
             override fun onResponse(
@@ -50,7 +47,7 @@ class QuizActivity : AppCompatActivity() {
                 val body = response.body()
 
                 quizInfo = response.body() ?: QuestResponse()
-//                println(characterInfo)
+
 
                 println(quizInfo)
                 println("=====quiz!!!!======")

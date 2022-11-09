@@ -6,6 +6,7 @@ import android.os.CountDownTimer
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.MapActivity
 import com.example.nawanolza.QuestService
 import com.example.nawanolza.QuestUtil
@@ -43,6 +44,11 @@ class CalcGameActivity : AppCompatActivity() {
         var firstNumber = (1..99).random()
         var secondNumber = (1..99).random()
         val operationNumber = (0..1).random()
+
+
+        markerId = intent.getLongExtra("markerId",-1)
+        memberId = LoginUtil.getMember(this)!!.id
+        characterId = intent.getLongExtra("characterId",-1)
 
         if (firstNumber < secondNumber) {
             var temp = secondNumber;

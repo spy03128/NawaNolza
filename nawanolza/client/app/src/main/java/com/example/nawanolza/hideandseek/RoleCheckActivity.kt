@@ -27,7 +27,7 @@ class RoleCheckActivity : AppCompatActivity() {
 
             override fun onTick(millisUntilFinished: Long) {
                 var time = (millisUntilFinished / 1000).toInt()
-                tvCountDown.setText(time.toString())
+                tvCountDown.text = time.toString()
                 countDown.progress = (60-time)*100/60
             }
 

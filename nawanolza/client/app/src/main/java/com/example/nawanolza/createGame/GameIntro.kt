@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.databinding.ActivityGameIntroBinding
 import com.example.nawanolza.databinding.ActivitySelectGameBinding
 import com.example.nawanolza.retrofit.RetrofitConnection
@@ -34,7 +35,8 @@ class GameIntro : AppCompatActivity() {
         )
 
         binding.btnEnterRoom.setOnClickListener {
-            enterRoomRequest = EnterRoomRequest(3, binding.EditText.text.toString())
+            val memberId = LoginUtil.getMember(this@GameIntro)!!.id
+            enterRoomRequest = EnterRoomRequest(memberId, binding.EditText.text.toString())
 
             retrofitAPI.postEnterRoom(enterRoomRequest).enqueue(object:
                 Callback<EnterRoomResponse> {
@@ -43,7 +45,7 @@ class GameIntro : AppCompatActivity() {
                     response: Response<EnterRoomResponse>
                 ) {
                     val intent = Intent(this@GameIntro, Waiting::class.java)
-                    intent.putExtra("code", response.body()?.entryCode)
+                    intent.putExtra("entryCode", response.body()?.entryCode)
                     when(response.code()){
                         200 -> startActivity(intent)
                         else -> Toast.makeText(this@GameIntro, "잘못된 정보입니다", Toast.LENGTH_SHORT).show()
@@ -54,8 +56,8 @@ class GameIntro : AppCompatActivity() {
                     println(call)
                     println(t)
                 }
-            })
 
+            })
         }
     }
 }

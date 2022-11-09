@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
@@ -20,15 +19,11 @@ import com.example.nawanolza.retrofit.RetrofitConnection
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideResponse
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideService
 import com.example.nawanolza.retrofit.createroom.CreateRoomRequest
-import com.example.nawanolza.stomp.SocketCommonDto
-import com.example.nawanolza.stomp.SocketType
-import com.example.nawanolza.stomp.StompClient
-import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import com.google.android.gms.location.*
+import com.google.gson.GsonBuilder
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.CircleOverlay
-import com.naver.maps.map.overlay.Marker
 import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -109,20 +104,21 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         btnCreateRoom.setOnClickListener {
             if(check){
-                createRoomRequest = CreateRoomRequest(lat, lng, gameTime, time, 100, 4)
+                val hostId = LoginUtil.getMember(this@SettingHideSeek)!!.id
+                createRoomRequest = CreateRoomRequest(lat, lng, gameTime, time, 100, hostId)
                 retrofitAPI.postCreateRoomHide(createRoomRequest).enqueue(object:Callback<CreateRoomHideResponse> {
                     override fun onResponse(
                         call: Call<CreateRoomHideResponse>,
                         response: Response<CreateRoomHideResponse>
                     ) {
                         val intent = Intent(this@SettingHideSeek, Waiting::class.java)
-                        intent.putExtra("code", "${response.body()?.entryCode}" )
+                        intent.putExtra("entryCode", "${response.body()?.entryCode}" )
+                        intent.putExtra("data", GsonBuilder().create().toJson(response.body()))
+
                         when(response.code()){
                             200 -> startActivity(intent)
                             else -> Toast.makeText(this@SettingHideSeek, "잘못된 정보입니다.", Toast.LENGTH_SHORT).show()
                         }
-
-
                     }
 
                     override fun onFailure(call: Call<CreateRoomHideResponse>, t: Throwable) {
@@ -133,7 +129,6 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
             }else{
                 Toast.makeText(this,"영역을 설정해주세요", Toast.LENGTH_LONG).show()
             }
-
         }
 
         if (isPermitted()) {

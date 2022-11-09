@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.nawanolza.createGame.GameIntro
+import com.example.nawanolza.hideandseek.MessageSenderService
 import com.example.nawanolza.retrofit.MemberResponse
 import com.kakao.sdk.user.UserApiClient
 import kotlinx.android.synthetic.main.activity_home.*
@@ -32,6 +33,15 @@ class HomeActivity : AppCompatActivity() {
         gameButton.setOnClickListener{
             val intent = Intent(this@HomeActivity, GameIntro::class.java)
             startActivity(intent)
+        }
+
+        var dummyNumber = 0
+        val messagePath = "/message_path"
+
+        button.setOnClickListener {
+            Log.i("WearableMainActivity", "Send Message Button Clicked")
+            dummyNumber += 1
+            MessageSenderService.sendMessageToWearable(messagePath, "Message from Wearable $dummyNumber", this)
         }
 
         Log.d(TAG, "init: ${memberInfo}")

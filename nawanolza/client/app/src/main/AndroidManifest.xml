@@ -27,6 +27,16 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <activity
+            android:name=".minigame.CardGameActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+
+
+        </activity>
         <activity
             android:name=".LoadingActivity"
             android:exported="true">
@@ -155,7 +165,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false">
-            w
+
             <!-- <meta-data -->
             <!-- android:name="com.kakao.sdk.AppKey" -->
             <!-- android:value="36f99e31298effdf1d6fe6dbdb063e78" /> -->

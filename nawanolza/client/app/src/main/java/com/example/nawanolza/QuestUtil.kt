@@ -11,9 +11,9 @@ import retrofit2.Response
 
 class QuestUtil {
     companion object{
-        fun quizFail(context: Activity, service: QuestService, memberId: Int) {
+        fun quizFail(context: Activity, service: QuestService, markerId: Long) {
 
-            service.PostFail(mapOf("memberId" to memberId.toString()))
+            service.PostFail(mapOf("markerId" to markerId.toString()))
                 .enqueue(object : Callback<QuestFailResponse> {
 
                     override fun onResponse(

@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.example.nawanolza.minigame.CardGameActivity
 import com.example.nawanolza.retrofit.CharacterLocationResponse
 import com.example.nawanolza.retrofit.CharacterLocationResponseItem
 import com.example.nawanolza.retrofit.MemberResponse
@@ -203,6 +204,9 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
 
+                    println("====마커====")
+                    println((marker.tag as CharacterLocationResponseItem))
+
 
                     if((marker.tag as CharacterLocationResponseItem).questType==0) {
                         val intent = Intent(this@MapActivity, QuizActivity::class.java)
@@ -221,6 +225,16 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                         activityResult.launch(intent)
                     }else if((marker.tag as CharacterLocationResponseItem).questType==1) {
                         val intent = Intent(this@MapActivity, GameBoomActivity::class.java)
+
+                        intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
+
+                        intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
+
+
+                        activityResult.launch(intent)
+                    }
+                    else if((marker.tag as CharacterLocationResponseItem).questType==2) {
+                        val intent = Intent(this@MapActivity, CardGameActivity::class.java)
 
                         intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
 

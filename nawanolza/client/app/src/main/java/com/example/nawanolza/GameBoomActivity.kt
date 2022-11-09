@@ -57,7 +57,7 @@ class GameBoomActivity : AppCompatActivity() {
                 }else{
                     println("캐릭터 획득 실패")
 
-                    QuestUtil.quizFail(this@GameBoomActivity, service, memberId)
+                    QuestUtil.quizFail(this@GameBoomActivity, service, markerId)
 
                     val intent = Intent(this@GameBoomActivity, MapActivity::class.java)
 //                    intent.putExtra("result",false)

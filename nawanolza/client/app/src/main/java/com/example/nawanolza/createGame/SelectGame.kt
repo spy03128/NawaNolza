@@ -5,12 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.nawanolza.databinding.ActivitySelectGameBinding
 import com.example.nawanolza.hideandseek.TokenActivity
-import com.example.nawanolza.retrofit.RetrofitConnection
-import com.example.nawanolza.retrofit.createroom.CreateRoomHideResponse
-import com.example.nawanolza.retrofit.createroom.CreateRoomHideService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class SelectGame : AppCompatActivity() {
 

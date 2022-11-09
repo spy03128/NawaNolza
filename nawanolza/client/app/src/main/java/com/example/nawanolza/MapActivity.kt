@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +27,7 @@ import com.example.nawanolza.minigame.GameBoomActivity
 import com.example.nawanolza.retrofit.CharacterLocationResponse
 import com.example.nawanolza.retrofit.CharacterLocationResponseItem
 import com.example.nawanolza.retrofit.MemberResponse
+import com.example.nawanolza.retrofit.QuestResponse
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -54,6 +56,7 @@ private const val TAG = "MapActivity_맵에서"
 class MapActivity :OnMapReadyCallback, AppCompatActivity() {
     val permission_request = 99
     private lateinit var naverMap: NaverMap
+    var quizInfo = QuestResponse()
 
 
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -63,6 +66,13 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
     var memberInfo: MemberResponse? = null
 
     lateinit var activityResult: ActivityResultLauncher<Intent>
+
+    //캐릭터 받아오기
+    var retrofit = Retrofit.Builder()
+        .baseUrl("https://k7d103.p.ssafy.io/api/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,11 +100,6 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
             .into(CircleImageView) // 이미지를 넣을 뷰
 
 
-        //캐릭터 받아오기
-        var retrofit = Retrofit.Builder()
-            .baseUrl("https://k7d103.p.ssafy.io/api/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
         var service = retrofit.create(GetCharacterService::class.java)
 
@@ -138,49 +143,42 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
             val booleanExtra = it.data?.getBooleanExtra("result", false)
             println(booleanExtra)
             if (it.resultCode == RESULT_OK && booleanExtra == true) {
-//                val builder = AlertDialog.Builder(this)
-//                builder.setTitle("퀘스트를 완료했습니다")
-//                    .setMessage("메세지 내용 부분 입니다.")
-//                    .setPositiveButton("닫기",
-//                        DialogInterface.OnClickListener { dialog, id ->
-//
-//                        })
-//
-//                // 다이얼로그를 띄워주기
-//                builder.show()
 
-                val view = View.inflate(this@MapActivity,R.layout.dialog_success, null)
-                val builder = AlertDialog.Builder(this@MapActivity)
-                builder.setView(view)
-                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                window!!.setDimAmount(0f)
+                val dialog = AlertDialog.Builder(this@MapActivity).apply {
+
+                }.create()
 
 
-                builder.setPositiveButton("닫기",
-                    DialogInterface.OnClickListener { dialog, id ->
+                dialog.window?.apply {
+                    setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                }
 
-                    })
+                dialog.apply {
+                    setView(layoutInflater.inflate(R.layout.dialog_success,null))
 
+                    show()
+                }
 
-                val dialog = builder.create()
-                builder.show()
-//                dialog.window?.setBackgroundDrawableResource(android.R.color.background_light)
 
 
             }
             else{
-                val view = View.inflate(this@MapActivity,R.layout.dialog_fail, null)
-                val builder = AlertDialog.Builder(this@MapActivity)
-                builder.setView(view)
-                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-                window!!.setDimAmount(0f)
-                builder.setPositiveButton("닫기",
-                    DialogInterface.OnClickListener { dialog, id ->
 
-                    })
-                val dialog = builder.create()
-                builder.show()
+                val dialog = AlertDialog.Builder(this@MapActivity).apply {
+
+                }.create()
+
+
+                dialog.window?.apply {
+                    setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                }
+
+                dialog.apply {
+                    setView(layoutInflater.inflate(R.layout.dialog_fail,null))
+
+                    show()
+                }
             }
         }
     }
@@ -210,50 +208,97 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                     println((marker.tag as CharacterLocationResponseItem))
 
 
-                    if((marker.tag as CharacterLocationResponseItem).questType==0) {
-                        val intent = Intent(this@MapActivity, QuizActivity::class.java)
+                    var service = retrofit.create(QuestService::class.java)
 
-                        intent.putExtra(
-                            "markerId",
-                            (marker.tag as CharacterLocationResponseItem).markerId
-                        )
-
-                        intent.putExtra(
-                            "characterId",
-                            (marker.tag as CharacterLocationResponseItem).characterId
-                        )
+                    var markerInfo = marker.tag as CharacterLocationResponseItem
 
 
-                        activityResult.launch(intent)
-                    }else if((marker.tag as CharacterLocationResponseItem).questType==1) {
-                        val intent = Intent(this@MapActivity, GameBoomActivity::class.java)
+                    service.GetQuiz(mapOf("markerId" to markerInfo.markerId.toString(), "questType" to markerInfo.questType.toString())).enqueue(object: Callback<QuestResponse> {
 
-                        intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
+                        override fun onResponse(
+                            call: Call<QuestResponse>,
+                            response: Response<QuestResponse>
+                        ) {
+                            val body = response.body()
 
-                        intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
+                            quizInfo = response.body() ?: QuestResponse()
 
 
-                        activityResult.launch(intent)
+                        }
+
+                        override fun onFailure(call: Call<QuestResponse>, t: Throwable) {
+                            println(call)
+                            println(t)
+
+                        }
+
+                    })
+
+
+                    if(!quizInfo.accessible){
+                        val dialog = AlertDialog.Builder(this@MapActivity).apply {
+
+                        }.create()
+
+
+                        dialog.window?.apply {
+                            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        }
+
+                        dialog.apply {
+                            setView(layoutInflater.inflate(R.layout.dialog_play,null))
+
+                            show()
+                        }
+                    }else{
+                        if(markerInfo.questType==0) {
+                            val intent = Intent(this@MapActivity, QuizActivity::class.java)
+
+                            intent.putExtra(
+                                "markerId",
+                                (marker.tag as CharacterLocationResponseItem).markerId
+                            )
+
+                            intent.putExtra(
+                                "characterId",
+                                (marker.tag as CharacterLocationResponseItem).characterId
+                            )
+
+
+                            activityResult.launch(intent)
+                        }else if(markerInfo.questType==1) {
+                            val intent = Intent(this@MapActivity, GameBoomActivity::class.java)
+
+                            intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
+
+                            intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
+
+
+                            activityResult.launch(intent)
+                        }
+                        else if(markerInfo.questType==2) {
+                            val intent = Intent(this@MapActivity, CardGameActivity::class.java)
+
+                            intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
+
+                            intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
+
+
+                            activityResult.launch(intent)
+                        }else if(markerInfo.questType==3) {
+                            val intent = Intent(this@MapActivity, CalcGameActivity::class.java)
+
+                            intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
+
+                            intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
+
+
+                            activityResult.launch(intent)
+                        }
                     }
-                    else if((marker.tag as CharacterLocationResponseItem).questType==2) {
-                        val intent = Intent(this@MapActivity, CardGameActivity::class.java)
-
-                        intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
-
-                        intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
 
 
-                        activityResult.launch(intent)
-                    }else if((marker.tag as CharacterLocationResponseItem).questType==3) {
-                        val intent = Intent(this@MapActivity, CalcGameActivity::class.java)
 
-                        intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
-
-                        intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
-
-
-                        activityResult.launch(intent)
-                    }
 
 
 

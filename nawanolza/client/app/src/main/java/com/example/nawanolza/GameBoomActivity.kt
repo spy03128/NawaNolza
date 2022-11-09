@@ -30,7 +30,7 @@ class GameBoomActivity : AppCompatActivity() {
         hideImages()
 
         val markerId = intent.getLongExtra("markerId",-1)
-        val memberId = intent.getLongExtra("memberId",-1)
+        val memberId = LoginUtil.getMember(this)!!.id
         val characterId = intent.getLongExtra("characterId",-1)
 
 

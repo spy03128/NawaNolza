@@ -1,11 +1,14 @@
 package com.example.nawanolza.stomp.waitingstomp
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.createGame.WaitingRvAdapter
 import com.example.nawanolza.hideandseek.PubGpsRequest
 import com.example.nawanolza.hideandseek.PubEventRequest
+import com.example.nawanolza.hideandseek.RoleCheckActivity
 import com.example.nawanolza.retrofit.createroom.MemberList
 import com.example.nawanolza.stomp.SocketCommonDto
 import com.example.nawanolza.stomp.SocketType
@@ -70,6 +73,17 @@ class WaitingStompClient {
         }
 
         /** 받는 메서드 **/
+
+        // 게임 시작
+        fun subGameStart(entryCode: String, context: Context) {
+            stompClient.topic("/sub/game/start/$entryCode").subscribe{ topicMessage ->
+                Log.i("message Receive", topicMessage.payload)
+
+                val intent = Intent(context, RoleCheckActivity::class.java)
+                intent.putExtra("entryCode", entryCode)
+                context.startActivity(intent)
+            }
+        }
 
         // 참여자 위치 받아서 실시간으로 업데이트
         fun subGPS(entryCode: String){

@@ -56,6 +56,7 @@ public class HideAndGameRoomService {
                 (List) roles.get("runners"), hideAndSeekGameRoom.getStartTime(),
                 hideAndSeekGameRoom.getHideAndSeekProperties().getPlayTime(), hideAndSeekGameRoom.getLat(),
                 hideAndSeekGameRoom.getLng(), hideAndSeekGameRoom.getRange());
+        hideAndSeekGameRoomRepository.save(hideAndSeekGameRoom);
         return gameStartDTO;
     }
 
@@ -64,17 +65,21 @@ public class HideAndGameRoomService {
                 hideAndSeekGameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
         boolean isWinTagger = winnerIsTagger(hideAndSeekGameRoom);
         GameFinishEvent finishEvent = new GameFinishEvent(entryCode, isWinTagger);
-        List<Member> winnerList = new ArrayList<>();
+        List<Long> winnerList;
         if (isWinTagger) {
-            Long winnerId = (Long) hideAndSeekGameRoom.getPlayersByRole().get("tagger");
-            winnerList.add(memberRepository.findById(winnerId).orElseThrow(() -> new MemberNotFountException(winnerId)));
+            winnerList = hideAndSeekGameRoom.getTaggers();
         } else {
-            List winnerIdList = (List) hideAndSeekGameRoom.getPlayersByRole().get("runners");
-            winnerList.add((Member) memberRepository.findAllByMemberId(winnerIdList));
+            winnerList = hideAndSeekGameRoom.getRunners();
         }
-        for (Member winner :winnerList) {
+        System.out.println(winnerList);
+        List<Member> winners = memberRepository.findAllByMemberId(winnerList).orElseThrow(() -> new MemberNotFountException(winnerList));
+        for (Member winner :winners) {
+            System.out.println(winner.getName());
             finishEvent.make(winner.getName(), winner.getImage());
         }
+        System.out.println(finishEvent);
+        System.out.println(finishEvent.getWinnerList());
+        System.out.println(finishEvent.getWinnerList().get(0));
         return finishEvent;
     }
 

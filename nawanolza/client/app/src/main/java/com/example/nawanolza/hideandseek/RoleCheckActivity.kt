@@ -12,12 +12,14 @@ import kotlinx.android.synthetic.main.fragment_participants.*
 class RoleCheckActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityRoleCheckAcitivityBinding
+    lateinit var entryCode: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRoleCheckAcitivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        entryCode = intent.getStringExtra("entryCode").toString()
         // 술래 참여자 나눠서 fragment 보여주기
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentFrame, ParticipantsFragment())
@@ -33,6 +35,7 @@ class RoleCheckActivity : AppCompatActivity() {
 
             override fun onFinish() {
                 val intent = Intent(this@RoleCheckActivity, MainHideSeek::class.java )
+                intent.putExtra("entryCode", "$entryCode")
                 startActivity(intent)
             }
         }.start()

@@ -6,12 +6,12 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Looper
-import android.util.Log
+import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.nawanolza.R
@@ -25,16 +25,16 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_role_check_acitivity.*
 import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
+import kotlinx.android.synthetic.main.fragment_participants.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.Duration
-import java.time.LocalDate
 
 class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
@@ -82,7 +82,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             val intent = Intent(this@MainHideSeek, MemberDetail::class.java )
             startActivity(intent)
         }
-
 
     }
 
@@ -133,27 +132,29 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         println(getRoomResponse)
         println("===========checking========")
         println(roomInfo.startTime)
-//        val stringTime = "2022-11-09T16:37:03.934"
-//        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
-//        val date = LocalDateTime.parse(stringTime, formatter)
-//        println(date)
-//        val nowDate = LocalDateTime.now()
-//        println(nowDate)
-//        val duration: Duration = Duration.between(date, nowDate)
-//        println(duration)
-//        duration.seconds
 
+        val startTime = roomInfo.startTime.slice(0..22)
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
-//        val targetDate: LocalDateTime = LocalDateTime.of(2022,11,9,16,37,3)
-//        val duration: Duration = Duration.between(targetDate, nowDate)
+        val start = LocalDateTime.parse(startTime, formatter)
+        val end = start.plusMinutes(roomInfo.playTime)
+        val duration: Duration = Duration.between(start, end)
+        val seconds = duration.seconds
+        println("==============check==============")
+        println(seconds)
 
-//        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss.SSS")
-//        val dateTime = LocalDateTime.parse(roomInfo.startTime, formatter)
-//        Log.d("dateTime", "$dateTime")
+        /** 타이머 **/
+        object : CountDownTimer(seconds*1000, 1000) {
 
-//        println(roomInfo.lat)
-//        println(roomInfo.lng)
-
+            override fun onTick(millisUntilFinished: Long) {
+                val minutes = (millisUntilFinished / 1000).toInt() / 60
+                val sec = (millisUntilFinished / 1000).toInt() % 60
+                binding.tvTime.text = "$minutes:$sec"
+            }
+            override fun onFinish() {
+                Toast.makeText(this@MainHideSeek, "끝", Toast.LENGTH_SHORT).show()
+            }
+        }.start()
     }
 
     fun isPermitted(): Boolean {
@@ -259,7 +260,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         val locationOverlay = naverMap.locationOverlay
 
 
-        locationOverlay.position = LatLng(36.1071562, 128.4164185)
+            locationOverlay.position = LatLng(36.1071562, 128.4164185)
         locationOverlay.isVisible = true
 
     }

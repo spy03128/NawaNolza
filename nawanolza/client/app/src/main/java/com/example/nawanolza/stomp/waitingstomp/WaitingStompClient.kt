@@ -12,6 +12,7 @@ import com.example.nawanolza.hideandseek.RoleCheckActivity
 import com.example.nawanolza.retrofit.createroom.MemberList
 import com.example.nawanolza.stomp.SocketCommonDto
 import com.example.nawanolza.stomp.SocketType
+import com.example.nawanolza.stomp.SubGpsDto
 import com.google.gson.GsonBuilder
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.dto.LifecycleEvent
@@ -85,14 +86,15 @@ class WaitingStompClient {
             }
         }
 
-        // 참여자 위치 받아서 실시간으로 업데이트
+        // 참여자 위치 받기 구독
         fun subGPS(entryCode: String){
             stompClient.topic("/sub/gps/$entryCode").subscribe{ topicMessage ->
-                Log.i("message Receive", topicMessage.payload)
+                Log.i("subGPSMessage", topicMessage.payload)
+                GsonBuilder().create().fromJson(topicMessage.payload, SubGpsDto::class.java)
             }
         }
 
-        // 잡힌 참여자 받아서 실시간으로 업데이트
+        // 잡힌 참여자 받기 구독
         fun subEvent(entryCode: String){
             stompClient.topic("/sub/event/$entryCode").subscribe{ topicMessage ->
                 Log.i("message Receive", topicMessage.payload)
@@ -104,7 +106,7 @@ class WaitingStompClient {
         // 내 위치 전송
         fun pubGPS(pubGpsRequest: PubGpsRequest) {
             val data = GsonBuilder().create().toJson(pubGpsRequest)
-            stompClient.send("/pub/"+ pubGpsRequest.type, data).subscribe()
+            stompClient.send("/pub/gps",data).subscribe()
         }
 
         //참가자 잡기

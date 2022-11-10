@@ -21,6 +21,7 @@ public class HideAndSeekGameRoom {
     private Long hostId;
     private Map<Long, Role> roles = new HashMap<>();        // 시작할때
     private Map<Long, Boolean> status = new HashMap<>();    // 시작할때
+    private Map<String, Object> playersByRole = new HashMap<>();    // 시작할때
     private HideAndSeekProperties hideAndSeekProperties;    // 방 참가시
     private LocalDateTime startTime;                        // 시작할때
     private List<Long> participants = new ArrayList<>();    // 방 참가시
@@ -68,9 +69,9 @@ public class HideAndSeekGameRoom {
     public Map<String, Object> startGame() {
         if (participants.size() < 2)    throw new UnderstaffedException(participants.size());
         participants.stream().forEach(id -> status.put(id, false));
-        Map<String, Object> returnMap = assignRoles(participants);
+        playersByRole = assignRoles(participants);
         startTime = LocalDateTime.now();
-        return returnMap;
+        return playersByRole;
     }
 
     private void designateTagger(List<Long> participants, HashMap<String, Object> returnMap) {

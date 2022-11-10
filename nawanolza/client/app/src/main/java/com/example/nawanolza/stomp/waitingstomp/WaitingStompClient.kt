@@ -1,7 +1,9 @@
 package com.example.nawanolza.stomp.waitingstomp
 
+import android.app.Activity
 import android.util.Log
 import com.example.nawanolza.createGame.Waiting
+import com.example.nawanolza.createGame.WaitingRvAdapter
 import com.example.nawanolza.hideandseek.PubGpsRequest
 import com.example.nawanolza.hideandseek.PubEventRequest
 import com.example.nawanolza.retrofit.createroom.MemberList
@@ -56,10 +58,14 @@ class WaitingStompClient {
         }
 
         // 구독 후 메세지 받음
-        fun receive(type: SocketType, entryCode: String){
+        fun receive(type: SocketType, entryCode: String, adapter: WaitingRvAdapter, activity: Activity){
             stompClient.topic("/sub/" + type.value + "/" + entryCode).subscribe { topicMessage ->
                 Log.i("message Receive", topicMessage.payload)
                 Waiting.memberList = GsonBuilder().create().fromJson(topicMessage.payload, MemberList::class.java).participants
+
+                activity.runOnUiThread {
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
 
@@ -78,7 +84,6 @@ class WaitingStompClient {
                 Log.i("message Receive", topicMessage.payload)
             }
         }
-
 
         /** 보내는 메서드 **/
 

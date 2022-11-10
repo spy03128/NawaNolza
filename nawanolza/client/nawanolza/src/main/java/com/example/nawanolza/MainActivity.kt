@@ -1,5 +1,6 @@
 package com.example.nawanolza
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -17,7 +18,7 @@ import org.w3c.dom.Text
 
 /*
 * w : 대기화면
-* s-10-7 : 게임 시작 초기 세팅 (10분-7명)
+* s-9:30-7 : 게임 시작 초기 세팅 (10분-7명)
 * g-6-김땡땡 : 6명 남음, 김땡땡 잡힘
 * a : 영역 밖 알람
 * r-0 : 술래팀 승리
@@ -38,6 +39,8 @@ class MainActivity : Activity() {
     }
 
     private val messageReceiver = object : BroadcastReceiver() {
+
+        @SuppressLint("SetTextI18n")
         override fun onReceive(context: Context?, intent: Intent?) {
             val message = intent?.getStringExtra(MessageConstants.message)
             val path = intent?.getStringExtra(MessageConstants.path)
@@ -51,8 +54,12 @@ class MainActivity : Activity() {
             val textViewResult1: TextView = findViewById(R.id.textView_result1)
             val textViewResult2: TextView = findViewById(R.id.textView_result2)
 
+
+
             if (message != null) {
-                if(message.substring(0,1)=="w"){
+                val str = message.split("-")
+
+                if(str[0]=="w"){
                     Log.i("Main Activity", "Waiting display")
                     progressBarWaiting.visibility = View.VISIBLE
                     progressBarAlarm.visibility = View.GONE
@@ -61,6 +68,23 @@ class MainActivity : Activity() {
                     textViewStart2.visibility = View.GONE
                     textViewResult1.visibility = View.GONE
                     textViewResult2.visibility = View.GONE
+                }else if(str[0]=="s"){
+                    Log.i("Main Activity", "Starting display")
+                    progressBarWaiting.visibility = View.GONE
+                    progressBarAlarm.visibility = View.GONE
+                    textViewWaiting.visibility = View.GONE
+                    textViewStart1.visibility = View.VISIBLE
+                    textViewStart2.visibility = View.VISIBLE
+                    textViewResult1.visibility = View.GONE
+                    textViewResult2.visibility = View.GONE
+
+                    textViewStart1.text = "남은 인원" + str[2] + "명"
+                    val time = str[1].split(":")
+                    if(time[0].length==1){
+                        textViewStart2.text = "0" + str[1];
+                    }else{
+                        textViewResult2.text = str[1];
+                    }
                 }
             }
         }

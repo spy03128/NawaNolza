@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -28,6 +29,12 @@ import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.Duration
+import java.time.LocalDate
 
 class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
@@ -41,6 +48,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     lateinit var binding: ActivityMainHideSeekBinding
     lateinit var adapter: HideSeekRvAdapter
     lateinit var roomInfo: GetRoomResponse
+    lateinit var entryCode: String
 
     private var waitingMember = arrayListOf(
         WaitingMember(1,"노현우","1"),
@@ -57,47 +65,97 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainHideSeekBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val entryCode = intent.getStringExtra("entryCode")
-
-        println(entryCode)
-
-        val retrofitAPI = RetrofitConnection.getInstance().create(
-            GetRoomService::class.java
-        )
-//        retrofitAPI.getRoomInfo(entryCode!!).enqueue(object: Callback<GetRoomResponse>{
-//            override fun onResponse(
-//                call: Call<GetRoomResponse>,
-//                response: Response<GetRoomResponse>
-//            ) {
-//                roomInfo = response.body()!!
-//                // 게임시간
-//                // playtime
-//                // tagger
-//                // runners
-//                // starttime
-//            }
-//            override fun onFailure(call: Call<GetRoomResponse>, t: Throwable) {
-//                println(call)
-//                println(t)
-//            }
-//        })
-
-        adapter = HideSeekRvAdapter(waitingMember)
-        binding.mRecyclerView.adapter = adapter
-        binding.mRecyclerView.layoutManager = GridLayoutManager(this, 4)
-
-        binding.memberDetail.setOnClickListener {
-            val intent = Intent(this@MainHideSeek, MemberDetail::class.java )
-            startActivity(intent)
-        }
+        entryCode = intent.getStringExtra("entryCode").toString()
 
         if (isPermitted()) {
             startProcess()
         } else {
             ActivityCompat.requestPermissions(this, permissions, permission_request)
         }//권한 확인
+
+
+
+        setRecycleView()
+        getData()
+
+        binding.memberDetail.setOnClickListener {
+            val intent = Intent(this@MainHideSeek, MemberDetail::class.java )
+            startActivity(intent)
+        }
+
+
     }
+
+    private fun setRecycleView() {
+        adapter = HideSeekRvAdapter(waitingMember)
+        binding.mRecyclerView.adapter = adapter
+        binding.mRecyclerView.layoutManager = GridLayoutManager(this, 4)
+    }
+
+    private fun getData() {
+
+        val retrofitAPI = RetrofitConnection.getInstance().create(
+            GetRoomService::class.java
+        )
+        println("check entrycode")
+        println(entryCode)
+        retrofitAPI.getRoomInfo(entryCode).enqueue(object : Callback<GetRoomResponse> {
+            override fun onResponse(
+                call: Call<GetRoomResponse>,
+                response: Response<GetRoomResponse>
+            ) {
+                println("first")
+                println(response)
+                response.body()?.let{
+                    println("second")
+                    updateUI(it)
+                }
+                // 게임시간
+                // playtime
+                // tagger
+                // runners
+                // starttime
+            }
+
+            override fun onFailure(call: Call<GetRoomResponse>, t: Throwable) {
+                println("fail")
+                println(call)
+                println(t)
+            }
+        })
+
+    }
+
+    fun updateUI(getRoomResponse: GetRoomResponse) {
+        println("third")
+        roomInfo = getRoomResponse
+        println(roomInfo)
+        println(getRoomResponse)
+        println("===========checking========")
+        println(roomInfo.startTime)
+//        val stringTime = "2022-11-09T16:37:03.934"
+//        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+//        val date = LocalDateTime.parse(stringTime, formatter)
+//        println(date)
+//        val nowDate = LocalDateTime.now()
+//        println(nowDate)
+//        val duration: Duration = Duration.between(date, nowDate)
+//        println(duration)
+//        duration.seconds
+
+
+//        val targetDate: LocalDateTime = LocalDateTime.of(2022,11,9,16,37,3)
+//        val duration: Duration = Duration.between(targetDate, nowDate)
+
+//        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss.SSS")
+//        val dateTime = LocalDateTime.parse(roomInfo.startTime, formatter)
+//        Log.d("dateTime", "$dateTime")
+
+//        println(roomInfo.lat)
+//        println(roomInfo.lng)
+
+    }
+
     fun isPermitted(): Boolean {
         for (perm in permissions) {
             if (ContextCompat.checkSelfPermission(this, perm) != PackageManager.PERMISSION_GRANTED) {
@@ -120,6 +178,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap){
+        println("onMapReadyCheck")
         this.naverMap = naverMap
 
         val cameraPosition = CameraPosition(
@@ -138,12 +197,12 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 //        marker.map = naverMap
         setLocationOverlay() // overlay 설정
         setUpdateLocationListener() //내위치를 가져오는 코드
-        setPolyline(LatLng(36.1071562, 128.4164185))
 
 //        naverMap.setOnMapClickListener { point, coord ->
 //            val latLng = LatLng(coord.latitude, coord.longitude)
 //            setPolyline(latLng)
 //        }
+        setPolyline(LatLng(36.1071562, 128.4164185))
     }
 
     //내 위치를 가져오는 코드
@@ -186,6 +245,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 //            naverMap.cameraPosition.target.latitude,
 //            naverMap.cameraPosition.target.longitude
 //        )
+
         //마커
         val cameraUpdate = CameraUpdate.scrollTo(myLocation)
         naverMap.moveCamera(cameraUpdate)
@@ -219,7 +279,8 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         return Math.round(ret) // 미터 단위
     }
 
-        private fun setPolyline(latLng: LatLng) {
+    private fun setPolyline(latLng: LatLng) {
+
         val circle = CircleOverlay()
         circle.center = latLng
         val color = Color.parseColor("#ef5350")

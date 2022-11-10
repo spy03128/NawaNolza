@@ -72,23 +72,17 @@ class GameBoomActivity : AppCompatActivity() {
                     finish()
                 }
 
-                restartBtn.visibility = View.VISIBLE;
                 timeText.text = "Time over"
                 handler.removeCallbacks(runnable)
                 for (image in imageArray)
                     image.visibility = View.INVISIBLE
             }
             override fun onTick(p0: Long) {
-                timeText.text = "Time: " + p0 / 1000
+                timeText.text =  (p0 / 1000).toString()
             }
         }.start()
 
 
-        restartBtn.setOnClickListener {
-            intent = Intent(this@GameBoomActivity, MainActivity::class.java)
-            finish()
-            startActivity(intent)
-        }
     }
 
     fun hideImages() {
@@ -98,10 +92,10 @@ class GameBoomActivity : AppCompatActivity() {
                 for (image in imageArray) {
                     image.visibility = View.INVISIBLE
                 }
-                restartBtn.visibility = View.INVISIBLE;
 
                 val random = Random()
                 val index = random.nextInt(8 - 0)
+                imageArray[index].setImageResource(R.drawable.boom_off)
                 imageArray[index].visibility = View.VISIBLE
 
                 handler.postDelayed(runnable, 700)
@@ -113,6 +107,10 @@ class GameBoomActivity : AppCompatActivity() {
 
     fun increaseScore(view: View) {
         score++
+
+        for (image in imageArray) {
+            image.setImageResource(R.drawable.boom_on)
+        }
 
         scoreText.text = "Score: " + score
     }

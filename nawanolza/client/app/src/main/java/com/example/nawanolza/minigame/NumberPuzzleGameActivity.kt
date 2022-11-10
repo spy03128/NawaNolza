@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.nawanolza.*
 import com.example.nawanolza.databinding.ActivityNumberPuzzleGameBinding
 import kotlinx.android.synthetic.main.activity_card_game.*
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
 class NumberPuzzleGameActivity : AppCompatActivity() {
@@ -19,24 +21,41 @@ class NumberPuzzleGameActivity : AppCompatActivity() {
     lateinit var binding: ActivityNumberPuzzleGameBinding
     var nextNumber: Int = 1
 
+    var markerId = 0L
+    var memberId = -1
+    var characterId = 0L
+    var retrofit = Retrofit.Builder()
+        .baseUrl("https://k7d103.p.ssafy.io/api/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    var service = retrofit.create(QuestService::class.java)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNumberPuzzleGameBinding.inflate(layoutInflater)
         nextNumber = 1
+
+
+        markerId = intent.getLongExtra("markerId",-1)
+        memberId = LoginUtil.getMember(this)!!.id
+        characterId = intent.getLongExtra("characterId",-1)
+
+
         setContentView(binding.root)
         makeNumbers()
         setButtons()
         createTimer().start()
     }
 
-    private fun createTimer() = object : CountDownTimer(15000, 1000) {
+    private fun createTimer() = object : CountDownTimer(20000, 1000) {
         override fun onTick(millisUntilFinished: Long) {
             var time = (millisUntilFinished / 1000).toInt()
             timer.text = time.toString()
         }
 
         override fun onFinish() {
-    //                QuestUtil.quizFail(this@, service, markerId)
+            QuestUtil.quizFail(this@NumberPuzzleGameActivity, service, markerId)
             val intent = Intent(this@NumberPuzzleGameActivity, MapActivity::class.java)
             intent.putExtra("result", false)
             setResult(RESULT_CANCELED, intent)
@@ -69,6 +88,7 @@ class NumberPuzzleGameActivity : AppCompatActivity() {
                         if (nextNumber == 17)   gameClear()
                     } else {
                         Toast.makeText(this, "올바르지 않은 숫자 선택!", Toast.LENGTH_SHORT)
+
                     }
                 }
             }
@@ -76,8 +96,11 @@ class NumberPuzzleGameActivity : AppCompatActivity() {
     }
 
     private fun gameClear() {
+        println("미션 성공")
+        QuestUtil.quizSuccess(this@NumberPuzzleGameActivity, service, memberId, markerId, characterId)
+
         val intent = Intent(this@NumberPuzzleGameActivity, MapActivity::class.java)
-        intent.putExtra("result", true)
+        intent.putExtra("result",true)
         setResult(RESULT_OK, intent)
         finish()
     }

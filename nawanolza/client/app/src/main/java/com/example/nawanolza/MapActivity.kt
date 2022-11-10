@@ -366,6 +366,7 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
         naverMap.cameraPosition = cameraPosition
         this.naverMap = naverMap
 
+
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(this) //gps 자동으로 받아오기
         setUpdateLocationListner() //내위치를 가져오는 코드

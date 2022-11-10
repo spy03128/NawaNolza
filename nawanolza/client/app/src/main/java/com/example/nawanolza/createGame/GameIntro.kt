@@ -12,6 +12,7 @@ import com.example.nawanolza.retrofit.RetrofitConnection
 import com.example.nawanolza.retrofit.enterroom.EnterRoomRequest
 import com.example.nawanolza.retrofit.enterroom.EnterRoomResponse
 import com.example.nawanolza.retrofit.enterroom.EnterRoomService
+import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -47,7 +48,10 @@ class GameIntro : AppCompatActivity() {
                     val intent = Intent(this@GameIntro, Waiting::class.java)
                     intent.putExtra("entryCode", response.body()?.entryCode)
                     when(response.code()){
-                        200 -> startActivity(intent)
+                        200 -> {
+                            intent.putExtra("data", GsonBuilder().create().toJson(response.body()))
+                            startActivity(intent)
+                        }
                         else -> Toast.makeText(this@GameIntro, "잘못된 정보입니다", Toast.LENGTH_SHORT).show()
                     }
                 }

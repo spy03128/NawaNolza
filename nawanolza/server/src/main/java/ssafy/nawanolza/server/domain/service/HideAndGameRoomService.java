@@ -47,7 +47,7 @@ public class HideAndGameRoomService {
                 hideAndSeekGameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
         Map<String, Object> roles = hideAndSeekGameRoom.startGame();
         GameStartEvent gameStartDTO = new GameStartEvent(entryCode, (Long) roles.get("tagger"),
-                (List) roles.get("runners"), hideAndSeekGameRoom.getStartTime());
+                (List) roles.get("runners"), hideAndSeekGameRoom.getStartTime(), hideAndSeekGameRoom.getHideAndSeekProperties().getPlayTime());
         return gameStartDTO;
     }
 

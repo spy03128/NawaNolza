@@ -15,4 +15,5 @@ public class GameStartEvent {
     private Long tagger;
     private List<Long> runners;
     private LocalDateTime startTime;
+    private long playTime;
 }

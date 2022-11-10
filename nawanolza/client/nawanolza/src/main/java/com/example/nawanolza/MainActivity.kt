@@ -53,7 +53,7 @@ class MainActivity : Activity() {
 
             if (message != null) {
                 if(message.substring(0,1)=="w"){
-                    Log.i("Main Activity", "dd")
+                    Log.i("Main Activity", "Waiting display")
                     progressBarWaiting.visibility = View.VISIBLE
                     progressBarAlarm.visibility = View.GONE
                     textViewWaiting.visibility = View.VISIBLE

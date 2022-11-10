@@ -38,6 +38,7 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 
 import com.google.android.gms.location.*
+import com.google.gson.GsonBuilder
 
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -149,6 +150,7 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                 }.create()
 
 
+
                 dialog.window?.apply {
                     setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 }
@@ -222,8 +224,103 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                             val body = response.body()
 
                             quizInfo = response.body() ?: QuestResponse()
+                            println("=======quizInfo======")
+                            println(quizInfo)
+
+                            println("=====quiz info accessible====")
+                            println(quizInfo.accessible)
+
+                            checkQuestType()
+
+                        }
+
+                        private fun checkQuestType() {
+                            if (!quizInfo.accessible) {
+                                val dialog = AlertDialog.Builder(this@MapActivity).apply {
+
+                                }.create()
 
 
+                                dialog.window?.apply {
+                                    setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                }
+
+                                dialog.apply {
+                                    setView(layoutInflater.inflate(R.layout.dialog_play, null))
+
+                                    show()
+                                }
+                            } else {
+                                if (markerInfo.questType == 0) {
+                                    val intent = Intent(this@MapActivity, QuizActivity::class.java)
+
+                                    intent.putExtra(
+                                        "markerId",
+                                        (marker.tag as CharacterLocationResponseItem).markerId
+                                    )
+
+                                    intent.putExtra(
+                                        "characterId",
+                                        (marker.tag as CharacterLocationResponseItem).characterId
+                                    )
+                                    intent.putExtra(
+                                        "quizInfo",
+                                        GsonBuilder().create().toJson(quizInfo)
+                                    )
+
+
+
+                                    activityResult.launch(intent)
+                                } else if (markerInfo.questType == 1) {
+                                    val intent =
+                                        Intent(this@MapActivity, GameBoomActivity::class.java)
+
+                                    intent.putExtra(
+                                        "markerId",
+                                        (marker.tag as CharacterLocationResponseItem).markerId
+                                    )
+
+                                    intent.putExtra(
+                                        "characterId",
+                                        (marker.tag as CharacterLocationResponseItem).characterId
+                                    )
+
+
+                                    activityResult.launch(intent)
+                                } else if (markerInfo.questType == 2) {
+                                    val intent =
+                                        Intent(this@MapActivity, CardGameActivity::class.java)
+
+                                    intent.putExtra(
+                                        "markerId",
+                                        (marker.tag as CharacterLocationResponseItem).markerId
+                                    )
+
+                                    intent.putExtra(
+                                        "characterId",
+                                        (marker.tag as CharacterLocationResponseItem).characterId
+                                    )
+
+
+                                    activityResult.launch(intent)
+                                } else if (markerInfo.questType == 3) {
+                                    val intent =
+                                        Intent(this@MapActivity, CalcGameActivity::class.java)
+
+                                    intent.putExtra(
+                                        "markerId",
+                                        (marker.tag as CharacterLocationResponseItem).markerId
+                                    )
+
+                                    intent.putExtra(
+                                        "characterId",
+                                        (marker.tag as CharacterLocationResponseItem).characterId
+                                    )
+
+
+                                    activityResult.launch(intent)
+                                }
+                            }
                         }
 
                         override fun onFailure(call: Call<QuestResponse>, t: Throwable) {
@@ -231,76 +328,7 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                             println(t)
 
                         }
-
                     })
-
-
-                    if(!quizInfo.accessible){
-                        val dialog = AlertDialog.Builder(this@MapActivity).apply {
-
-                        }.create()
-
-
-                        dialog.window?.apply {
-                            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                        }
-
-                        dialog.apply {
-                            setView(layoutInflater.inflate(R.layout.dialog_play,null))
-
-                            show()
-                        }
-                    }else{
-                        if(markerInfo.questType==0) {
-                            val intent = Intent(this@MapActivity, QuizActivity::class.java)
-
-                            intent.putExtra(
-                                "markerId",
-                                (marker.tag as CharacterLocationResponseItem).markerId
-                            )
-
-                            intent.putExtra(
-                                "characterId",
-                                (marker.tag as CharacterLocationResponseItem).characterId
-                            )
-
-
-                            activityResult.launch(intent)
-                        }else if(markerInfo.questType==1) {
-                            val intent = Intent(this@MapActivity, GameBoomActivity::class.java)
-
-                            intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
-
-                            intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
-
-
-                            activityResult.launch(intent)
-                        }
-                        else if(markerInfo.questType==2) {
-                            val intent = Intent(this@MapActivity, CardGameActivity::class.java)
-
-                            intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
-
-                            intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
-
-
-                            activityResult.launch(intent)
-                        }else if(markerInfo.questType==3) {
-                            val intent = Intent(this@MapActivity, CalcGameActivity::class.java)
-
-                            intent.putExtra("markerId", (marker.tag as CharacterLocationResponseItem).markerId)
-
-                            intent.putExtra("characterId",(marker.tag as CharacterLocationResponseItem).characterId)
-
-
-                            activityResult.launch(intent)
-                        }
-                    }
-
-
-
-
-
 
                     true
 

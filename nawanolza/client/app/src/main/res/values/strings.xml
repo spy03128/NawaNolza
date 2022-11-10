@@ -10,4 +10,5 @@
     <string name="create_room">방 생성하기</string>
     <string name="select_game">게임 선택</string>
     <string name="hide_seek">숨바꼭질</string>
+    <string name="timer">%d:%d</string>
 </resources>

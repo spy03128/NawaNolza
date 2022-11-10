@@ -17,7 +17,6 @@ class NumberPuzzleGameActivity : AppCompatActivity() {
     val numbers: ArrayList<Int> = ArrayList()
     lateinit var flags: HashMap<Int, Boolean>
     lateinit var binding: ActivityNumberPuzzleGameBinding
-    lateinit var adapter: NumberCardRvAdapter
     var nextNumber: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +29,7 @@ class NumberPuzzleGameActivity : AppCompatActivity() {
         createTimer().start()
     }
 
-    private fun createTimer() = object : CountDownTimer(7000, 1000) {
+    private fun createTimer() = object : CountDownTimer(15000, 1000) {
         override fun onTick(millisUntilFinished: Long) {
             var time = (millisUntilFinished / 1000).toInt()
             timer.text = time.toString()

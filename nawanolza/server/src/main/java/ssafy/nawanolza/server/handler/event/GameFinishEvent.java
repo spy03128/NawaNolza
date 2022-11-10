@@ -17,6 +17,7 @@ public class GameFinishEvent {
     }
 
     @AllArgsConstructor
+    @Getter
     private class Winner {
         private String name;
         private String image;

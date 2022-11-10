@@ -66,7 +66,7 @@ class Waiting : AppCompatActivity() {
         codeNumber.text = entryCode
 
         WaitingStompClient.connect()
-        WaitingStompClient.receive(SocketType.PARTICIPATE, entryCode.toString())
+        WaitingStompClient.receive(SocketType.PARTICIPATE, entryCode.toString(), adapter, this)
 
         check.setOnClickListener {
             check()

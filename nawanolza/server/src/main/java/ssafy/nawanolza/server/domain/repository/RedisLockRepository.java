@@ -21,4 +21,15 @@ public class RedisLockRepository {
     private String generateKey(Long key) {
         return key.toString();
     }
+
+    public String checkAllLock() {
+        return redisTemplate.opsForValue().get("ALL_MARKER");
+    }
+    public Boolean allLock() {
+        return redisTemplate.opsForValue().setIfAbsent("ALL_MARKER", "lock");
+    }
+
+    public Boolean allUnLock() {
+        return redisTemplate.delete("ALL_MARKER");
+    }
 }

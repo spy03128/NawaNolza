@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.databinding.ActivityWaitingBinding
 import com.example.nawanolza.hideandseek.RoleCheckActivity
 import com.example.nawanolza.retrofit.RetrofitConnection
@@ -34,6 +35,7 @@ class Waiting : AppCompatActivity() {
     lateinit var adapter: WaitingRvAdapter
 
     companion object {
+        var hostId = 0
         var memberList: ArrayList<WaitingMember> = ArrayList()
     }
 
@@ -58,6 +60,9 @@ class Waiting : AppCompatActivity() {
 
         roomInfo = GsonBuilder().create()
             .fromJson(intent.getStringExtra("data"), EnterRoomResponse::class.java)
+
+        memberList = roomInfo.participants
+        hostId = roomInfo.host.memberId
         hostName.text = roomInfo.host.name
         Glide.with(this).load(roomInfo.host.image).circleCrop().into(hostImg)
 

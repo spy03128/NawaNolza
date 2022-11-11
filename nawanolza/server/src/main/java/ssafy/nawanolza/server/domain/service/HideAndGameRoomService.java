@@ -3,14 +3,19 @@ package ssafy.nawanolza.server.domain.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ssafy.nawanolza.server.domain.entity.Member;
 import ssafy.nawanolza.server.domain.entity.dto.HideAndSeekGameRoom;
 import ssafy.nawanolza.server.domain.entity.dto.HideAndSeekProperties;
 import ssafy.nawanolza.server.domain.exception.CreateGameRoomLimitException;
 import ssafy.nawanolza.server.domain.exception.GameRoomNotFoundException;
+import ssafy.nawanolza.server.domain.exception.MemberNotFountException;
 import ssafy.nawanolza.server.domain.repository.HideAndSeekGameRoomRepository;
+import ssafy.nawanolza.server.domain.repository.MemberRepository;
+import ssafy.nawanolza.server.handler.event.GameFinishEvent;
 import ssafy.nawanolza.server.handler.event.GameStartEvent;
 import ssafy.nawanolza.server.domain.utils.CreateRoomUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class HideAndGameRoomService {
     private final HideAndSeekGameRoomRepository hideAndSeekGameRoomRepository;
+    private final MemberRepository memberRepository;
 
 
     public HideAndSeekGameRoom createGameRoom(Long hostId, HideAndSeekProperties hideAndSeekProperties) {
@@ -40,15 +46,56 @@ public class HideAndGameRoomService {
     }
 
     /*
-    * 게임 시간 전달, 게임 술래 전달
-    * */
+     * 게임 시간 전달, 게임 술래 전달
+     * */
     public GameStartEvent startGame(String entryCode) {
         HideAndSeekGameRoom hideAndSeekGameRoom =
                 hideAndSeekGameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
         Map<String, Object> roles = hideAndSeekGameRoom.startGame();
-        GameStartEvent gameStartDTO = new GameStartEvent(entryCode, (Long) roles.get("tagger"),
-                (List) roles.get("runners"), hideAndSeekGameRoom.getStartTime());
+        GameStartEvent gameStartDTO = GameStartEvent.of(entryCode, (Long) roles.get("tagger"),
+                (List) roles.get("runners"), hideAndSeekGameRoom.getStartTime(),
+                hideAndSeekGameRoom.getHideAndSeekProperties().getPlayTime(), hideAndSeekGameRoom.getLat(),
+                hideAndSeekGameRoom.getLng(), hideAndSeekGameRoom.getRange());
+        hideAndSeekGameRoomRepository.save(hideAndSeekGameRoom);
         return gameStartDTO;
+    }
+
+    public GameFinishEvent finishedGame(String entryCode) {
+        HideAndSeekGameRoom hideAndSeekGameRoom =
+                hideAndSeekGameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
+        boolean isWinTagger = winnerIsTagger(hideAndSeekGameRoom);
+        GameFinishEvent finishEvent = new GameFinishEvent(entryCode, isWinTagger);
+        List<Long> winnerList;
+        if (isWinTagger) {
+            winnerList = hideAndSeekGameRoom.getTaggers();
+        } else {
+            winnerList = hideAndSeekGameRoom.getRunners();
+        }
+        System.out.println(winnerList);
+        List<Member> winners = memberRepository.findAllByMemberId(winnerList).orElseThrow(() -> new MemberNotFountException(winnerList));
+        for (Member winner :winners) {
+            System.out.println(winner.getName());
+            finishEvent.make(winner.getName(), winner.getImage());
+        }
+        System.out.println(finishEvent);
+        System.out.println(finishEvent.getWinnerList());
+        System.out.println(finishEvent.getWinnerList().get(0));
+        return finishEvent;
+    }
+
+
+    /**
+     * true : 술래 승리, false : 숨는 팀 승리
+     */
+    private boolean winnerIsTagger(HideAndSeekGameRoom hideAndSeekGameRoom) {
+
+        // 숨는 팀 중 안잡힌 사람이 있는지 확인
+        for (Boolean isCatched : hideAndSeekGameRoom.getStatus().values()) {
+            if (!isCatched) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void deleteGameRoom(String entryCode) {
@@ -57,7 +104,9 @@ public class HideAndGameRoomService {
     }
 
     public void catchMember(String entryCode, Long memberId) {
-
+        HideAndSeekGameRoom hideAndSeekGameRoom = hideAndSeekGameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
+        hideAndSeekGameRoom.seekRunner(memberId);
+        hideAndSeekGameRoomRepository.save(hideAndSeekGameRoom);
     }
 
     public boolean checkOutOfRange(String entryCode, double currentLat, double currentLng) {

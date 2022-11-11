@@ -6,6 +6,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import ssafy.nawanolza.server.handler.event.GameFinishEvent;
 import ssafy.nawanolza.server.handler.event.GameStartEvent;
 
 @Slf4j
@@ -17,7 +18,13 @@ public class HideAndSeekEventHandler {
 
     @Async
     @EventListener
-    public void makerRemove(GameStartEvent event) {
+    public void gameStart(GameStartEvent event) {
         operations.convertAndSend("/sub/game/start/" + event.getEntryCode(), event);
+    }
+
+    @Async
+    @EventListener
+    public void gameFinish(GameFinishEvent event) {
+        operations.convertAndSend("/sub/game/finish/" + event.getEntryCode(), event);
     }
 }

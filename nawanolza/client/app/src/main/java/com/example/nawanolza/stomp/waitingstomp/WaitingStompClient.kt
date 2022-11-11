@@ -10,9 +10,15 @@ import com.example.nawanolza.hideandseek.PubGpsRequest
 import com.example.nawanolza.hideandseek.PubEventRequest
 import com.example.nawanolza.hideandseek.RoleCheckActivity
 import com.example.nawanolza.retrofit.createroom.MemberList
+import com.example.nawanolza.retrofit.enterroom.GetRoomResponse
 import com.example.nawanolza.stomp.SocketCommonDto
 import com.example.nawanolza.stomp.SocketType
+import com.example.nawanolza.stomp.SubGpsDto
 import com.google.gson.GsonBuilder
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.overlay.Marker
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.dto.LifecycleEvent
 import kotlin.concurrent.timer
@@ -22,6 +28,14 @@ class WaitingStompClient {
         val url = "wss://k7d103.p.ssafy.io/api/ws"
         val stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, url)
         var stopFlag = true
+        lateinit var roomInfo: GetRoomResponse
+        val markerMap: HashMap<Int, Marker> = HashMap()
+
+        // 마커 업데이트
+//        fun updateMarker(naverMap: NaverMap, subGpsDto: SubGpsDto) {
+//            if(markerMap.containsKey(subGpsDto.senderId))
+//                markerMap.get(subGpsDto.senderId).marker = null
+//        }
 
         // 소켓 연결
         fun connect() {
@@ -78,6 +92,7 @@ class WaitingStompClient {
         fun subGameStart(entryCode: String, context: Context) {
             stompClient.topic("/sub/game/start/$entryCode").subscribe{ topicMessage ->
                 Log.i("message Receive", topicMessage.payload)
+                roomInfo = GsonBuilder().create().fromJson(topicMessage.payload, GetRoomResponse::class.java)
 
                 val intent = Intent(context, RoleCheckActivity::class.java)
                 intent.putExtra("entryCode", entryCode)
@@ -85,14 +100,51 @@ class WaitingStompClient {
             }
         }
 
-        // 참여자 위치 받아서 실시간으로 업데이트
-        fun subGPS(entryCode: String){
+        // 참여자 위치 받기 (구독)
+        fun subGPS(entryCode: String, naverMap: NaverMap, activity: Activity, senderId: Int){
+            println("구독했나요?")
             stompClient.topic("/sub/gps/$entryCode").subscribe{ topicMessage ->
-                Log.i("message Receive", topicMessage.payload)
+                println("메세지 오나요?")
+                Log.i("subGPSMessage", topicMessage.payload)
+
+                var subDto: SubGpsDto = GsonBuilder().create().fromJson(topicMessage.payload, SubGpsDto::class.java)
+                println("================= start ===================")
+                println(subDto)
+                println("================= end ===================")
+
+                if(senderId != subDto.senderId) {
+                    activity.runOnUiThread {
+                        if(markerMap.containsKey(subDto.senderId)) {
+                            markerMap.get(subDto.senderId)?.map = null
+                        }
+
+                        val myLocation = LatLng(subDto.lat, subDto.lng)
+                        val marker = Marker()
+                        //마커
+
+                        marker.position= myLocation
+//                    marker.width  = 250
+//                    marker.height = 250
+////                    marker.icon = OverlayImage.fromResource(MarkerImageUtil.getImage(current.characterId) as Int)
+
+                        markerMap.put(subDto.senderId, marker)
+                        marker.map = naverMap
+//                    var timeFlag: Boolean = false
+
+//                    timer(initialDelay = 0L, period = 1000L) {
+//                        activity.runOnUiThread{
+////                            marker.map = null
+//                            timeFlag = true
+//                        }
+//                        if (timeFlag) cancel()
+//                    }
+
+                    }
+                }
             }
         }
 
-        // 잡힌 참여자 받아서 실시간으로 업데이트
+        // 잡힌 참여자 받기 구독
         fun subEvent(entryCode: String){
             stompClient.topic("/sub/event/$entryCode").subscribe{ topicMessage ->
                 Log.i("message Receive", topicMessage.payload)
@@ -104,7 +156,7 @@ class WaitingStompClient {
         // 내 위치 전송
         fun pubGPS(pubGpsRequest: PubGpsRequest) {
             val data = GsonBuilder().create().toJson(pubGpsRequest)
-            stompClient.send("/pub/"+ pubGpsRequest.type, data).subscribe()
+            stompClient.send("/pub/gps", data).subscribe()
         }
 
         //참가자 잡기

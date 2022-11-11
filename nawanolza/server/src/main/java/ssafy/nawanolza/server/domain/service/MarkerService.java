@@ -3,14 +3,17 @@ package ssafy.nawanolza.server.domain.service;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ssafy.nawanolza.server.config.MarkerConfig;
 import ssafy.nawanolza.server.domain.entity.Character;
 import ssafy.nawanolza.server.domain.entity.Game;
 import ssafy.nawanolza.server.domain.entity.dto.Marker;
+import ssafy.nawanolza.server.domain.exception.AllMarkerLockException;
 import ssafy.nawanolza.server.domain.repository.MapCharacterRedisRepository;
 import ssafy.nawanolza.server.domain.repository.RedisLockRepository;
+import ssafy.nawanolza.server.handler.event.MarkerCreateEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +29,18 @@ public class MarkerService {
     private final CharacterService characterService;
     private final MapCharacterRedisRepository mapCharacterRedisRepository;
     private final RedisLockRepository redisLockRepository;
+    private final ApplicationEventPublisher publisher;
 
     /*
      * true : 퀘스트 시작, 해당 마커 락 걸림
      * false : 퀘스트 시작 X, 해당 마커 다른 사람이 락 걸어놓음
      * */
     public boolean questStart(Long key) {
+        if (redisLockRepository.checkAllLock() != null){
+            log.info("All Marker locked!! Please wait 30 seconds...");
+            throw new AllMarkerLockException();
+        }
+
         return redisLockRepository.lock(key);
     }
 
@@ -57,6 +66,15 @@ public class MarkerService {
     /*
      * 마커 만들기
      * */
+    @Scheduled(cron = "30 59 5,17 * * *", zone = "Asia/Seoul")
+    public void allMarkerLock() {
+        if (redisLockRepository.allLock()) {
+            log.info("All Marker lock success...");
+        } else {
+            log.info("It is already locked. Please confirm it.");
+        }
+    }
+
     @Scheduled(cron = "0 0 6,18 * * *", zone = "Asia/Seoul")
     public void insertMarker(){
         log.info("!! Marker Update...");
@@ -71,6 +89,10 @@ public class MarkerService {
         List<Game> games = gameService.findGame();
         makeMarkers(normalCharacters, rareCharacters, games);
         log.info("Marker Update Success!!");
+        redisLockRepository.allUnLock();
+        log.info("All Marker Unlock");
+        MarkerCreateEvent markerCreateEvent = new MarkerCreateEvent("마커 업데이트가 완료되었습니다. 새로고침해주세요.");
+        publisher.publishEvent(markerCreateEvent);
     }
 
     public boolean checkMarkerInRedis() {

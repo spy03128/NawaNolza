@@ -8,31 +8,30 @@ import android.location.Location
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.R
 import com.example.nawanolza.createGame.WaitingMember
 import com.example.nawanolza.databinding.ActivityMainHideSeekBinding
-import com.example.nawanolza.retrofit.RetrofitConnection
-import com.example.nawanolza.retrofit.enterroom.GetRoomResponse
-import com.example.nawanolza.retrofit.enterroom.GetRoomService
+import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import com.google.android.gms.location.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.CircleOverlay
+import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.activity_role_check_acitivity.*
 import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
 import kotlinx.android.synthetic.main.fragment_participants.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -42,12 +41,13 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     private val permission_request = 99
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
+    var senderId = 0
+
 
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
 
     lateinit var binding: ActivityMainHideSeekBinding
     lateinit var adapter: HideSeekRvAdapter
-    lateinit var roomInfo: GetRoomResponse
     lateinit var entryCode: String
 
     private var waitingMember = arrayListOf(
@@ -66,6 +66,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         binding = ActivityMainHideSeekBinding.inflate(layoutInflater)
         setContentView(binding.root)
         entryCode = intent.getStringExtra("entryCode").toString()
+        senderId = LoginUtil.getMember(this)?.id!!
 
         if (isPermitted()) {
             startProcess()
@@ -74,9 +75,8 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         }//권한 확인
 
 
-
+        updateTime()
         setRecycleView()
-        getData()
 
         binding.memberDetail.setOnClickListener {
             val intent = Intent(this@MainHideSeek, MemberDetail::class.java )
@@ -91,55 +91,26 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         binding.mRecyclerView.layoutManager = GridLayoutManager(this, 4)
     }
 
-    private fun getData() {
 
-        val retrofitAPI = RetrofitConnection.getInstance().create(
-            GetRoomService::class.java
-        )
-        println("check entrycode")
-        println(entryCode)
-        retrofitAPI.getRoomInfo(entryCode).enqueue(object : Callback<GetRoomResponse> {
-            override fun onResponse(
-                call: Call<GetRoomResponse>,
-                response: Response<GetRoomResponse>
-            ) {
-                println("first")
-                println(response)
-                response.body()?.let{
-                    println("second")
-                    updateUI(it)
-                }
-                // 게임시간
-                // playtime
-                // tagger
-                // runners
-                // starttime
-            }
-
-            override fun onFailure(call: Call<GetRoomResponse>, t: Throwable) {
-                println("fail")
-                println(call)
-                println(t)
-            }
-        })
-
-    }
-
-    fun updateUI(getRoomResponse: GetRoomResponse) {
+    private fun updateTime() {
         println("third")
-        roomInfo = getRoomResponse
-        println(roomInfo)
-        println(getRoomResponse)
         println("===========checking========")
-        println(roomInfo.startTime)
 
-        val startTime = roomInfo.startTime.slice(0..22)
+
+        val startTime = WaitingStompClient.roomInfo.startTime.slice(0..22)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
+
         val start = LocalDateTime.parse(startTime, formatter)
-        val end = start.plusMinutes(roomInfo.playTime)
-        val duration: Duration = Duration.between(start, end)
+        val end = start.plusMinutes(5)
+
+        // 원래는 playTime/60 더해야함
+        println(WaitingStompClient.roomInfo.playTime)
+        println(end)
+
+        val duration: Duration = Duration.between(LocalDateTime.now(), end)
         val seconds = duration.seconds
+
         println("==============check==============")
         println(seconds)
 
@@ -152,6 +123,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                 binding.tvTime.text = "$minutes:$sec"
             }
             override fun onFinish() {
+                /** 끝났을 때 **/
                 Toast.makeText(this@MainHideSeek, "끝", Toast.LENGTH_SHORT).show()
             }
         }.start()
@@ -203,32 +175,33 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 //            val latLng = LatLng(coord.latitude, coord.longitude)
 //            setPolyline(latLng)
 //        }
-        setPolyline(LatLng(36.1071562, 128.4164185))
+        setPolyline(LatLng(WaitingStompClient.roomInfo.lat, WaitingStompClient.roomInfo.lng))
+
+        WaitingStompClient.subGPS(entryCode, naverMap, this, senderId)
     }
 
     //내 위치를 가져오는 코드
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient //자동으로 gps값을 받아온다.
     lateinit var locationCallback: LocationCallback //gps응답 값을 가져온다.
-    //lateinit: 나중에 초기화 해주겠다는 의미
 
     @SuppressLint("MissingPermission")
     fun setUpdateLocationListener() {
         val locationRequest = LocationRequest.create()
         locationRequest.run {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY //높은 정확도
-//            interval = 1000 //1초에 한번씩 GPS 요청
+            interval = 1000 //1초에 한번씩 GPS 요청
         }
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
                 for ((i, location) in locationResult.locations.withIndex()) {
-//                    Log.d("location: ", "${location.latitude}, ${location.longitude}")
-                    setLastLocation(location)
+                    Log.d("location: ", "${location.latitude}, ${location.longitude}")
+//                    setLastLocation(location)
+                    sendMyLocation(location)
                 }
             }
         }
-        //location 요청 함수 호출 (locationRequest, locationCallback)
 
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest,
@@ -236,22 +209,30 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             Looper.myLooper()
         )
 
-    }//좌표계를 주기적으로 갱신
+    }
+
+
+    // 내 위치 보내기
+    fun sendMyLocation(location: Location) {
+        val pubGpsRequest = PubGpsRequest(entryCode, location.latitude, location.longitude, senderId, "GPS")
+        WaitingStompClient.pubGPS(pubGpsRequest)
+    }
 
     fun setLastLocation(location: Location) {
         val myLocation = LatLng(location.latitude, location.longitude)
-
-
-//        marker.position = LatLng(
-//            naverMap.cameraPosition.target.latitude,
-//            naverMap.cameraPosition.target.longitude
-//        )
-
+        val marker = Marker()
         //마커
         val cameraUpdate = CameraUpdate.scrollTo(myLocation)
         naverMap.moveCamera(cameraUpdate)
         naverMap.maxZoom = 18.0
         naverMap.minZoom = 5.0
+
+        marker.position= myLocation
+        marker.width  = 250
+        marker.height = 250
+//        marker.icon = OverlayImage.fromResource(MarkerImageUtil.getImage(current.characterId) as Int)
+        marker.map = naverMap
+
 //        marker.map = null
     }
 
@@ -259,10 +240,8 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 //        val myLocation = LatLng(location.latitude, location.longitude)
         val locationOverlay = naverMap.locationOverlay
 
-
-            locationOverlay.position = LatLng(36.1071562, 128.4164185)
+        locationOverlay.position = LatLng(36.1071562, 128.4164185)
         locationOverlay.isVisible = true
-
     }
 
     //좌표간 거리 구하기

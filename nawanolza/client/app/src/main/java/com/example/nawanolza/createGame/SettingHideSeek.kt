@@ -106,6 +106,8 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
             if(check){
                 val hostId = LoginUtil.getMember(this@SettingHideSeek)!!.id
                 createRoomRequest = CreateRoomRequest(lat, lng, gameTime, time, 100, hostId)
+                println("=====게임만들기======")
+                println(createRoomRequest)
                 retrofitAPI.postCreateRoomHide(createRoomRequest).enqueue(object:Callback<CreateRoomHideResponse> {
                     override fun onResponse(
                         call: Call<CreateRoomHideResponse>,
@@ -223,19 +225,19 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
 
 
-     private fun setPolyline(latLng:LatLng){
-         if(!check){
-             circle.center = latLng
-             val color = Color.parseColor("#e3f2fd")
-             circle.outlineWidth = 1
-             circle.color = color
-             circle.radius = 100.0
-             circle.map = naverMap
-             check = true
-         }else{
-             circle.map = null
-             check = false
-         }
+    private fun setPolyline(latLng:LatLng){
+        if(!check){
+            circle.center = latLng
+            val color = Color.parseColor("#e3f2fd")
+            circle.outlineWidth = 1
+            circle.color = color
+            circle.radius = 100.0
+            circle.map = naverMap
+            check = true
+        }else{
+            circle.map = null
+            check = false
+        }
     }
 }
 

@@ -4,7 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.R
+import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.databinding.ActivityRoleCheckAcitivityBinding
 import kotlinx.android.synthetic.main.activity_role_check_acitivity.*
 import kotlinx.android.synthetic.main.fragment_participants.*
@@ -20,10 +22,8 @@ class RoleCheckActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         entryCode = intent.getStringExtra("entryCode").toString()
-        // 술래 참여자 나눠서 fragment 보여주기
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragmentFrame, ParticipantsFragment())
-        fragmentTransaction.commit()
+
+        setRoleFragment()
 
         object : CountDownTimer(2000, 1000) {
 
@@ -39,6 +39,19 @@ class RoleCheckActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }.start()
+    }
+
+
+    // 술래 참여자 나눠서 fragment 보여주기
+    private fun setRoleFragment() {
+
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+
+        if (Waiting.hostId == LoginUtil.getMember(this)?.id) {
+            fragmentTransaction.replace(R.id.fragmentFrame, ItFragment())
+        } else fragmentTransaction.replace(R.id.fragmentFrame, ParticipantsFragment())
+
+        fragmentTransaction.commit()
     }
 
 }

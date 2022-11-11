@@ -3,6 +3,7 @@ package ssafy.nawanolza.server.domain.service;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ssafy.nawanolza.server.config.MarkerConfig;
@@ -12,6 +13,7 @@ import ssafy.nawanolza.server.domain.entity.dto.Marker;
 import ssafy.nawanolza.server.domain.exception.AllMarkerLockException;
 import ssafy.nawanolza.server.domain.repository.MapCharacterRedisRepository;
 import ssafy.nawanolza.server.domain.repository.RedisLockRepository;
+import ssafy.nawanolza.server.handler.event.MarkerCreateEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class MarkerService {
     private final CharacterService characterService;
     private final MapCharacterRedisRepository mapCharacterRedisRepository;
     private final RedisLockRepository redisLockRepository;
+    private final ApplicationEventPublisher publisher;
 
     /*
      * true : 퀘스트 시작, 해당 마커 락 걸림
@@ -88,6 +91,8 @@ public class MarkerService {
         log.info("Marker Update Success!!");
         redisLockRepository.allUnLock();
         log.info("All Marker Unlock");
+        MarkerCreateEvent markerCreateEvent = new MarkerCreateEvent("마커 업데이트가 완료되었습니다. 새로고침해주세요.");
+        publisher.publishEvent(markerCreateEvent);
     }
 
     public boolean checkMarkerInRedis() {

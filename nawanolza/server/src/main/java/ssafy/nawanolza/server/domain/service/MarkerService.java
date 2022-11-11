@@ -9,6 +9,7 @@ import ssafy.nawanolza.server.config.MarkerConfig;
 import ssafy.nawanolza.server.domain.entity.Character;
 import ssafy.nawanolza.server.domain.entity.Game;
 import ssafy.nawanolza.server.domain.entity.dto.Marker;
+import ssafy.nawanolza.server.domain.exception.AllMarkerLockException;
 import ssafy.nawanolza.server.domain.repository.MapCharacterRedisRepository;
 import ssafy.nawanolza.server.domain.repository.RedisLockRepository;
 
@@ -32,6 +33,11 @@ public class MarkerService {
      * false : 퀘스트 시작 X, 해당 마커 다른 사람이 락 걸어놓음
      * */
     public boolean questStart(Long key) {
+        if (redisLockRepository.checkAllLock() != null){
+            log.info("All Marker locked!! Please wait 30 seconds...");
+            throw new AllMarkerLockException();
+        }
+
         return redisLockRepository.lock(key);
     }
 
@@ -57,6 +63,15 @@ public class MarkerService {
     /*
      * 마커 만들기
      * */
+    @Scheduled(cron = "30 59 5,17 * * *", zone = "Asia/Seoul")
+    public void allMarkerLock() {
+        if (redisLockRepository.allLock()) {
+            log.info("All Marker lock success...");
+        } else {
+            log.info("It is already locked. Please confirm it.");
+        }
+    }
+
     @Scheduled(cron = "0 0 6,18 * * *", zone = "Asia/Seoul")
     public void insertMarker(){
         log.info("!! Marker Update...");
@@ -71,6 +86,8 @@ public class MarkerService {
         List<Game> games = gameService.findGame();
         makeMarkers(normalCharacters, rareCharacters, games);
         log.info("Marker Update Success!!");
+        redisLockRepository.allUnLock();
+        log.info("All Marker Unlock");
     }
 
     public boolean checkMarkerInRedis() {

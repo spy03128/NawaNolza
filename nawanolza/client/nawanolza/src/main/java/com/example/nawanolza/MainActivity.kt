@@ -7,22 +7,26 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.nawanolza.databinding.ActivityMainBinding
-import org.w3c.dom.Text
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 /*
 * w : 대기화면
-* s-9:30-7 : 게임 시작 초기 세팅 (10분-7명)
-* g-6-김땡땡 : 6명 남음, 김땡땡 잡힘
+* s/2022-09-30-06-30(종료시간)/7(인원) : 게임 시작 초기 세팅 (10분-7명)
+* g/6/김땡땡 : 6명 남음, 김땡땡 잡힘
 * a : 영역 밖 알람
-* r-0 : 술래팀 승리
-* r-1 : 숨는팀 승리
+* r/0 : 술래팀 승리
+* r/1 : 숨는팀 승리
 * */
 class MainActivity : Activity() {
 
@@ -57,7 +61,7 @@ class MainActivity : Activity() {
 
 
             if (message != null) {
-                val str = message.split("-")
+                val str = message.split("/")
 
                 if(str[0]=="w"){
                     Log.i("Main Activity", "Waiting display")
@@ -79,12 +83,40 @@ class MainActivity : Activity() {
                     textViewResult2.visibility = View.GONE
 
                     textViewStart1.text = "남은 인원" + str[2] + "명"
-                    val time = str[1].split(":")
-                    if(time[0].length==1){
-                        textViewStart2.text = "0" + str[1];
-                    }else{
-                        textViewResult2.text = str[1];
-                    }
+                    val duration: Duration = Duration.between(LocalDateTime.now(), LocalDateTime.parse(str[1], DateTimeFormatter.ISO_DATE_TIME))
+                    object : CountDownTimer(duration.seconds*1000, 1000) {
+                        override fun onFinish() {
+                            Log.i("Main Activity", "타이머 끝")
+                        }
+                        override fun onTick(p0: Long) {
+                            val minutes = p0/1000/60
+                            val sec = p0/1000%60
+
+                            if(minutes<10 && sec<10){
+                                textViewStart2.text = String.format("0%s:0%s",minutes, sec)
+                            } else if(minutes<10 && sec>=10){
+                                textViewStart2.text = String.format("0%s:%s",minutes, sec)
+                            } else if(minutes>=10 && sec<10){
+                                textViewStart2.text = String.format("%s:0%s",minutes, sec)
+                            }
+                            else{
+                                textViewStart2.text = String.format("%s:%s",minutes, sec)
+                            }
+                        }
+                    }.start()
+
+                }else if(str[0]=="g"){
+                    Log.i("Main Activity", "Gaming display")
+                    progressBarWaiting.visibility = View.GONE
+                    progressBarAlarm.visibility = View.GONE
+                    textViewWaiting.visibility = View.GONE
+                    textViewStart1.visibility = View.VISIBLE
+                    textViewStart2.visibility = View.VISIBLE
+                    textViewResult1.visibility = View.GONE
+                    textViewResult2.visibility = View.GONE
+
+                    textViewStart1.text = "남은 인원" + str[1] + "명"
+                    Toast.makeText(this@MainActivity,str[2] + "님이 잡혔습니다!", Toast.LENGTH_SHORT).show();
                 }
             }
         }

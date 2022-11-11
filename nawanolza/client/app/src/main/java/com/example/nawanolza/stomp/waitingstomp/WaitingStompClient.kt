@@ -6,17 +6,16 @@ import android.content.Intent
 import android.util.Log
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.createGame.WaitingRvAdapter
-import com.example.nawanolza.hideandseek.PubGpsRequest
 import com.example.nawanolza.hideandseek.PubEventRequest
+import com.example.nawanolza.hideandseek.PubGpsRequest
 import com.example.nawanolza.hideandseek.RoleCheckActivity
 import com.example.nawanolza.retrofit.createroom.MemberList
 import com.example.nawanolza.retrofit.enterroom.GetRoomResponse
-import com.example.nawanolza.stomp.SocketCommonDto
+import com.example.nawanolza.stomp.CatchResponse
 import com.example.nawanolza.stomp.SocketType
 import com.example.nawanolza.stomp.SubGpsDto
 import com.google.gson.GsonBuilder
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import ua.naiksoftware.stomp.Stomp
@@ -148,6 +147,12 @@ class WaitingStompClient {
         fun subEvent(entryCode: String){
             stompClient.topic("/sub/event/$entryCode").subscribe{ topicMessage ->
                 Log.i("message Receive", topicMessage.payload)
+                val data = GsonBuilder().create().fromJson(topicMessage.payload, CatchResponse::class.java)
+                for(member in Waiting.memberList){
+                    if(data.catchMemberId == member.memberId){
+                        member.status = false
+                    }
+                }
             }
         }
 

@@ -50,16 +50,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     lateinit var adapter: HideSeekRvAdapter
     lateinit var entryCode: String
 
-    private var waitingMember = arrayListOf(
-        WaitingMember(1,"노현우","1"),
-        WaitingMember(2,"김땡땡","2"),
-        WaitingMember(3,"노땡땡","3"),
-        WaitingMember(3,"노땡땡","3"),
-        WaitingMember(3,"노땡땡","3"),
-        WaitingMember(3,"노땡땡","3"),
-        WaitingMember(3,"노땡땡","3"),
-        WaitingMember(3,"노땡땡","3"),
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +76,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     }
 
     private fun setRecycleView() {
-        adapter = HideSeekRvAdapter(waitingMember)
+        adapter = HideSeekRvAdapter(this)
         binding.mRecyclerView.adapter = adapter
         binding.mRecyclerView.layoutManager = GridLayoutManager(this, 4)
     }
@@ -198,6 +188,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                 for ((i, location) in locationResult.locations.withIndex()) {
                     Log.d("location: ", "${location.latitude}, ${location.longitude}")
 //                    setLastLocation(location)
+
                     sendMyLocation(location)
                 }
             }

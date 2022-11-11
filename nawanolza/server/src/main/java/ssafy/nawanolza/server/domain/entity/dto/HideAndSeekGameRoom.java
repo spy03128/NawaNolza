@@ -10,6 +10,7 @@ import ssafy.nawanolza.server.domain.exception.GameRoomOverflowException;
 import ssafy.nawanolza.server.domain.exception.UnderstaffedException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter @Setter
 @RedisHash("HideAndSeekGameRoom")
@@ -68,9 +69,21 @@ public class HideAndSeekGameRoom {
     public Map<String, Object> startGame() {
         if (participants.size() < 2)    throw new UnderstaffedException(participants.size());
         participants.stream().forEach(id -> status.put(id, false));
-        Map<String, Object> returnMap = assignRoles(participants);
+        Map<String, Object> playersByRole = assignRoles(participants);
         startTime = LocalDateTime.now();
-        return returnMap;
+        return playersByRole;
+    }
+
+    public List<Long> getTaggers() {
+        System.out.println(roles);
+        List<Long> taggers = roles.keySet().stream().filter(id -> roles.get(id) == Role.TAGGER).collect(Collectors.toList());
+        return taggers;
+    }
+
+    public List<Long> getRunners() {
+        System.out.println(roles);
+        List<Long> runners = roles.keySet().stream().filter(id -> roles.get(id) == Role.RUNNER).collect(Collectors.toList());
+        return runners;
     }
 
     private void designateTagger(List<Long> participants, HashMap<String, Object> returnMap) {

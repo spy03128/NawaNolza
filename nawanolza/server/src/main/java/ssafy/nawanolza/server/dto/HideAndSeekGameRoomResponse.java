@@ -22,7 +22,10 @@ public class HideAndSeekGameRoomResponse extends ResponseDto {
         this.host = new MemberDto(repository.findById(gameRoom.getHostId()).orElseThrow(() -> new MemberNotFountException(gameRoom.getHostId())));
         this.entryCode = gameRoom.getEntryCode();
         this.hideAndSeekProperties = gameRoom.getHideAndSeekProperties();
-        this.participants = repository.findAllByMemberId(gameRoom.getParticipants().stream().filter(x -> !x.equals(gameRoom.getHostId())).collect(Collectors.toList())).stream().map(MemberDto::new).collect(Collectors.toList());
+        this.participants = repository.findAllByMemberId(gameRoom.getParticipants().stream()
+                .filter(x -> !x.equals(gameRoom.getHostId())).collect(Collectors.toList()))
+                .orElseThrow(() -> new MemberNotFountException(gameRoom.getParticipants()))
+                .stream().map(MemberDto::new).collect(Collectors.toList());
     }
 
     public static HideAndSeekGameRoomResponse makeEntryResponse(HideAndSeekGameRoom gameRoom, MemberRepository memberRepository) {

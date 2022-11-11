@@ -48,7 +48,7 @@ class NumberPuzzleGameActivity : AppCompatActivity() {
         createTimer().start()
     }
 
-    private fun createTimer() = object : CountDownTimer(20000, 1000) {
+    private fun createTimer() = object : CountDownTimer(10000, 1000) {
         override fun onTick(millisUntilFinished: Long) {
             var time = (millisUntilFinished / 1000).toInt()
             timer.text = time.toString()
@@ -83,7 +83,7 @@ class NumberPuzzleGameActivity : AppCompatActivity() {
                 if(flags.get(i) == false) {
                     if(numbers.get(i).equals(nextNumber)) {
                         nextNumber++
-                        buttons.get(i).setImageResource(R.drawable.card_question)
+                        buttons.get(i).setImageResource(R.drawable.number_card_off)
                         flags.put(i, true)
                         if (nextNumber == 17)   gameClear()
                     } else {

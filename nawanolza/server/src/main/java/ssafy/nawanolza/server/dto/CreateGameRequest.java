@@ -8,8 +8,8 @@ public class CreateGameRequest {
     private Long hostId;
     private double lat;
     private double lng;
-    private long playTime = 1000 * 60 * 10L;
-    private long hideTime = 1000 * 60;
+    private long playTime;
+    private long hideTime;
     private int range;
 
     public HideAndSeekProperties makeHideAndSeekProperties() {

@@ -50,7 +50,7 @@ class MainHideSeekParticipant : OnMapReadyCallback, AppCompatActivity() {
         binding = ActivityMainHideSeekParticipantBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = HideSeekRvAdapter(waitingMember)
+        adapter = HideSeekRvAdapter(this)
         binding.mRecyclerView.adapter = adapter
         binding.mRecyclerView.layoutManager = GridLayoutManager(this, 4)
 

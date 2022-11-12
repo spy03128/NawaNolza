@@ -47,7 +47,7 @@ class RoleCheckActivity : AppCompatActivity() {
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 
-        if (Waiting.hostId == LoginUtil.getMember(this)?.id) {
+        if (Waiting.taggerList.contains(Waiting.hostId)) {
             fragmentTransaction.replace(R.id.fragmentFrame, ItFragment())
         } else fragmentTransaction.replace(R.id.fragmentFrame, ParticipantsFragment())
 

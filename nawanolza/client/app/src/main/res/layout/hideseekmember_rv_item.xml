@@ -7,8 +7,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImg"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
         android:background="@drawable/round"
         android:src="@mipmap/ic_launcher_round"
         app:layout_constraintBottom_toBottomOf="@+id/progressBar"

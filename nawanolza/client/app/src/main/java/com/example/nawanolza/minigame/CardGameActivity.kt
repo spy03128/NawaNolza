@@ -51,10 +51,6 @@ class CardGameActivity : AppCompatActivity(), View.OnClickListener{
 
         init()
 
-        resetBtn = findViewById(R.id.reset_btn)
-        resetBtn.setOnClickListener(){
-            init()
-        }
 
 
 
@@ -185,7 +181,7 @@ class CardGameActivity : AppCompatActivity(), View.OnClickListener{
     private fun checkForMatch(preCardPostion: Int, position: Int) {
 
         if(cards.get(preCardPostion).imageId == cards.get(position).imageId){
-            resultText.text = "매치성공"
+            resultText.text = "매치 성공"
 
             cards.get(preCardPostion).isMatched = true
             cards.get(position).isMatched = true

@@ -160,13 +160,13 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap){
+        this.naverMap = naverMap
 
         val cameraPosition = CameraPosition(
-            LatLng(37.5666102, 126.9783881),  // 위치 지정
+            LatLng(36.1071562, 128.4164185),  // 위치 지정
             16.0 // 줌 레벨
         )
         naverMap.cameraPosition = cameraPosition
-        this.naverMap = naverMap
 
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(this) //gps 자동으로 받아오기
@@ -212,15 +212,10 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
     fun setLastLocation(location: Location) {
         val myLocation = LatLng(location.latitude, location.longitude)
-//        val marker = Marker()
-//        marker.position = LatLng(myLocation.latitude, myLocation.longitude)
-//        marker.map = naverMap
-        //마커
         val cameraUpdate = CameraUpdate.scrollTo(myLocation)
         naverMap.moveCamera(cameraUpdate)
         naverMap.maxZoom = 18.0
         naverMap.minZoom = 5.0
-        //marker.map = null
     }
 
 

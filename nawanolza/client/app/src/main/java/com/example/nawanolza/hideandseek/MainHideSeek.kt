@@ -1,6 +1,7 @@
 package com.example.nawanolza.hideandseek
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -9,14 +10,18 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.UiThread
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.R
+import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.createGame.WaitingMember
 import com.example.nawanolza.databinding.ActivityMainHideSeekBinding
 import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
@@ -26,9 +31,12 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
+import kotlinx.android.synthetic.main.activity_card_game.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.activity_role_check_acitivity.*
 import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
+import kotlinx.android.synthetic.main.activity_waiting.*
+import kotlinx.android.synthetic.main.catch_check_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_participants.*
 import java.time.Duration
 import java.time.LocalDate
@@ -79,6 +87,29 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         adapter = HideSeekRvAdapter(this)
         binding.mRecyclerView.adapter = adapter
         binding.mRecyclerView.layoutManager = GridLayoutManager(this, 4)
+        adapter.setItemClickListener(object: HideSeekRvAdapter.OnItemClickListener{
+            override fun onClick(v: View, position: Int) {
+//                Toast.makeText(this@MainHideSeek, "hi", Toast.LENGTH_SHORT).show()
+                val builder = AlertDialog.Builder(this@MainHideSeek)
+                val dialogView = layoutInflater.inflate(R.layout.catch_check_dialog, null)
+
+                val user = Waiting.memberHash[Waiting.runnerList[position]]
+                dialogView.username.text = user?.name
+                Glide.with(this@MainHideSeek).load(user?.image).circleCrop().into(dialogView.userImage)
+
+                if(Waiting.tagger == LoginUtil.getMember(this@MainHideSeek)?.id){
+                    builder.setView(dialogView)
+                        .setPositiveButton("확인") {dialogInterface, i ->
+                            val pubEventRequest = PubEventRequest(user!!.memberId, entryCode, "CATCH", Waiting.tagger, "EVENT")
+                            WaitingStompClient.pubEvent(pubEventRequest)
+                        }
+                        .setNegativeButton("돌아가기") { dialogInterface, i ->
+                        }
+                    builder.show()
+                }
+
+            }
+        })
     }
 
 
@@ -101,16 +132,18 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         val duration: Duration = Duration.between(LocalDateTime.now(), end)
         val seconds = duration.seconds
 
-        println("==============check==============")
-        println(seconds)
-
         /** 타이머 **/
         object : CountDownTimer(seconds*1000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 val minutes = (millisUntilFinished / 1000).toInt() / 60
                 val sec = (millisUntilFinished / 1000).toInt() % 60
-                binding.tvTime.text = "$minutes:$sec"
+
+
+                val textMin = if(minutes < 10) "0$minutes" else minutes.toString()
+                val textSec = if(sec < 10) "0$seconds" else sec.toString()
+                val textTime = "$textMin:$textSec"
+                binding.tvTime.text = textTime
             }
             override fun onFinish() {
                 /** 끝났을 때 **/
@@ -141,7 +174,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap){
-        println("onMapReadyCheck")
         this.naverMap = naverMap
 
         val cameraPosition = CameraPosition(
@@ -152,22 +184,19 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         val uiSettings = naverMap.uiSettings
         uiSettings.isLocationButtonEnabled = true //위치 버튼 활성화
+
         naverMap.locationSource = locationSource // 좌표 눌렀을때 현재 위치로 이동
+
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(this) //gps 자동으로 받아오기
-//        val marker = Marker()
-//        marker.position = LatLng(36.1071562, 128.4164185)
-//        marker.map = naverMap
-        setLocationOverlay() // overlay 설정
         setUpdateLocationListener() //내위치를 가져오는 코드
 
-//        naverMap.setOnMapClickListener { point, coord ->
-//            val latLng = LatLng(coord.latitude, coord.longitude)
-//            setPolyline(latLng)
-//        }
+
+        setLocationOverlay() // overlay 설정
         setPolyline(LatLng(WaitingStompClient.roomInfo.lat, WaitingStompClient.roomInfo.lng))
 
         WaitingStompClient.subGPS(entryCode, naverMap, this, senderId)
+        WaitingStompClient.subEvent(entryCode, adapter, this)
     }
 
     //내 위치를 가져오는 코드
@@ -218,13 +247,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         naverMap.maxZoom = 18.0
         naverMap.minZoom = 5.0
 
-        marker.position= myLocation
-        marker.width  = 250
-        marker.height = 250
-//        marker.icon = OverlayImage.fromResource(MarkerImageUtil.getImage(current.characterId) as Int)
-        marker.map = naverMap
-
-//        marker.map = null
     }
 
     private fun setLocationOverlay(){

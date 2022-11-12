@@ -1,49 +1,36 @@
 package com.example.nawanolza.hideandseek
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.nawanolza.createGame.WaitingMember
+import com.bumptech.glide.Glide
+import com.example.nawanolza.R
+import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.databinding.ActivityMemberDetailBinding
 
 class MemberDetail : AppCompatActivity() {
     lateinit var binding: ActivityMemberDetailBinding
     lateinit var adapter: MemberRvAdapter
 
-    private var waitingMember = arrayListOf(
-        WaitingMember(1,"노현우","1"),
-        WaitingMember(2,"김땡땡","2"),
-        WaitingMember(3,"노땡땡","3"),
-        WaitingMember(3,"노땡땡","3"),
-        WaitingMember(3,"노땡땡","3"),
-        WaitingMember(3,"노땡땡","3"),
-        WaitingMember(3,"노땡땡","3"),
-        WaitingMember(3,"노땡땡","3"),
-    )
-
-    private var itMember = arrayListOf(
-        WaitingMember(1,"노현우","1"),
-        WaitingMember(2,"김땡땡","2"),
-        WaitingMember(3,"노땡땡","3")
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMemberDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ppUpdate()
-        itUpdate()
+        taggerUpdate()
+        runnerUpdate()
     }
 
-    private fun itUpdate(){
-        // 원래 멤버는 it멤버 넣어야해
-        adapter = MemberRvAdapter(itMember)
-        binding.itRv.adapter = adapter
-        binding.itRv.layoutManager = GridLayoutManager(this, 4)
+    private fun taggerUpdate(){
+        val tagger = Waiting.memberHash[Waiting.tagger]
+        binding.username.text = tagger?.name
+        Glide.with(this).load(tagger?.image).circleCrop().into(binding.profileImg)
+        val userLocation = if(tagger?.location!!) R.drawable.user_status_false else R.drawable.user_status_true
+        binding.progressBar.setProgressDrawableTiled(AppCompatResources.getDrawable(this, userLocation))
     }
 
-    private fun ppUpdate(){
-        adapter = MemberRvAdapter(waitingMember)
+    private fun runnerUpdate(){
+        adapter = MemberRvAdapter(this)
         binding.ppRv.adapter = adapter
         binding.ppRv.layoutManager = GridLayoutManager(this, 4)
     }

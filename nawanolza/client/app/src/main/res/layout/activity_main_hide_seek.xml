@@ -112,17 +112,17 @@
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="57dp"
+            android:layout_height="41dp"
             android:layout_gravity="center"
             android:src="@drawable/timer" />
 
         <TextView
             android:id="@+id/tvTime"
-            android:layout_width="61dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:text="1:53"
+            android:text="01:53"
             android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle="bold" />

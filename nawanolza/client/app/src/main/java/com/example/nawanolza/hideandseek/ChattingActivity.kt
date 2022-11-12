@@ -3,6 +3,8 @@ package com.example.nawanolza.hideandseek
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.nawanolza.CharacterRvAdapter
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.databinding.ActivityChattingBinding
@@ -19,6 +21,9 @@ import kotlinx.android.synthetic.main.activity_chatting.*
 class ChattingActivity : AppCompatActivity() {
     lateinit var binding: ActivityChattingBinding
     lateinit var chatData: ArrayList<SocketChatDTO>
+    lateinit var adapter: ChattingRvAdapter
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WaitingStompClient.connect()
@@ -38,6 +43,15 @@ class ChattingActivity : AppCompatActivity() {
             sendMessage(socketChatDTO)
             binding.messageInput.setText("")
         }
+
+        adapter = ChattingRvAdapter(chatData, application)
+        binding.chattingRecyclerView.adapter = adapter
+        binding.chattingRecyclerView.layoutManager =
+            GridLayoutManager(this@ChattingActivity, 3)
+
+
+
+
     }
 
     private fun messageSubscribe(

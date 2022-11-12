@@ -4,9 +4,11 @@ import android.app.Application
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.nawanolza.MarkerImageUtil
+import com.example.nawanolza.R
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.databinding.HideseekmemberRvItemBinding
 
@@ -31,7 +33,7 @@ class HideSeekRvAdapter (private val context: Context)
         holder.apply{
             Glide.with(context).load(waitingData.image).circleCrop().into(profileImg)
             username.text = waitingData.name
-
+            status.setProgressDrawableTiled(AppCompatResources.getDrawable(context, R.drawable.user_status_false))
         }
     }
 

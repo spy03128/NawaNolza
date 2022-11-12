@@ -1,11 +1,16 @@
 package com.example.nawanolza.hideandseek
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nawanolza.LoginUtil
+import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.databinding.ActivityChattingBinding
+import com.example.nawanolza.retrofit.Member
+import com.example.nawanolza.retrofit.createroom.MemberList
 import com.example.nawanolza.stomp.SocketChatDTO
 import com.example.nawanolza.stomp.SocketType
+import com.example.nawanolza.stomp.StompClient
 import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -13,11 +18,16 @@ import kotlinx.android.synthetic.main.activity_chatting.*
 
 class ChattingActivity : AppCompatActivity() {
     lateinit var binding: ActivityChattingBinding
+    lateinit var chatData: ArrayList<SocketChatDTO>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WaitingStompClient.connect()
 
-        val entryCode = intent.getStringExtra("entryCode")
-        val member = LoginUtil.getMember(this)
+//        val entryCode = intent.getStringExtra("entryCode")
+//        val member = LoginUtil.getMember(this)!!
+        val entryCode = "1234"
+        val member = Member("", "", 10, "http://k.kakaocdn.net/dn/rekq2/btrQrFFtJMK/E3rOBQjbKuKRKzMNQ2KWu1/img_640x640.jpg", "권도현")
+        chatData = ChattingUtil.getChatData(entryCode!!)
 
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -33,15 +43,22 @@ class ChattingActivity : AppCompatActivity() {
     private fun messageSubscribe(
         entryCode: String,
     ) {
-        WaitingStompClient.stompClient.topic("/sub/" + SocketType.CHAT.value + "/" + entryCode)
-            .subscribe { topicMessage ->
-                val message = Gson().fromJson(topicMessage.payload, SocketChatDTO::class.java)
-                ChatRepository.addChat(message)
-            }
+        WaitingStompClient.stompClient.topic("/sub/chat/" + entryCode).subscribe { topicMessage ->
+            Log.i("message Receive", topicMessage.payload)
+            chatData.add(GsonBuilder().create().fromJson(topicMessage.payload, SocketChatDTO::class.java))
+        }
+        println("/sub/" + SocketType.CHAT.value + "/" + entryCode)
     }
 
     private fun sendMessage(dto: SocketChatDTO) {
         val data = GsonBuilder().create().toJson(dto)
+        println(dto.type)
+        println(dto.senderId)
+        println(dto.senderName)
+        println(dto.senderImage)
+        println(dto.message)
+
+        chatData.add(dto)
         WaitingStompClient.stompClient.send("/pub/"+ SocketType.CHAT.value, data).subscribe()
     }
 }

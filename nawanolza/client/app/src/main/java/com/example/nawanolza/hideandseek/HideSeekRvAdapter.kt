@@ -3,6 +3,7 @@ package com.example.nawanolza.hideandseek
 import android.app.Application
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,8 @@ class HideSeekRvAdapter (private val context: Context)
         inner class MyViewHolder(binding: HideseekmemberRvItemBinding):
             RecyclerView.ViewHolder(binding.root){
                 val username = binding.username
-                val status = binding.progressBar
+                val location = binding.progressBar
+                val status = binding.catchStatus
                 val profileImg = binding.profileImg
             }
 
@@ -28,16 +30,41 @@ class HideSeekRvAdapter (private val context: Context)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val waitingData = Waiting.memberList[position]
+        val runnerNum = Waiting.runnerList[position]
+        val userInfo = Waiting.memberHash[runnerNum]
+
+        println(userInfo)
+
 
         holder.apply{
-            Glide.with(context).load(waitingData.image).circleCrop().into(profileImg)
-            username.text = waitingData.name
-            status.setProgressDrawableTiled(AppCompatResources.getDrawable(context, R.drawable.user_status_false))
+            itemView.setOnClickListener {
+                itemClickListener.onClick(it, position)
+            }
+            Glide.with(context).load(userInfo?.image).circleCrop().into(profileImg)
+            username.text = userInfo?.name
+            val userStatus = if(userInfo?.location!!) R.drawable.user_status_false else R.drawable.user_status_true
+            location.setProgressDrawableTiled(AppCompatResources.getDrawable(context, userStatus))
+            if(!userInfo.status){
+                status.visibility = View.INVISIBLE
+            } else status.visibility = View.VISIBLE
         }
     }
 
+    // (1) 리스너 인터페이스
+    interface OnItemClickListener {
+        fun onClick(v: View, position: Int)
+    }
+
+    // (2) 외부에서 클릭 시 이벤트 설정
+    fun setItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.itemClickListener = onItemClickListener
+    }
+
+    // (3) setItemClickListener로 설정한 함수 실행
+    private lateinit var itemClickListener : OnItemClickListener
+
+
     override fun getItemCount(): Int {
-        return Waiting.memberList.size
+        return Waiting.runnerList.size
     }
 }

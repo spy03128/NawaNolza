@@ -39,23 +39,12 @@ class Waiting : AppCompatActivity() {
 
     companion object {
         var hostId = 0
+        lateinit var hostInfo: WaitingMember
         var memberList: ArrayList<WaitingMember> = ArrayList()
         var memberHash: HashMap<Int, WaitingMember> = HashMap()
-        var taggerList: List<Int> = ArrayList()
+        var tagger: Int = 0
         var runnerList: List<Int> = ArrayList()
     }
-
-//    private var waitingMember = arrayListOf(
-//        WaitingMember(1,"노현우","1"),
-//        WaitingMember(2,"김땡땡","2"),
-//        WaitingMember(3,"노땡땡","3"),
-//        WaitingMember(3,"노땡땡","3"),
-//        WaitingMember(3,"노땡땡","3"),
-//        WaitingMember(3,"노땡땡","3"),
-//        WaitingMember(3,"노땡땡","3"),
-//        WaitingMember(3,"노땡땡","3"),
-//    )
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +58,10 @@ class Waiting : AppCompatActivity() {
 
         memberList = roomInfo.participants
         hostId = roomInfo.host.memberId
+
+        val host = roomInfo.host
+        hostInfo = WaitingMember(host.memberId, host.name, host.image)
+
         hostName.text = roomInfo.host.name
         Glide.with(this).load(roomInfo.host.image).circleCrop().into(hostImg)
 
@@ -83,17 +76,24 @@ class Waiting : AppCompatActivity() {
         binding.btnStart.setOnClickListener {
             startGame(retrofitAPI, entryCode)
         }
-        adapter = WaitingRvAdapter(this)
-        binding.mRecyclerView.adapter = adapter
-        binding.mRecyclerView.layoutManager = GridLayoutManager(this, 3)
+
+        setAdapter()
 
         codeNumber.text = entryCode
 
+        connecStomp(entryCode)
+    }
+
+    private fun connecStomp(entryCode: String?) {
         WaitingStompClient.connect()
         WaitingStompClient.subParticipate(entryCode.toString(), adapter, this)
         WaitingStompClient.subGameStart(entryCode.toString(), this@Waiting)
+    }
 
-//        WaitingStompClient.send(SocketType.GPS, SocketGpsDTO(roomCode.toString(), 4, 37.5666102, 126.9783881))
+    private fun setAdapter() {
+        adapter = WaitingRvAdapter(this)
+        binding.mRecyclerView.adapter = adapter
+        binding.mRecyclerView.layoutManager = GridLayoutManager(this, 3)
     }
 
     private fun startGame(

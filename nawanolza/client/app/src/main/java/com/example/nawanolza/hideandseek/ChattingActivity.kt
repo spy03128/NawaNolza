@@ -33,6 +33,9 @@ class ChattingActivity : AppCompatActivity() {
         val entryCode = "1234"
         val member = Member("", "", 10, "http://k.kakaocdn.net/dn/rekq2/btrQrFFtJMK/E3rOBQjbKuKRKzMNQ2KWu1/img_640x640.jpg", "권도현")
         chatData = ChattingUtil.getChatData(entryCode!!)
+        chatData.add(SocketChatDTO(member, "1234","안녕ㅎ"))
+        chatData.add(SocketChatDTO(member, "1234","안녕123"))
+        chatData.add(SocketChatDTO(member, "1234","안녕435"))
 
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -44,10 +47,15 @@ class ChattingActivity : AppCompatActivity() {
             binding.messageInput.setText("")
         }
 
+        println("=========chatting oncreate")
+        println(chatData.size)
+        println(chatData)
+
+
         adapter = ChattingRvAdapter(chatData, application)
         binding.chattingRecyclerView.adapter = adapter
         binding.chattingRecyclerView.layoutManager =
-            GridLayoutManager(this@ChattingActivity, 3)
+            GridLayoutManager(this@ChattingActivity, 1)
 
 
 
@@ -60,6 +68,17 @@ class ChattingActivity : AppCompatActivity() {
         WaitingStompClient.stompClient.topic("/sub/chat/" + entryCode).subscribe { topicMessage ->
             Log.i("message Receive", topicMessage.payload)
             chatData.add(GsonBuilder().create().fromJson(topicMessage.payload, SocketChatDTO::class.java))
+            runOnUiThread {
+                adapter.notifyDataSetChanged()
+
+            }
+
+            println("=========chatting")
+            println(chatData.size)
+            println(chatData)
+
+
+
         }
         println("/sub/" + SocketType.CHAT.value + "/" + entryCode)
     }
@@ -74,5 +93,7 @@ class ChattingActivity : AppCompatActivity() {
 
         chatData.add(dto)
         WaitingStompClient.stompClient.send("/pub/"+ SocketType.CHAT.value, data).subscribe()
+
+
     }
 }

@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.chatting_rv_item.view.*
 
 
 class ChattingRvAdapter(
-    private val chatData: ArrayList<SocketChatDTO>,
+    private val chatData: ArrayList<ChatDTO>,
     private val application: Application,
 )
 :RecyclerView.Adapter<ChattingRvAdapter.MyViewHolder>(){

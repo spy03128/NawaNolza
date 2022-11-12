@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_chatting.*
 
 class ChattingActivity : AppCompatActivity() {
     lateinit var binding: ActivityChattingBinding
-    lateinit var chatData: ArrayList<SocketChatDTO>
+    lateinit var chatData: ArrayList<ChatDTO>
     lateinit var adapter: ChattingRvAdapter
 
 
@@ -33,13 +33,13 @@ class ChattingActivity : AppCompatActivity() {
         val entryCode = "1234"
         val member = Member("", "", 10, "http://k.kakaocdn.net/dn/rekq2/btrQrFFtJMK/E3rOBQjbKuKRKzMNQ2KWu1/img_640x640.jpg", "권도현")
         chatData = ChattingUtil.getChatData(entryCode!!)
-        chatData.add(SocketChatDTO(member, "1234","안녕ㅎ"))
-        chatData.add(SocketChatDTO(member, "1234","안녕123"))
-        chatData.add(SocketChatDTO(member, "1234","안녕435"))
+        chatData.add(ChatDTO(SocketChatDTO(member, "1234","안녕ㅎ"), ChatType.LEFT))
+        chatData.add(ChatDTO(SocketChatDTO(member, "1234","안녕123"), ChatType.RIGHT))
+        chatData.add(ChatDTO(SocketChatDTO(member, "1234","안녕435"), ChatType.LEFT))
 
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        messageSubscribe(entryCode!!)
+        messageSubscribe(entryCode!!, member.id)
 
         sendButton.setOnClickListener {
             val socketChatDTO = SocketChatDTO(member!!, entryCode, messageInput.text.toString())
@@ -64,21 +64,21 @@ class ChattingActivity : AppCompatActivity() {
 
     private fun messageSubscribe(
         entryCode: String,
+        memberId: Int,
     ) {
         WaitingStompClient.stompClient.topic("/sub/chat/" + entryCode).subscribe { topicMessage ->
             Log.i("message Receive", topicMessage.payload)
-            chatData.add(GsonBuilder().create().fromJson(topicMessage.payload, SocketChatDTO::class.java))
+            val fromJson = GsonBuilder().create().fromJson(topicMessage.payload, SocketChatDTO::class.java)
+
+            if(!fromJson.senderId.equals(memberId))
+                chatData.add(ChatDTO(fromJson, ChatType.LEFT))
+
             runOnUiThread {
                 adapter.notifyDataSetChanged()
-
             }
-
             println("=========chatting")
             println(chatData.size)
             println(chatData)
-
-
-
         }
         println("/sub/" + SocketType.CHAT.value + "/" + entryCode)
     }
@@ -90,10 +90,7 @@ class ChattingActivity : AppCompatActivity() {
         println(dto.senderName)
         println(dto.senderImage)
         println(dto.message)
-
-        chatData.add(dto)
+        chatData.add(ChatDTO(dto, ChatType.RIGHT))
         WaitingStompClient.stompClient.send("/pub/"+ SocketType.CHAT.value, data).subscribe()
-
-
     }
 }

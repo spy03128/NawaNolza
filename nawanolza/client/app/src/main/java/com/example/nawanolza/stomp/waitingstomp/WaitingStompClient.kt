@@ -6,10 +6,7 @@ import android.content.Intent
 import android.util.Log
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.createGame.WaitingRvAdapter
-import com.example.nawanolza.hideandseek.HideSeekRvAdapter
-import com.example.nawanolza.hideandseek.PubEventRequest
-import com.example.nawanolza.hideandseek.PubGpsRequest
-import com.example.nawanolza.hideandseek.RoleCheckActivity
+import com.example.nawanolza.hideandseek.*
 import com.example.nawanolza.retrofit.createroom.MemberList
 import com.example.nawanolza.retrofit.enterroom.GetRoomResponse
 import com.example.nawanolza.stomp.CatchResponse
@@ -115,16 +112,13 @@ class WaitingStompClient {
         }
 
         // 참여자 위치 받기 (구독)
-        fun subGPS(entryCode: String, naverMap: NaverMap, activity: Activity, senderId: Int){
+        fun subGPS(entryCode: String, naverMap: NaverMap, activity: Activity, senderId: Int, adapter:HideSeekRvAdapter){
             println("구독했나요?")
             stompClient.topic("/sub/gps/$entryCode").subscribe{ topicMessage ->
-                println("메세지 오나요?")
                 Log.i("subGPSMessage", topicMessage.payload)
 
                 var subDto: SubGpsDto = GsonBuilder().create().fromJson(topicMessage.payload, SubGpsDto::class.java)
-                println("================= start ===================")
                 println(subDto)
-                println("================= end ===================")
 
                 if(senderId != subDto.senderId) {
                     activity.runOnUiThread {
@@ -152,9 +146,13 @@ class WaitingStompClient {
 //                        }
 //                        if (timeFlag) cancel()
 //                    }
-
                     }
                 }
+                Waiting.memberHash[subDto.senderId]?.location = roomInfo.range < MainHideSeek.DistanceManager.getDistance(subDto.lat, subDto.lng, roomInfo.lat, roomInfo.lng)
+                activity.runOnUiThread{
+                    adapter.notifyDataSetChanged()
+                }
+
             }
         }
 

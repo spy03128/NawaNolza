@@ -42,6 +42,7 @@ import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.*
 
 class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
@@ -80,7 +81,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             val intent = Intent(this@MainHideSeek, MemberDetail::class.java )
             startActivity(intent)
         }
-
     }
 
     private fun setRecycleView() {
@@ -114,20 +114,14 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
 
     private fun updateTime() {
-        println("third")
-        println("===========checking========")
-
-
         val startTime = WaitingStompClient.roomInfo.startTime.slice(0..22)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
-
-
         val start = LocalDateTime.parse(startTime, formatter)
-        val end = start.plusMinutes(5)
-
-        // 원래는 playTime/60 더해야함
+        val plusTime = WaitingStompClient.roomInfo.playTime/60 + 1
+        println("==========check")
+        println(plusTime)
         println(WaitingStompClient.roomInfo.playTime)
-        println(end)
+        val end = start.plusMinutes(plusTime)
 
         val duration: Duration = Duration.between(LocalDateTime.now(), end)
         val seconds = duration.seconds
@@ -195,7 +189,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         setLocationOverlay() // overlay 설정
         setPolyline(LatLng(WaitingStompClient.roomInfo.lat, WaitingStompClient.roomInfo.lng))
 
-        WaitingStompClient.subGPS(entryCode, naverMap, this, senderId)
+        WaitingStompClient.subGPS(entryCode, naverMap, this, senderId, adapter)
         WaitingStompClient.subEvent(entryCode, adapter, this)
     }
 
@@ -281,5 +275,28 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         circle.outlineWidth = 1
         circle.radius = 100.0
         circle.map = naverMap
+    }
+
+    object DistanceManager {
+
+        private const val R = 6372.8 * 1000
+
+        /**
+         * 두 좌표의 거리를 계산한다.
+         *
+         * @param lat1 위도1
+         * @param lon1 경도1
+         * @param lat2 위도2
+         * @param lon2 경도2
+         * @return 두 좌표의 거리(m)
+         */
+
+        fun getDistance(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Int {
+            val dLat = Math.toRadians(lat2 - lat1)
+            val dLng = Math.toRadians(lng2 - lng1)
+            val a = sin(dLat / 2).pow(2.0) + sin(dLng / 2).pow(2.0) * cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2))
+            val c = 2 * asin(sqrt(a))
+            return (R * c).toInt()
+        }
     }
 }

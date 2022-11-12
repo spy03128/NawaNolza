@@ -1,9 +1,9 @@
 package com.example.nawanolza.hideandseek
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import androidx.appcompat.app.AppCompatActivity
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.R
 import com.example.nawanolza.createGame.Waiting
@@ -24,18 +24,23 @@ class RoleCheckActivity : AppCompatActivity() {
         entryCode = intent.getStringExtra("entryCode").toString()
 
         setRoleFragment()
+        countStart()
 
+    }
+
+    //카운트 시작
+    private fun countStart() {
         object : CountDownTimer(2000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 var time = (millisUntilFinished / 1000).toInt()
                 tvCountDown.text = time.toString()
-                countDown.progress = (60-time)*100/60
+                countDown.progress = (60 - time) * 100 / 60
             }
 
             override fun onFinish() {
-                val intent = Intent(this@RoleCheckActivity, MainHideSeek::class.java )
-                intent.putExtra("entryCode", "$entryCode")
+                val intent = Intent(this@RoleCheckActivity, MainHideSeek::class.java)
+                intent.putExtra("entryCode", entryCode)
                 startActivity(intent)
             }
         }.start()
@@ -47,7 +52,7 @@ class RoleCheckActivity : AppCompatActivity() {
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 
-        if (Waiting.taggerList.contains(Waiting.hostId)) {
+        if (Waiting.tagger == LoginUtil.getMember(this)?.id){
             fragmentTransaction.replace(R.id.fragmentFrame, ItFragment())
         } else fragmentTransaction.replace(R.id.fragmentFrame, ParticipantsFragment())
 

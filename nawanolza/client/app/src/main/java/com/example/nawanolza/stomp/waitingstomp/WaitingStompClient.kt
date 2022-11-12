@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.Log
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.createGame.WaitingRvAdapter
+import com.example.nawanolza.hideandseek.HideSeekRvAdapter
 import com.example.nawanolza.hideandseek.PubEventRequest
 import com.example.nawanolza.hideandseek.PubGpsRequest
 import com.example.nawanolza.hideandseek.RoleCheckActivity
@@ -91,12 +92,21 @@ class WaitingStompClient {
         fun subGameStart(entryCode: String, context: Context) {
             stompClient.topic("/sub/game/start/$entryCode").subscribe{ topicMessage ->
                 Log.i("message Receive", topicMessage.payload)
+
+
+                roomInfo = GsonBuilder().create().fromJson(topicMessage.payload, GetRoomResponse::class.java)
+                Waiting.memberList.add(0, Waiting.hostInfo)
+
                 for(member in Waiting.memberList)
                     Waiting.memberHash.put(member.memberId, member)
 
-                roomInfo = GsonBuilder().create().fromJson(topicMessage.payload, GetRoomResponse::class.java)
-                Waiting.taggerList = roomInfo.tagger
+                Waiting.tagger = roomInfo.tagger
                 Waiting.runnerList = roomInfo.runners
+
+                println("========check waiting===========")
+                println(Waiting.tagger)
+                println(Waiting.runnerList)
+                println(Waiting.memberHash)
 
                 val intent = Intent(context, RoleCheckActivity::class.java)
                 intent.putExtra("entryCode", entryCode)
@@ -149,15 +159,17 @@ class WaitingStompClient {
         }
 
         // 잡힌 참여자 받기 구독
-        fun subEvent(entryCode: String){
+        fun subEvent(entryCode: String, adapter:HideSeekRvAdapter, activity: Activity){
             stompClient.topic("/sub/event/$entryCode").subscribe{ topicMessage ->
                 Log.i("message Receive", topicMessage.payload)
                 val data = GsonBuilder().create().fromJson(topicMessage.payload, CatchResponse::class.java)
-                for(member in Waiting.memberList){
-                    if(data.catchMemberId == member.memberId){
-                        member.status = false
-                    }
+                Waiting.memberHash[data.catchMemberId]?.status = true
+                Waiting.memberHash[data.catchMemberId]?.location = true
+                activity.runOnUiThread {
+                    adapter.notifyDataSetChanged()
                 }
+
+
             }
         }
 
@@ -172,7 +184,7 @@ class WaitingStompClient {
         //참가자 잡기
         fun pubEvent(pubEventRequest: PubEventRequest){
             val data = GsonBuilder().create().toJson(pubEventRequest)
-            stompClient.send("/pub/"+ pubEventRequest.type, data).subscribe()
+            stompClient.send("/pub/event", data).subscribe()
         }
 
     }

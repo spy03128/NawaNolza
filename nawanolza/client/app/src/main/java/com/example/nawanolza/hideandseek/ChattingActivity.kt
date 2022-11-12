@@ -32,9 +32,10 @@ class ChattingActivity : AppCompatActivity() {
 //        val member = LoginUtil.getMember(this)!!
         val entryCode = "1234"
         val member = Member("", "", 10, "http://k.kakaocdn.net/dn/rekq2/btrQrFFtJMK/E3rOBQjbKuKRKzMNQ2KWu1/img_640x640.jpg", "권도현")
+        val member2 = Member("", "", 11, "http://k.kakaocdn.net/dn/rekq2/btrQrFFtJMK/E3rOBQjbKuKRKzMNQ2KWu1/img_640x640.jpg", "권도현")
         chatData = ChattingUtil.getChatData(entryCode!!)
         chatData.add(ChatDTO(SocketChatDTO(member, "1234","안녕ㅎ"), ChatType.LEFT))
-        chatData.add(ChatDTO(SocketChatDTO(member, "1234","안녕123"), ChatType.RIGHT))
+        chatData.add(ChatDTO(SocketChatDTO(member2, "1234","안녕123"), ChatType.RIGHT))
         chatData.add(ChatDTO(SocketChatDTO(member, "1234","안녕435"), ChatType.LEFT))
 
         binding = ActivityChattingBinding.inflate(layoutInflater)
@@ -47,19 +48,9 @@ class ChattingActivity : AppCompatActivity() {
             binding.messageInput.setText("")
         }
 
-        println("=========chatting oncreate")
-        println(chatData.size)
-        println(chatData)
-
-
         adapter = ChattingRvAdapter(chatData, application)
         binding.chattingRecyclerView.adapter = adapter
-        binding.chattingRecyclerView.layoutManager =
-            GridLayoutManager(this@ChattingActivity, 1)
-
-
-
-
+        binding.chattingRecyclerView.layoutManager = GridLayoutManager(this@ChattingActivity, 1)
     }
 
     private fun messageSubscribe(
@@ -67,20 +58,16 @@ class ChattingActivity : AppCompatActivity() {
         memberId: Int,
     ) {
         WaitingStompClient.stompClient.topic("/sub/chat/" + entryCode).subscribe { topicMessage ->
-            Log.i("message Receive", topicMessage.payload)
             val fromJson = GsonBuilder().create().fromJson(topicMessage.payload, SocketChatDTO::class.java)
 
-            if(!fromJson.senderId.equals(memberId))
+            if(fromJson.senderId.toString() != memberId.toString()) {
                 chatData.add(ChatDTO(fromJson, ChatType.LEFT))
+            }
 
             runOnUiThread {
                 adapter.notifyDataSetChanged()
             }
-            println("=========chatting")
-            println(chatData.size)
-            println(chatData)
         }
-        println("/sub/" + SocketType.CHAT.value + "/" + entryCode)
     }
 
     private fun sendMessage(dto: SocketChatDTO) {

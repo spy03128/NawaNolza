@@ -1,64 +1,83 @@
 package com.example.nawanolza.hideandseek
 
 import android.app.Application
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.example.nawanolza.databinding.ChattingRvItemBinding
-import com.example.nawanolza.stomp.SocketChatDTO
-import kotlinx.android.synthetic.main.chatting_rv_item.view.*
+import com.example.nawanolza.databinding.ChattingRvItemLeftBinding
+import com.example.nawanolza.databinding.ChattingRvItemRightBinding
 
 
 class ChattingRvAdapter(
     private val chatData: ArrayList<ChatDTO>,
     private val application: Application,
-)
-:RecyclerView.Adapter<ChattingRvAdapter.MyViewHolder>(){
+) :RecyclerView.Adapter<ViewHolder>() {
 
-    var message_left = false
-
-    inner class MyViewHolder(binding: ChattingRvItemBinding):
-        RecyclerView.ViewHolder(binding.root) {
-            val name = binding.name
-            val content = binding.content
-            val profileImage = binding.profileImg
-        }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val binding: ChattingRvItemBinding = ChattingRvItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MyViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val chatInfo = chatData[position]
-
-        println("===chat size===")
-        println(chatInfo.senderName)
-
-        holder.name.text = chatInfo.senderName
-        //holder.content.background = application.getDrawable((if(!message_left)  R.drawable.chatting_left else R.drawable.chatting_right))
-        holder.content.text = chatInfo.message
-        Glide.with(application).load(chatInfo.senderImage).into(holder.profileImage)
-
-
-        val align: Int
-
-        if (!message_left) {
-            align = Gravity.LEFT
-            message_left = false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        if(viewType == ChatType.LEFT) {
+            val binding = ChattingRvItemLeftBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+            return LeftViewHolder(binding)
         } else {
-            align = Gravity.RIGHT
-            message_left = true
+            val binding = ChattingRvItemRightBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+            return RightViewHolder(binding)
         }
-
-//        holder.container.gravity = align
-
     }
 
     override fun getItemCount(): Int {
         return chatData.size
+    }
+
+    inner class LeftViewHolder(itemView: ChattingRvItemLeftBinding) : ViewHolder(itemView.root) {
+        var content: TextView
+        var name: TextView
+        var image: ImageView
+
+        init {
+            content = itemView.content
+            name = itemView.name
+            image = itemView.profileImg
+        }
+    }
+
+    inner class RightViewHolder(itemView: ChattingRvItemRightBinding) : ViewHolder(itemView.root) {
+        var content: TextView
+        var name: TextView
+        var image: ImageView
+
+        init {
+            content = itemView.content
+            name = itemView.name
+            image = itemView.profileImg
+        }
+    }
+
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        val chatInfo = chatData.get(position)
+        if (viewHolder is LeftViewHolder) {
+            viewHolder.name.setText(chatInfo.senderName)
+            viewHolder.content.setText(chatInfo.message)
+            Glide.with(application).load(chatInfo.senderImage).into(viewHolder.image)
+        } else {
+            (viewHolder as RightViewHolder).name.setText(chatInfo.senderName)
+            viewHolder.content.setText(chatInfo.message)
+            Glide.with(application).load(chatInfo.senderImage).into(viewHolder.image)
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return chatData.get(position).viewType
     }
 }
 

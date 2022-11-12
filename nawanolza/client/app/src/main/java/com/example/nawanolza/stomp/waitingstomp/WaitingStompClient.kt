@@ -73,9 +73,11 @@ class WaitingStompClient {
             stopFlag = true
         }
 
-        // 구독 후 메세지 받음
-        fun receive(type: SocketType, entryCode: String, adapter: WaitingRvAdapter, activity: Activity){
-            stompClient.topic("/sub/" + type.value + "/" + entryCode).subscribe { topicMessage ->
+        /** 받는 메서드 **/
+
+        // 참가자 정보 받기
+        fun subParticipate(entryCode: String, adapter: WaitingRvAdapter, activity: Activity){
+            stompClient.topic("/sub/participate/$entryCode").subscribe { topicMessage ->
                 Log.i("message Receive", topicMessage.payload)
                 Waiting.memberList = GsonBuilder().create().fromJson(topicMessage.payload, MemberList::class.java).participants
 
@@ -85,13 +87,16 @@ class WaitingStompClient {
             }
         }
 
-        /** 받는 메서드 **/
-
         // 게임 시작
         fun subGameStart(entryCode: String, context: Context) {
             stompClient.topic("/sub/game/start/$entryCode").subscribe{ topicMessage ->
                 Log.i("message Receive", topicMessage.payload)
+                for(member in Waiting.memberList)
+                    Waiting.memberHash.put(member.memberId, member)
+
                 roomInfo = GsonBuilder().create().fromJson(topicMessage.payload, GetRoomResponse::class.java)
+                Waiting.taggerList = roomInfo.tagger
+                Waiting.runnerList = roomInfo.runners
 
                 val intent = Intent(context, RoleCheckActivity::class.java)
                 intent.putExtra("entryCode", entryCode)

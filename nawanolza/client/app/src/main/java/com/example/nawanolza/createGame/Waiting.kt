@@ -4,7 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.nawanolza.LoginUtil
@@ -37,6 +40,9 @@ class Waiting : AppCompatActivity() {
     companion object {
         var hostId = 0
         var memberList: ArrayList<WaitingMember> = ArrayList()
+        var memberHash: HashMap<Int, WaitingMember> = HashMap()
+        var taggerList: List<Int> = ArrayList()
+        var runnerList: List<Int> = ArrayList()
     }
 
 //    private var waitingMember = arrayListOf(
@@ -66,27 +72,16 @@ class Waiting : AppCompatActivity() {
         hostName.text = roomInfo.host.name
         Glide.with(this).load(roomInfo.host.image).circleCrop().into(hostImg)
 
-        var retrofitAPI = RetrofitConnection.getInstance().create(
+        val retrofitAPI = RetrofitConnection.getInstance().create(
             GetRoomService::class.java
         )
 
-        binding.btnStart.setOnClickListener {
-            retrofitAPI.getRoomInfo(entryCode.toString()).enqueue(object:
-                Callback<GetRoomResponse> {
-                override fun onResponse(
-                    call: Call<GetRoomResponse>,
-                    response: Response<GetRoomResponse>
-                ) {
-                    when(response.code()){
-                        else -> Toast.makeText(this@Waiting, "게임 시작 실패", Toast.LENGTH_SHORT).show()
-                    }
-                }
+        if (hostId != LoginUtil.getMember(this)?.id){
+            btnStart.visibility = View.INVISIBLE
+        }
 
-                override fun onFailure(call: Call<GetRoomResponse>, t: Throwable) {
-                    println(call)
-                    println(t)
-                }
-            })
+        binding.btnStart.setOnClickListener {
+            startGame(retrofitAPI, entryCode)
         }
         adapter = WaitingRvAdapter(this)
         binding.mRecyclerView.adapter = adapter
@@ -95,16 +90,31 @@ class Waiting : AppCompatActivity() {
         codeNumber.text = entryCode
 
         WaitingStompClient.connect()
-        WaitingStompClient.receive(SocketType.PARTICIPATE, entryCode.toString(), adapter, this)
+        WaitingStompClient.subParticipate(entryCode.toString(), adapter, this)
         WaitingStompClient.subGameStart(entryCode.toString(), this@Waiting)
 
-        check.setOnClickListener {
-            check()
-        }
 //        WaitingStompClient.send(SocketType.GPS, SocketGpsDTO(roomCode.toString(), 4, 37.5666102, 126.9783881))
     }
 
-    fun check() {
-        adapter.notifyDataSetChanged()
+    private fun startGame(
+        retrofitAPI: GetRoomService,
+        entryCode: String?
+    ) {
+        retrofitAPI.getRoomInfo(entryCode.toString()).enqueue(object :
+            Callback<GetRoomResponse> {
+            override fun onResponse(
+                call: Call<GetRoomResponse>,
+                response: Response<GetRoomResponse>
+            ) {
+                when (response.code()) {
+                    else -> Toast.makeText(this@Waiting, "게임 시작 실패", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<GetRoomResponse>, t: Throwable) {
+                println(call)
+                println(t)
+            }
+        })
     }
 }

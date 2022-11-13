@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -157,7 +158,15 @@ class MainActivity : Activity() {
                     textViewResult1.visibility = View.GONE
                     textViewResult2.visibility = View.GONE
                     testViewEnd.visibility = View.VISIBLE
-                    
+
+                }else if(str[0]=="a"){
+                    Log.i("Main Activity", "alarm display")
+
+                    progressBarAlarm.visibility = View.VISIBLE
+                    Handler().postDelayed(Runnable {
+                        progressBarAlarm.visibility = View.GONE
+                    }, 500)
+
                 }
 
             }

@@ -218,8 +218,6 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
         naverMap.minZoom = 5.0
     }
 
-
-
     private fun setPolyline(latLng:LatLng){
         if(!check){
             circle.center = latLng

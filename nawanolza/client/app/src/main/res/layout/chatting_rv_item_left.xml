@@ -24,9 +24,10 @@
 
     <TextView
         android:id="@+id/content"
-        android:layout_width="326dp"
-        android:layout_height="47dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
+        android:background="@drawable/chat_bubble"
         android:gravity="center_vertical"
         android:text="Lv.10"
         android:textSize="15dp"

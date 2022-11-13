@@ -6,9 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.Handler
+import android.os.*
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -41,6 +39,7 @@ class MainActivity : Activity() {
         setContentView(binding.root)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 //        Toast.makeText(this,"김땡떙님이 잡혔습니다!", Toast.LENGTH_SHORT).show();
+
 
     }
 
@@ -161,6 +160,9 @@ class MainActivity : Activity() {
 
                 }else if(str[0]=="a"){
                     Log.i("Main Activity", "alarm display")
+
+                    val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator;
+                    vibrator.vibrate(VibrationEffect.createOneShot(500, 100));
 
                     progressBarAlarm.visibility = View.VISIBLE
                     Handler().postDelayed(Runnable {

@@ -136,17 +136,18 @@ class WaitingStompClient {
                             markerMap.get(subDto.senderId)?.map = null
                         }
 
-                        val myLocation = LatLng(subDto.lat, subDto.lng)
-                        val marker = Marker()
-                        //마커
+                        if(!MainHideSeek.isTagger || MainHideSeek.isHintOn) {
+                            val myLocation = LatLng(subDto.lat, subDto.lng)
+                            val marker = Marker()
+                            //마커
 
-                        marker.position= myLocation
+                            marker.position= myLocation
 //                    marker.width  = 250
 //                    marker.height = 250
 ////                    marker.icon = OverlayImage.fromResource(MarkerImageUtil.getImage(current.characterId) as Int)
 
-                        markerMap.put(subDto.senderId, marker)
-                        marker.map = naverMap
+                            markerMap.put(subDto.senderId, marker)
+                            marker.map = naverMap
 //                    var timeFlag: Boolean = false
 
 //                    timer(initialDelay = 0L, period = 1000L) {
@@ -156,6 +157,7 @@ class WaitingStompClient {
 //                        }
 //                        if (timeFlag) cancel()
 //                    }
+                        }
                     }
                 }
                 Waiting.memberHash[subDto.senderId]?.location = roomInfo.range < MainHideSeek.DistanceManager.getDistance(subDto.lat, subDto.lng, roomInfo.lat, roomInfo.lng)

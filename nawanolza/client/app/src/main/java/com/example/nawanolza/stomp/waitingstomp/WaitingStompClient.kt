@@ -3,6 +3,7 @@ package com.example.nawanolza.stomp.waitingstomp
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.util.Log
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.MainActivity
@@ -16,8 +17,10 @@ import com.google.gson.GsonBuilder
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.dto.LifecycleEvent
+import java.net.URL
 import kotlin.concurrent.timer
 
 class WaitingStompClient {
@@ -131,6 +134,11 @@ class WaitingStompClient {
                 println(subDto)
 
                 if(senderId != subDto.senderId) {
+                    val url = URL(Waiting.memberHash.get(subDto.senderId)!!.image)
+                    val image = BitmapFactory.decodeStream(
+                        url.openConnection().getInputStream()
+                    )
+
                     activity.runOnUiThread {
                         if(markerMap.containsKey(subDto.senderId)) {
                             markerMap.get(subDto.senderId)?.map = null
@@ -142,9 +150,9 @@ class WaitingStompClient {
                             //마커
 
                             marker.position= myLocation
-//                    marker.width  = 250
-//                    marker.height = 250
-////                    marker.icon = OverlayImage.fromResource(MarkerImageUtil.getImage(current.characterId) as Int)
+                            marker.icon = OverlayImage.fromBitmap(image)
+                            marker.width  = 75
+                            marker.height = 75
 
                             markerMap.put(subDto.senderId, marker)
                             marker.map = naverMap

@@ -58,6 +58,7 @@ class MainActivity : Activity() {
             val textViewStart2: TextView = findViewById(R.id.textView_start2)
             val textViewResult1: TextView = findViewById(R.id.textView_result1)
             val textViewResult2: TextView = findViewById(R.id.textView_result2)
+            val testViewEnd: TextView = findViewById(R.id.textView_end)
 
 
 
@@ -73,6 +74,7 @@ class MainActivity : Activity() {
                     textViewStart2.visibility = View.GONE
                     textViewResult1.visibility = View.GONE
                     textViewResult2.visibility = View.GONE
+                    testViewEnd.visibility = View.GONE
 
                 }else if(str[0]=="s"){
                     Log.i("Main Activity", "Starting display")
@@ -83,6 +85,7 @@ class MainActivity : Activity() {
                     textViewStart2.visibility = View.VISIBLE
                     textViewResult1.visibility = View.GONE
                     textViewResult2.visibility = View.GONE
+                    testViewEnd.visibility = View.GONE
 
                     textViewStart1.text = "남은 인원" + str[2] + "명"
                     val duration: Duration = Duration.between(LocalDateTime.now(), LocalDateTime.parse(str[1], DateTimeFormatter.ISO_DATE_TIME))
@@ -116,6 +119,7 @@ class MainActivity : Activity() {
                     textViewStart2.visibility = View.VISIBLE
                     textViewResult1.visibility = View.GONE
                     textViewResult2.visibility = View.GONE
+                    testViewEnd.visibility = View.GONE
 
                     textViewStart1.text = "남은 인원" + str[1] + "명"
                     Toast.makeText(this@MainActivity,str[2] + "님이 잡혔습니다!", Toast.LENGTH_SHORT).show();
@@ -130,6 +134,7 @@ class MainActivity : Activity() {
                         textViewStart2.visibility = View.GONE
                         textViewResult1.visibility = View.VISIBLE
                         textViewResult2.visibility = View.GONE
+                        testViewEnd.visibility = View.GONE
                     }else{
                         Log.i("Main Activity", "non tagger win display")
                         progressBarWaiting.visibility = View.GONE
@@ -139,8 +144,20 @@ class MainActivity : Activity() {
                         textViewStart2.visibility = View.GONE
                         textViewResult1.visibility = View.GONE
                         textViewResult2.visibility = View.VISIBLE
+                        testViewEnd.visibility = View.GONE
                     }
 
+                }else if(str[0]=="e"){
+                    Log.i("Main Activity", "end display")
+                    progressBarWaiting.visibility = View.GONE
+                    progressBarAlarm.visibility = View.GONE
+                    textViewWaiting.visibility = View.GONE
+                    textViewStart1.visibility = View.GONE
+                    textViewStart2.visibility = View.GONE
+                    textViewResult1.visibility = View.GONE
+                    textViewResult2.visibility = View.GONE
+                    testViewEnd.visibility = View.VISIBLE
+                    
                 }
 
             }

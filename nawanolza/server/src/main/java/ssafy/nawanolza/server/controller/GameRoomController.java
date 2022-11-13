@@ -17,6 +17,7 @@ import ssafy.nawanolza.server.domain.socket.dto.GameRoomGpsRangeDTO;
 import ssafy.nawanolza.server.dto.CreateGameRequest;
 import ssafy.nawanolza.server.dto.HideAndSeekGameRoomResponse;
 import ssafy.nawanolza.server.dto.MemberDto;
+import ssafy.nawanolza.server.handler.event.GameEndEvent;
 import ssafy.nawanolza.server.handler.event.GameFinishEvent;
 import ssafy.nawanolza.server.handler.event.GameStartEvent;
 
@@ -90,5 +91,13 @@ public class GameRoomController {
         publisher.publishEvent(gameFinishEvent);
         log.info("{}번 방의 게임이 종료되었습니다.", entryCode);
         return ResponseEntity.ok(gameFinishEvent);
+    }
+
+    @DeleteMapping("/game/end/{entryCode}")
+    public ResponseEntity<GameEndEvent> gameEnd(@PathVariable String entryCode) {
+        GameEndEvent gameEndEvent = hideAndGameRoomService.deleteRoom(entryCode);
+        publisher.publishEvent(gameEndEvent);
+        log.info("{}번 방이 삭제되었습니다.", entryCode);
+        return ResponseEntity.ok(gameEndEvent);
     }
 }

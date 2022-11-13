@@ -1,36 +1,23 @@
 package com.example.nawanolza.createGame
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.databinding.ActivityWaitingBinding
-import com.example.nawanolza.hideandseek.RoleCheckActivity
 import com.example.nawanolza.retrofit.RetrofitConnection
-import com.example.nawanolza.retrofit.createroom.MemberList
 import com.example.nawanolza.retrofit.enterroom.EnterRoomResponse
 import com.example.nawanolza.retrofit.enterroom.GetRoomResponse
 import com.example.nawanolza.retrofit.enterroom.GetRoomService
-import com.example.nawanolza.stomp.SocketType
 import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import com.google.gson.GsonBuilder
-import io.reactivex.Emitter
 import kotlinx.android.synthetic.main.activity_waiting.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.create
-import ua.naiksoftware.stomp.Stomp
-import ua.naiksoftware.stomp.dto.LifecycleEvent
-import kotlin.concurrent.timer
-import kotlin.properties.Delegates
 
 class Waiting : AppCompatActivity() {
     lateinit var binding: ActivityWaitingBinding
@@ -44,6 +31,7 @@ class Waiting : AppCompatActivity() {
         var memberHash: HashMap<Int, WaitingMember> = HashMap()
         var tagger: Int = 0
         var runnerList: List<Int> = ArrayList()
+        lateinit var entryCode: String
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +39,7 @@ class Waiting : AppCompatActivity() {
         binding = ActivityWaitingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val entryCode = intent.getStringExtra("entryCode")
+        entryCode = intent.getStringExtra("entryCode").toString()
 
         roomInfo = GsonBuilder().create()
             .fromJson(intent.getStringExtra("data"), EnterRoomResponse::class.java)
@@ -81,10 +69,10 @@ class Waiting : AppCompatActivity() {
 
         codeNumber.text = entryCode
 
-        connecStomp(entryCode)
+        connectStomp(entryCode)
     }
 
-    private fun connecStomp(entryCode: String?) {
+    private fun connectStomp(entryCode: String?) {
         WaitingStompClient.connect()
         WaitingStompClient.subParticipate(entryCode.toString(), adapter, this)
         WaitingStompClient.subGameStart(entryCode.toString(), this@Waiting)
@@ -107,6 +95,7 @@ class Waiting : AppCompatActivity() {
                 response: Response<GetRoomResponse>
             ) {
                 when (response.code()) {
+                    200 -> WaitingStompClient.roomInfo = response.body()!!
                     else -> Toast.makeText(this@Waiting, "게임 시작 실패", Toast.LENGTH_SHORT).show()
                 }
             }

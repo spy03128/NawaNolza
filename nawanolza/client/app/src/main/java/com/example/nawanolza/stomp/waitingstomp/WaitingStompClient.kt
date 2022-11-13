@@ -4,14 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.example.nawanolza.LoginUtil
+import com.example.nawanolza.MainActivity
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.createGame.WaitingRvAdapter
 import com.example.nawanolza.hideandseek.*
 import com.example.nawanolza.retrofit.createroom.MemberList
 import com.example.nawanolza.retrofit.enterroom.GetRoomResponse
-import com.example.nawanolza.stomp.CatchResponse
-import com.example.nawanolza.stomp.SocketType
-import com.example.nawanolza.stomp.SubGpsDto
+import com.example.nawanolza.stomp.*
 import com.google.gson.GsonBuilder
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.NaverMap
@@ -27,6 +27,8 @@ class WaitingStompClient {
         var stopFlag = true
         lateinit var roomInfo: GetRoomResponse
         val markerMap: HashMap<Int, Marker> = HashMap()
+        lateinit var winnerList: List<Winner>
+        var winTagger = false
 
         // 마커 업데이트
 //        fun updateMarker(naverMap: NaverMap, subGpsDto: SubGpsDto) {
@@ -91,13 +93,21 @@ class WaitingStompClient {
                 Log.i("message Receive", topicMessage.payload)
 
 
-                roomInfo = GsonBuilder().create().fromJson(topicMessage.payload, GetRoomResponse::class.java)
+//                roomInfo = GsonBuilder().create().fromJson(topicMessage.payload, GetRoomResponse::class.java)
+
+                println(topicMessage.payload)
+
+                println("==================fuckingRoom")
+
+                println(GsonBuilder().create().fromJson(topicMessage.payload, GetRoomResponse::class.java))
+
                 Waiting.memberList.add(0, Waiting.hostInfo)
 
                 for(member in Waiting.memberList)
                     Waiting.memberHash.put(member.memberId, member)
 
-                Waiting.tagger = roomInfo.tagger
+//                Waiting.tagger = roomInfo.tagger
+                Waiting.tagger = 18
                 Waiting.runnerList = roomInfo.runners
 
                 println("========check waiting===========")
@@ -156,18 +166,38 @@ class WaitingStompClient {
             }
         }
 
-        // 잡힌 참여자 받기 구독
+        // 잡힌 참여자 받기
         fun subEvent(entryCode: String, adapter:HideSeekRvAdapter, activity: Activity){
             stompClient.topic("/sub/event/$entryCode").subscribe{ topicMessage ->
                 Log.i("message Receive", topicMessage.payload)
                 val data = GsonBuilder().create().fromJson(topicMessage.payload, CatchResponse::class.java)
                 Waiting.memberHash[data.catchMemberId]?.status = true
                 Waiting.memberHash[data.catchMemberId]?.location = true
+                MainHideSeek.caughtMember += 1
+
                 activity.runOnUiThread {
                     adapter.notifyDataSetChanged()
                 }
 
+                if(MainHideSeek.caughtMember == Waiting.runnerList.size) {
+                    println("============check 똑같================")
+                    MainHideSeek.finishGame()
+                }
+            }
+        }
 
+        // 게임 종료 받기
+        fun subFinish(entryCode:String, context: Context) {
+            stompClient.topic("/sub/game/finish/$entryCode").subscribe{ topicMessage ->
+                Log.i("message Receive", topicMessage.payload)
+                println("===========게임이 종료되었습니다=============")
+                val data = GsonBuilder().create().fromJson(topicMessage.payload, FinishResponse::class.java)
+                println(data)
+                winnerList = data.winnerList
+                winTagger = data.winTagger
+                stompClient.disconnect()
+                val intent = Intent(context, FinishGame::class.java)
+                context.startActivity(intent)
             }
         }
 
@@ -184,10 +214,5 @@ class WaitingStompClient {
             val data = GsonBuilder().create().toJson(pubEventRequest)
             stompClient.send("/pub/event", data).subscribe()
         }
-
     }
-
-
 }
-
-

@@ -39,6 +39,8 @@ import retrofit2.Response
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Timer
+import kotlin.concurrent.schedule
 import kotlin.math.*
 
 class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
@@ -57,6 +59,9 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     lateinit var entryCode: String
 
     companion object {
+        var isTagger: Boolean = true
+        var isHintOn: Boolean = false
+
         var caughtMember = 0
         fun finishGame() {
             val retrofitAPI = RetrofitConnection.getInstance().create(FinishRoomService::class.java)
@@ -91,6 +96,8 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             ActivityCompat.requestPermissions(this, permissions, permission_request)
         }//권한 확인
 
+        if(Waiting.tagger != senderId)
+            isTagger = false
 
         updateTime()
         setRecycleView()
@@ -98,6 +105,13 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         binding.memberDetail.setOnClickListener {
             val intent = Intent(this@MainHideSeek, MemberDetail::class.java )
             startActivity(intent)
+        }
+
+        binding.bulb.setOnClickListener {
+            isHintOn = true
+            Timer().schedule(1500) {
+                isHintOn = false
+            }
         }
     }
 

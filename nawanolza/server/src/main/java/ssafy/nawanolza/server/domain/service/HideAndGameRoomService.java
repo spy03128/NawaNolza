@@ -11,6 +11,7 @@ import ssafy.nawanolza.server.domain.exception.GameRoomNotFoundException;
 import ssafy.nawanolza.server.domain.exception.MemberNotFountException;
 import ssafy.nawanolza.server.domain.repository.HideAndSeekGameRoomRepository;
 import ssafy.nawanolza.server.domain.repository.MemberRepository;
+import ssafy.nawanolza.server.handler.event.GameEndEvent;
 import ssafy.nawanolza.server.handler.event.GameFinishEvent;
 import ssafy.nawanolza.server.handler.event.GameStartEvent;
 import ssafy.nawanolza.server.domain.utils.CreateRoomUtil;
@@ -71,16 +72,19 @@ public class HideAndGameRoomService {
         } else {
             winnerList = hideAndSeekGameRoom.getRunners();
         }
-        System.out.println(winnerList);
         List<Member> winners = memberRepository.findAllByMemberId(winnerList).orElseThrow(() -> new MemberNotFountException(winnerList));
         for (Member winner :winners) {
             System.out.println(winner.getName());
             finishEvent.make(winner.getName(), winner.getImage());
         }
-        System.out.println(finishEvent);
-        System.out.println(finishEvent.getWinnerList());
-        System.out.println(finishEvent.getWinnerList().get(0));
         return finishEvent;
+    }
+
+    public GameEndEvent deleteRoom(String entryCode) {
+        HideAndSeekGameRoom hideAndSeekGameRoom =
+                hideAndSeekGameRoomRepository.findById(entryCode).orElseThrow(() -> new GameRoomNotFoundException());
+        hideAndSeekGameRoomRepository.delete(hideAndSeekGameRoom);
+        return new GameEndEvent(entryCode);
     }
 
 

@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter
 * a : 영역 밖 알람
 * r/0 : 술래팀 승리
 * r/1 : 숨는팀 승리
+* e : 게임 종료
 * */
 class MainActivity : Activity() {
 
@@ -72,6 +73,7 @@ class MainActivity : Activity() {
                     textViewStart2.visibility = View.GONE
                     textViewResult1.visibility = View.GONE
                     textViewResult2.visibility = View.GONE
+
                 }else if(str[0]=="s"){
                     Log.i("Main Activity", "Starting display")
                     progressBarWaiting.visibility = View.GONE
@@ -117,7 +119,30 @@ class MainActivity : Activity() {
 
                     textViewStart1.text = "남은 인원" + str[1] + "명"
                     Toast.makeText(this@MainActivity,str[2] + "님이 잡혔습니다!", Toast.LENGTH_SHORT).show();
+                    
+                }else if(str[0]=="r"){
+                    if(str[1]=="0"){
+                        Log.i("Main Activity", "tagger win display")
+                        progressBarWaiting.visibility = View.GONE
+                        progressBarAlarm.visibility = View.GONE
+                        textViewWaiting.visibility = View.GONE
+                        textViewStart1.visibility = View.GONE
+                        textViewStart2.visibility = View.GONE
+                        textViewResult1.visibility = View.VISIBLE
+                        textViewResult2.visibility = View.GONE
+                    }else{
+                        Log.i("Main Activity", "non tagger win display")
+                        progressBarWaiting.visibility = View.GONE
+                        progressBarAlarm.visibility = View.GONE
+                        textViewWaiting.visibility = View.GONE
+                        textViewStart1.visibility = View.GONE
+                        textViewStart2.visibility = View.GONE
+                        textViewResult1.visibility = View.GONE
+                        textViewResult2.visibility = View.VISIBLE
+                    }
+
                 }
+
             }
         }
     }

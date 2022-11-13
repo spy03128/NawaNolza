@@ -1,7 +1,6 @@
 package com.example.nawanolza.hideandseek
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -22,8 +21,10 @@ import com.bumptech.glide.Glide
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.R
 import com.example.nawanolza.createGame.Waiting
-import com.example.nawanolza.createGame.WaitingMember
 import com.example.nawanolza.databinding.ActivityMainHideSeekBinding
+import com.example.nawanolza.retrofit.RetrofitConnection
+import com.example.nawanolza.retrofit.finishroom.FinishRoomService
+import com.example.nawanolza.stomp.FinishResponse
 import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import com.google.android.gms.location.*
 import com.naver.maps.geometry.LatLng
@@ -31,17 +32,14 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
-import kotlinx.android.synthetic.main.activity_card_game.*
-import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.activity_role_check_acitivity.*
-import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
-import kotlinx.android.synthetic.main.activity_waiting.*
-import kotlinx.android.synthetic.main.catch_check_dialog.view.*
-import kotlinx.android.synthetic.main.fragment_participants.*
+import kotlinx.android.synthetic.main.dialog_catch_check.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.time.Duration
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.*
 
 class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
@@ -57,6 +55,27 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     lateinit var binding: ActivityMainHideSeekBinding
     lateinit var adapter: HideSeekRvAdapter
     lateinit var entryCode: String
+
+    companion object {
+        var caughtMember = 0
+        fun finishGame() {
+            val retrofitAPI = RetrofitConnection.getInstance().create(FinishRoomService::class.java)
+            retrofitAPI.finishRoom(Waiting.entryCode).enqueue(object: Callback<FinishResponse>{
+                override fun onResponse(
+                    call: Call<FinishResponse>,
+                    response: Response<FinishResponse>
+                ) {
+                    println("====retrofit====")
+                    println(response)
+                }
+                override fun onFailure(call: Call<FinishResponse>, t: Throwable) {
+                    println("=====error=====")
+                    println(call)
+                    println(t)
+                }
+            })
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +99,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             val intent = Intent(this@MainHideSeek, MemberDetail::class.java )
             startActivity(intent)
         }
-
     }
 
     private fun setRecycleView() {
@@ -89,9 +107,9 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         binding.mRecyclerView.layoutManager = GridLayoutManager(this, 4)
         adapter.setItemClickListener(object: HideSeekRvAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
-//                Toast.makeText(this@MainHideSeek, "hi", Toast.LENGTH_SHORT).show()
-                val builder = AlertDialog.Builder(this@MainHideSeek)
-                val dialogView = layoutInflater.inflate(R.layout.catch_check_dialog, null)
+
+                val builder = AlertDialog.Builder(this@MainHideSeek, R.style.AppAlertDialogTheme)
+                val dialogView = layoutInflater.inflate(R.layout.dialog_catch_check, null)
 
                 val user = Waiting.memberHash[Waiting.runnerList[position]]
                 dialogView.username.text = user?.name
@@ -112,22 +130,15 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         })
     }
 
-
     private fun updateTime() {
-        println("third")
-        println("===========checking========")
-
-
         val startTime = WaitingStompClient.roomInfo.startTime.slice(0..22)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
-
-
         val start = LocalDateTime.parse(startTime, formatter)
-        val end = start.plusMinutes(5)
-
-        // 원래는 playTime/60 더해야함
+        val plusTime = WaitingStompClient.roomInfo.playTime/60 + 1
+        println("==========check")
+        println(plusTime)
         println(WaitingStompClient.roomInfo.playTime)
-        println(end)
+        val end = start.plusMinutes(plusTime)
 
         val duration: Duration = Duration.between(LocalDateTime.now(), end)
         val seconds = duration.seconds
@@ -139,7 +150,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                 val minutes = (millisUntilFinished / 1000).toInt() / 60
                 val sec = (millisUntilFinished / 1000).toInt() % 60
 
-
                 val textMin = if(minutes < 10) "0$minutes" else minutes.toString()
                 val textSec = if(sec < 10) "0$seconds" else sec.toString()
                 val textTime = "$textMin:$textSec"
@@ -147,7 +157,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             }
             override fun onFinish() {
                 /** 끝났을 때 **/
-                Toast.makeText(this@MainHideSeek, "끝", Toast.LENGTH_SHORT).show()
+                finishGame()
             }
         }.start()
     }
@@ -195,8 +205,9 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         setLocationOverlay() // overlay 설정
         setPolyline(LatLng(WaitingStompClient.roomInfo.lat, WaitingStompClient.roomInfo.lng))
 
-        WaitingStompClient.subGPS(entryCode, naverMap, this, senderId)
+        WaitingStompClient.subGPS(entryCode, naverMap, this, senderId, adapter)
         WaitingStompClient.subEvent(entryCode, adapter, this)
+        WaitingStompClient.subFinish(entryCode, this)
     }
 
     //내 위치를 가져오는 코드
@@ -257,21 +268,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         locationOverlay.isVisible = true
     }
 
-    //좌표간 거리 구하기
-    private fun calDist(lat1:Double, lon1:Double, lat2:Double, lon2:Double) : Long{
-        val EARTH_R = 6371000.0
-        val rad = Math.PI / 180
-        val radLat1 = rad * lat1
-        val radLat2 = rad * lat2
-        val radDist = rad * (lon1 - lon2)
-
-        var distance = Math.sin(radLat1) * Math.sin(radLat2)
-        distance = distance + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radDist)
-        val ret = EARTH_R * Math.acos(distance)
-
-        return Math.round(ret) // 미터 단위
-    }
-
     private fun setPolyline(latLng: LatLng) {
 
         val circle = CircleOverlay()
@@ -281,5 +277,19 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         circle.outlineWidth = 1
         circle.radius = 100.0
         circle.map = naverMap
+    }
+
+    // 거리 구하기
+    object DistanceManager {
+
+        private const val R = 6372.8 * 1000
+
+        fun getDistance(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Int {
+            val dLat = Math.toRadians(lat2 - lat1)
+            val dLng = Math.toRadians(lng2 - lng1)
+            val a = sin(dLat / 2).pow(2.0) + sin(dLng / 2).pow(2.0) * cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2))
+            val c = 2 * asin(sqrt(a))
+            return (R * c).toInt()
+        }
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import ssafy.nawanolza.server.handler.event.GameEndEvent;
 import ssafy.nawanolza.server.handler.event.GameFinishEvent;
 import ssafy.nawanolza.server.handler.event.GameStartEvent;
 
@@ -26,5 +27,11 @@ public class HideAndSeekEventHandler {
     @EventListener
     public void gameFinish(GameFinishEvent event) {
         operations.convertAndSend("/sub/game/finish/" + event.getEntryCode(), event);
+    }
+
+    @Async
+    @EventListener
+    public void gameEnd(GameEndEvent event) {
+        operations.convertAndSend("/sub/game/end/" + event.getEntryCode(), event);
     }
 }

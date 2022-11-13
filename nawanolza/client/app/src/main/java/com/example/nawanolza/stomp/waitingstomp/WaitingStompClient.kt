@@ -6,10 +6,7 @@ import android.content.Intent
 import android.util.Log
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.createGame.WaitingRvAdapter
-import com.example.nawanolza.hideandseek.HideSeekRvAdapter
-import com.example.nawanolza.hideandseek.PubEventRequest
-import com.example.nawanolza.hideandseek.PubGpsRequest
-import com.example.nawanolza.hideandseek.RoleCheckActivity
+import com.example.nawanolza.hideandseek.*
 import com.example.nawanolza.retrofit.createroom.MemberList
 import com.example.nawanolza.retrofit.enterroom.GetRoomResponse
 import com.example.nawanolza.stomp.CatchResponse
@@ -132,17 +129,17 @@ class WaitingStompClient {
                             markerMap.get(subDto.senderId)?.map = null
                         }
 
-                        val myLocation = LatLng(subDto.lat, subDto.lng)
-                        val marker = Marker()
-                        //마커
+                        if(!MainHideSeek.isTagger || MainHideSeek.isHintOn) {
+                            val myLocation = LatLng(subDto.lat, subDto.lng)
+                            val marker = Marker()
 
-                        marker.position= myLocation
-//                    marker.width  = 250
-//                    marker.height = 250
-////                    marker.icon = OverlayImage.fromResource(MarkerImageUtil.getImage(current.characterId) as Int)
+                            //마커
+                            marker.position= myLocation
+                            marker.width  = 80
+                            marker.height = 80
 
-                        markerMap.put(subDto.senderId, marker)
-                        marker.map = naverMap
+                            markerMap.put(subDto.senderId, marker)
+                            marker.map = naverMap
 //                    var timeFlag: Boolean = false
 
 //                    timer(initialDelay = 0L, period = 1000L) {
@@ -152,7 +149,7 @@ class WaitingStompClient {
 //                        }
 //                        if (timeFlag) cancel()
 //                    }
-
+                        }
                     }
                 }
             }

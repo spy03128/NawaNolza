@@ -1,7 +1,6 @@
 package com.example.nawanolza.hideandseek
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -22,7 +21,6 @@ import com.bumptech.glide.Glide
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.R
 import com.example.nawanolza.createGame.Waiting
-import com.example.nawanolza.createGame.WaitingMember
 import com.example.nawanolza.databinding.ActivityMainHideSeekBinding
 import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import com.google.android.gms.location.*
@@ -39,18 +37,23 @@ import kotlinx.android.synthetic.main.activity_waiting.*
 import kotlinx.android.synthetic.main.catch_check_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_participants.*
 import java.time.Duration
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.concurrent.schedule
 
 class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
+
+    companion object {
+        var isTagger: Boolean = true
+        var isHintOn: Boolean = false
+    }
 
     // 네이버 맵 권한 요청
     private val permission_request = 99
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
     var senderId = 0
-
 
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
 
@@ -72,6 +75,8 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             ActivityCompat.requestPermissions(this, permissions, permission_request)
         }//권한 확인
 
+        if(Waiting.tagger != senderId)
+            isTagger = false
 
         updateTime()
         setRecycleView()
@@ -81,6 +86,15 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.bulb.setOnClickListener {
+            println(Waiting.tagger)
+            println(Waiting.runnerList)
+
+            isHintOn = true
+            Timer().schedule(1500) {
+                isHintOn = false
+            }
+        }
     }
 
     private fun setRecycleView() {

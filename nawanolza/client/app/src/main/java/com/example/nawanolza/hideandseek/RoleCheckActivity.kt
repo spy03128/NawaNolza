@@ -8,6 +8,7 @@ import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.R
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.databinding.ActivityRoleCheckAcitivityBinding
+import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import kotlinx.android.synthetic.main.activity_role_check_acitivity.*
 import kotlinx.android.synthetic.main.fragment_participants.*
 

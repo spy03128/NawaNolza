@@ -34,9 +34,9 @@ class ChattingActivity : AppCompatActivity() {
         val member = Member("", "", 10, "http://k.kakaocdn.net/dn/rekq2/btrQrFFtJMK/E3rOBQjbKuKRKzMNQ2KWu1/img_640x640.jpg", "권도현")
         val member2 = Member("", "", 11, "http://k.kakaocdn.net/dn/rekq2/btrQrFFtJMK/E3rOBQjbKuKRKzMNQ2KWu1/img_640x640.jpg", "권도현")
         chatData = ChattingUtil.getChatData(entryCode!!)
-        chatData.add(ChatDTO(SocketChatDTO(member, "1234","안녕ㅎ"), ChatType.LEFT))
-        chatData.add(ChatDTO(SocketChatDTO(member2, "1234","안녕123"), ChatType.RIGHT))
-        chatData.add(ChatDTO(SocketChatDTO(member, "1234","안녕435"), ChatType.LEFT))
+        chatData.add(ChatDTO(SocketChatDTO(member, "1234","안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"), ChatType.LEFT))
+        chatData.add(ChatDTO(SocketChatDTO(member2, "1234","안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"), ChatType.RIGHT))
+        chatData.add(ChatDTO(SocketChatDTO(member, "1234","안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕"), ChatType.LEFT))
 
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)

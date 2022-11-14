@@ -53,13 +53,9 @@ class ChattingRvAdapter(
 
     inner class RightViewHolder(itemView: ChattingRvItemRightBinding) : ViewHolder(itemView.root) {
         var content: TextView
-        var name: TextView
-        var image: ImageView
 
         init {
             content = itemView.content
-            name = itemView.name
-            image = itemView.profileImg
         }
     }
 
@@ -70,9 +66,7 @@ class ChattingRvAdapter(
             viewHolder.content.setText(chatInfo.message)
             Glide.with(application).load(chatInfo.senderImage).into(viewHolder.image)
         } else {
-            (viewHolder as RightViewHolder).name.setText(chatInfo.senderName)
-            viewHolder.content.setText(chatInfo.message)
-            Glide.with(application).load(chatInfo.senderImage).into(viewHolder.image)
+            (viewHolder as RightViewHolder).content.setText(chatInfo.message)
         }
     }
 

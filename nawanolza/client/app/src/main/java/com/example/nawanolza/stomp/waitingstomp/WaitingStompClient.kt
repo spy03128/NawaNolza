@@ -96,27 +96,15 @@ class WaitingStompClient {
                 Log.i("message Receive", topicMessage.payload)
 
 
-//                roomInfo = GsonBuilder().create().fromJson(topicMessage.payload, GetRoomResponse::class.java)
-
-                println(topicMessage.payload)
-
-                println("==================fuckingRoom")
-
-                println(GsonBuilder().create().fromJson(topicMessage.payload, GetRoomResponse::class.java))
+                roomInfo = GsonBuilder().create().fromJson(topicMessage.payload, GetRoomResponse::class.java)
 
                 Waiting.memberList.add(0, Waiting.hostInfo)
 
                 for(member in Waiting.memberList)
                     Waiting.memberHash.put(member.memberId, member)
 
-//                Waiting.tagger = roomInfo.tagger
-                Waiting.tagger = 18
+                Waiting.tagger = roomInfo.tagger
                 Waiting.runnerList = roomInfo.runners
-
-                println("========check waiting===========")
-                println(Waiting.tagger)
-                println(Waiting.runnerList)
-                println(Waiting.memberHash)
 
                 val intent = Intent(context, RoleCheckActivity::class.java)
                 intent.putExtra("entryCode", entryCode)
@@ -189,7 +177,7 @@ class WaitingStompClient {
                     adapter.notifyDataSetChanged()
                 }
 
-                if(MainHideSeek.caughtMember == Waiting.runnerList.size) {
+                if(MainHideSeek.caughtMember == Waiting.runnerList.size && MainHideSeek.isTagger) {
                     println("============check 똑같================")
                     MainHideSeek.finishGame()
                 }

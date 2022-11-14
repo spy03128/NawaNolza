@@ -18,10 +18,14 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_chatting.*
 
-class ChattingActivity : AppCompatActivity() {
+class ChattingActivity : AppCompatActivity {
     lateinit var binding: ActivityChattingBinding
     lateinit var chatData: ArrayList<ChatDTO>
-    lateinit var adapter: ChattingRvAdapter
+    val adapter: ChattingRvAdapter
+
+    constructor(adapter: ChattingRvAdapter) {
+        this.adapter = adapter
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +38,6 @@ class ChattingActivity : AppCompatActivity() {
 
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        messageSubscribe(entryCode!!, member.id)
 
         sendButton.setOnClickListener {
             val socketChatDTO = SocketChatDTO(member!!, entryCode, messageInput.text.toString())
@@ -42,26 +45,8 @@ class ChattingActivity : AppCompatActivity() {
             binding.messageInput.setText("")
         }
 
-        adapter = ChattingRvAdapter(chatData, application)
         binding.chattingRecyclerView.adapter = adapter
         binding.chattingRecyclerView.layoutManager = GridLayoutManager(this@ChattingActivity, 1)
-    }
-
-    private fun messageSubscribe(
-        entryCode: String,
-        memberId: Int,
-    ) {
-        WaitingStompClient.stompClient.topic("/sub/chat/" + entryCode).subscribe { topicMessage ->
-            val fromJson = GsonBuilder().create().fromJson(topicMessage.payload, SocketChatDTO::class.java)
-
-            if(fromJson.senderId.toString() != memberId.toString()) {
-                chatData.add(ChatDTO(fromJson, ChatType.LEFT))
-            }
-
-            runOnUiThread {
-                adapter.notifyDataSetChanged()
-            }
-        }
     }
 
     private fun sendMessage(dto: SocketChatDTO) {

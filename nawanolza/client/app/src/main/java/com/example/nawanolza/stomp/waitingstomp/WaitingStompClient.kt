@@ -199,6 +199,20 @@ class WaitingStompClient {
             }
         }
 
+        fun subChat(
+            entryCode: String,
+            memberId: Int,
+            adapter: ChattingRvAdapter
+        ) {
+            stompClient.topic("/sub/chat/" + entryCode).subscribe { topicMessage ->
+                val fromJson = GsonBuilder().create().fromJson(topicMessage.payload, SocketChatDTO::class.java)
+
+                if(fromJson.senderId.toString() != memberId.toString()) {
+                    adapter.addChat(ChatDTO(fromJson, ChatType.LEFT))
+                }
+            }
+        }
+
         /** 보내는 메서드 **/
 
         // 내 위치 전송

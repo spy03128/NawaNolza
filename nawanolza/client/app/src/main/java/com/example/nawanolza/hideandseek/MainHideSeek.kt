@@ -244,10 +244,10 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         setLocationOverlay() // overlay 설정
         setPolyline(LatLng(WaitingStompClient.roomInfo.lat, WaitingStompClient.roomInfo.lng))
-
         WaitingStompClient.subGPS(entryCode, naverMap, this, senderId, adapter)
         WaitingStompClient.subEvent(entryCode, adapter, this)
         WaitingStompClient.subFinish(entryCode, this)
+        WaitingStompClient.subChat(entryCode, LoginUtil.getMember(this)!!.id, ChattingRvAdapter(ChattingUtil.getChatData(entryCode), application))
     }
 
     override fun onBackPressed() {

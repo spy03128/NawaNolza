@@ -73,6 +73,11 @@ class ChattingRvAdapter(
     override fun getItemViewType(position: Int): Int {
         return chatData.get(position).viewType
     }
+
+    fun addChat(dto: ChatDTO) {
+        chatData.add(dto)
+        notifyItemInserted(chatData.size-1)
+    }
 }
 
 

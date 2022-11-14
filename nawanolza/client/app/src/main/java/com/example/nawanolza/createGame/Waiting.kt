@@ -95,7 +95,6 @@ class Waiting : AppCompatActivity() {
                 response: Response<GetRoomResponse>
             ) {
                 when (response.code()) {
-                    200 -> WaitingStompClient.roomInfo = response.body()!!
                     else -> Toast.makeText(this@Waiting, "게임 시작 실패", Toast.LENGTH_SHORT).show()
                 }
             }

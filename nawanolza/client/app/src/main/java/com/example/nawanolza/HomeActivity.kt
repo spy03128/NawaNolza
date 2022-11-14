@@ -47,6 +47,11 @@ class HomeActivity : AppCompatActivity() {
         Log.d(TAG, "init: ${memberInfo}")
     }
 
+    override fun onPause() {
+        super.onPause()
+        println("===============Pause main============")
+    }
+
 
 
 

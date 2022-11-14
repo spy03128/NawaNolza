@@ -107,9 +107,14 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             startActivity(intent)
         }
 
+        if(!isTagger){
+            binding.bulb.visibility = View.INVISIBLE
+            binding.flag.visibility = View.INVISIBLE
+        }
+
         binding.bulb.setOnClickListener {
             isHintOn = true
-            Timer().schedule(1500) {
+            Timer().schedule(3000) {
                 isHintOn = false
             }
         }

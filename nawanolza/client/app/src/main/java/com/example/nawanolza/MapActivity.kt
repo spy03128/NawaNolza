@@ -45,6 +45,7 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_main_hide_seek.*
 import kotlinx.android.synthetic.main.activity_map.*
 import retrofit2.Call
@@ -58,7 +59,9 @@ private const val TAG = "MapActivity_맵에서"
 class MapActivity :OnMapReadyCallback, AppCompatActivity() {
     val permission_request = 99
     private lateinit var naverMap: NaverMap
+    private lateinit var locationSource: FusedLocationSource
     var quizInfo = QuestResponse()
+
 
 
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -371,6 +374,8 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                 fm.beginTransaction().add(R.id.map, it).commit()
             } //권한
         mapFragment.getMapAsync(this)
+
+        locationSource = FusedLocationSource(this, 1000) // 좌표 눌렀을때 현재 위치로 이동
     }
 
     @UiThread
@@ -382,6 +387,11 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
         )
         naverMap.cameraPosition = cameraPosition
         this.naverMap = naverMap
+
+        val uiSettings = naverMap.uiSettings
+        uiSettings.isLocationButtonEnabled = true //위치 버튼 활성화
+
+        naverMap.locationSource = locationSource // 좌표 눌렀을때 현재 위치로 이동
 
 
         fusedLocationProviderClient =

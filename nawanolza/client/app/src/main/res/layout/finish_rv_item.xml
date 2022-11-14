@@ -11,6 +11,7 @@
         android:layout_height="50dp"
         android:background="@drawable/round"
         android:src="@mipmap/ic_launcher_round"
+        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="@+id/progressBar"
         app:layout_constraintStart_toStartOf="@+id/progressBar"

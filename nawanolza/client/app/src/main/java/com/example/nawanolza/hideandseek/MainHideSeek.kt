@@ -107,9 +107,14 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             startActivity(intent)
         }
 
+        if(!isTagger){
+            binding.bulb.visibility = View.INVISIBLE
+            binding.flag.visibility = View.INVISIBLE
+        }
+
         binding.bulb.setOnClickListener {
             isHintOn = true
-            Timer().schedule(1500) {
+            Timer().schedule(3000) {
                 isHintOn = false
             }
         }
@@ -243,6 +248,20 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         WaitingStompClient.subGPS(entryCode, naverMap, this, senderId, adapter)
         WaitingStompClient.subEvent(entryCode, adapter, this)
         WaitingStompClient.subFinish(entryCode, this)
+    }
+
+    override fun onBackPressed() {
+        val builder = AlertDialog.Builder(this@MainHideSeek, R.style.AppAlertDialogTheme)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_main_back_finish, null)
+
+        builder.setView(dialogView)
+            .setPositiveButton("나가기") {dialogInterface, i ->
+                finishAffinity()
+            }
+            .setNegativeButton("돌아가기") { dialogInterface, i ->
+
+            }
+        builder.show()
     }
 
     //내 위치를 가져오는 코드

@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import ssafy.nawanolza.server.domain.exception.GameRoomAccessDeniedException;
 import ssafy.nawanolza.server.domain.exception.GameRoomOverflowException;
 import ssafy.nawanolza.server.domain.exception.UnderstaffedException;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class HideAndSeekGameRoom {
     private double lat;
     private double lng;
     private int range;
+    private RoomStatus roomStatus = RoomStatus.Create;
 
     private static final int MAXIMUM_PEOPLE_COUNT = 15;
 
@@ -35,6 +37,11 @@ public class HideAndSeekGameRoom {
     protected enum Role {
         TAGGER, RUNNER
     }
+
+    private enum RoomStatus {
+        Create, Progress, End
+    }
+
 
     @Builder
     private HideAndSeekGameRoom(Long hostId, String entryCode, HideAndSeekProperties hideAndSeekProperties,
@@ -62,6 +69,10 @@ public class HideAndSeekGameRoom {
     public HideAndSeekGameRoom participateMember(Long memberId) {
         if (participants.size() > MAXIMUM_PEOPLE_COUNT)
             throw new GameRoomOverflowException();
+
+        if (this.roomStatus == RoomStatus.Progress)
+            throw new GameRoomAccessDeniedException();
+
         participants.add(memberId);
         return this;
     }
@@ -71,6 +82,7 @@ public class HideAndSeekGameRoom {
         participants.stream().forEach(id -> status.put(id, false));
         Map<String, Object> playersByRole = assignRoles(participants);
         startTime = LocalDateTime.now();
+        this.roomStatus = RoomStatus.Progress;
         return playersByRole;
     }
 
@@ -111,5 +123,9 @@ public class HideAndSeekGameRoom {
 
     public void seekRunner(Long seekRunnerId) {
         status.put(seekRunnerId, true);
+    }
+
+    public void gameEnd() {
+        this.roomStatus = RoomStatus.End;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.nawanolza.HomeActivity
 import com.example.nawanolza.databinding.ActivityFinishGameBinding
 import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import kotlinx.android.synthetic.main.activity_finish_game.*
@@ -21,7 +22,7 @@ class FinishGame : AppCompatActivity() {
         binding.title.text = if(WaitingStompClient.winTagger) "술래팀 승리!" else "숨는팀 승리!"
 
         ExitBtn.setOnClickListener{
-            val intent = Intent(this, MainHideSeek::class.java)
+            val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
         }
 

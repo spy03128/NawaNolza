@@ -113,6 +113,21 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                 isHintOn = false
             }
         }
+
+        binding.flag.setOnClickListener {
+            val builder = AlertDialog.Builder(this@MainHideSeek, R.style.AppAlertDialogTheme)
+            val dialogView = layoutInflater.inflate(R.layout.dialog_surrender, null)
+
+            builder.setView(dialogView)
+                .setPositiveButton("확인") {dialogInterface, i ->
+                    Log.i("surrender", "항복 확인")
+                    finishGame()
+                }
+                .setNegativeButton("돌아가기") { dialogInterface, i ->
+                    Log.i("surrender", "항복 취소")
+                }
+            builder.show()
+        }
     }
 
     private fun setRecycleView() {

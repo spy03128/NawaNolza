@@ -1,6 +1,7 @@
 package com.example.nawanolza.createGame
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -95,6 +96,7 @@ class Waiting : AppCompatActivity() {
                 response: Response<GetRoomResponse>
             ) {
                 when (response.code()) {
+                    200 -> Log.i("getRoomInfo", "게임 시작 성공")
                     else -> Toast.makeText(this@Waiting, "게임 시작 실패", Toast.LENGTH_SHORT).show()
                 }
             }

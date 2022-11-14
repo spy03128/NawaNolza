@@ -16,6 +16,7 @@ public class ExControllerAdvice {
     @ExceptionHandler({CharacterNotFountException.class,
             CollectionNotFountException.class,
             GameRoomNotFoundException.class,
+            GameRoomAccessDeniedException.class,
             MemberNotFountException.class,
             NotFoundEntryCodeException.class,
             TokenEmptyException.class})

@@ -21,7 +21,6 @@ import ssafy.nawanolza.server.handler.event.GameEndEvent;
 import ssafy.nawanolza.server.handler.event.GameFinishEvent;
 import ssafy.nawanolza.server.handler.event.GameStartEvent;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +69,7 @@ public class GameRoomController {
         String entryCode = request.get("entryCode");
 
         // 게임 참여
-        HideAndSeekGameRoom hideAndSeekGameRoom = hideAndGameRoomService.paticipateGameRoom(memberId, entryCode);
+        HideAndSeekGameRoom hideAndSeekGameRoom = hideAndGameRoomService.participateGameRoom(memberId, entryCode);
         HideAndSeekGameRoomResponse hideAndSeekGameRoomResponse = HideAndSeekGameRoomResponse.makeEntryResponse(hideAndSeekGameRoom, memberRepository);
         Map<String, List<MemberDto>> result = Map.of("participants", hideAndSeekGameRoomResponse.getParticipants());
         simpMessageSendingOperations.convertAndSend("/sub/participate/" + entryCode, result);

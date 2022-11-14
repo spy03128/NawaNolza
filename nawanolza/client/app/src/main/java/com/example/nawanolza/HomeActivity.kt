@@ -47,7 +47,8 @@ class HomeActivity : AppCompatActivity() {
         Log.d(TAG, "init: ${memberInfo}")
     }
 
-
-
-
+    override fun onBackPressed() {
+//        super.onBackPressed()
+        finishAffinity()
+    }
 }

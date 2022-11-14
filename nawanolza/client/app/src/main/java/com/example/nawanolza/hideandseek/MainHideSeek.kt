@@ -128,6 +128,12 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                 }
             builder.show()
         }
+
+        binding.talk.setOnClickListener {
+            val intent = Intent(this@MainHideSeek, ChattingActivity::class.java)
+            intent.putExtra("entryCode", entryCode)
+            startActivity(intent)
+        }
     }
 
     private fun setRecycleView() {

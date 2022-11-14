@@ -51,21 +51,21 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         var time = 60
         var gameTime = 300
-        plusButton.setOnClickListener {
-            time += 10
-            var minute = if(time%60==0) "00" else time%60
-            binding.hideTime.text = "${time/60}:${minute}"
-        }
-        minusButton.setOnClickListener {
-            if(time > 10){
-                time -= 10
-                var minute = if(time%60==0) "00" else time%60
-                binding.hideTime.text = "${time/60}:${minute}"
-            }
-            else{
-                binding.hideTime.text = "0:10"
-            }
-        }
+//        plusButton.setOnClickListener {
+//            time += 10
+//            var minute = if(time%60==0) "00" else time%60
+//            binding.hideTime.text = "${time/60}:${minute}"
+//        }
+//        minusButton.setOnClickListener {
+//            if(time > 10){
+//                time -= 10
+//                var minute = if(time%60==0) "00" else time%60
+//                binding.hideTime.text = "${time/60}:${minute}"
+//            }
+//            else{
+//                binding.hideTime.text = "0:10"
+//            }
+//        }
 
         gamePlus.setOnClickListener {
             gameTime += 30
@@ -83,17 +83,17 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
             }
         }
 
-        var range = 100.0
+        var range = 100
         rangeMinus.setOnClickListener {
-            if(range <= 50.0) {
+            if(range <= 50) {
             }else{
-                range -= 50.0
+                range -= 50
                 binding.rangeText.text = range.toString()
             }
         }
         rangePlus.setOnClickListener {
             if(range <= 150.0){
-                range += 50.0
+                range += 50
                 binding.rangeText.text = range.toString()
             }
         }
@@ -218,15 +218,13 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
         naverMap.minZoom = 5.0
     }
 
-
-
     private fun setPolyline(latLng:LatLng){
         if(!check){
             circle.center = latLng
             val color = Color.parseColor("#e3f2fd")
             circle.outlineWidth = 1
             circle.color = color
-            circle.radius = 100.0
+            circle.radius = rangeText.text.toString().toDouble()
             circle.map = naverMap
             check = true
         }else{

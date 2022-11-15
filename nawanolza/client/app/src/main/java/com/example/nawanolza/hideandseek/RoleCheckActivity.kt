@@ -40,8 +40,9 @@ class RoleCheckActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                val intent = Intent(this@RoleCheckActivity, MainHideSeek::class.java)
+                val intent = Intent(this@RoleCheckActivity, ChattingActivity::class.java)
                 intent.putExtra("entryCode", entryCode)
+                intent.putExtra("flag", true)
                 startActivity(intent)
             }
         }.start()

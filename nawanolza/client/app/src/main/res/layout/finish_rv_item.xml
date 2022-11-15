@@ -11,7 +11,6 @@
         android:layout_height="50dp"
         android:background="@drawable/round"
         android:src="@mipmap/ic_launcher_round"
-        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="@+id/progressBar"
         app:layout_constraintStart_toStartOf="@+id/progressBar"
@@ -24,6 +23,7 @@
         android:indeterminateOnly="false"
         android:progress="0"
         android:progressDrawable="@drawable/user_status_true"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="이름"
-        android:textSize="12sp"
+        android:textSize="15sp"
         android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

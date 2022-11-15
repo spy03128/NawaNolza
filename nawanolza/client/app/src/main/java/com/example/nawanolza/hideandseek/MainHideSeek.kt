@@ -327,8 +327,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         val circle = CircleOverlay()
         circle.center = latLng
         val color = Color.parseColor("#80D6E6F2")
-        circle.outlineColor = color
-//        circle.outlineWidth = 1
+        circle.color = color
         circle.radius = WaitingStompClient.roomInfo.range.toDouble()
         circle.map = naverMap
     }

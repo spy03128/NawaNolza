@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:background="@drawable/host_round"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="1dp"
             tools:layout_editor_absoluteX="43dp"
             tools:layout_editor_absoluteY="121dp">
@@ -122,8 +122,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="16sp"
-                android:text="hostname" />
+                android:text="hostname"
+                android:textSize="16sp" />
 
         </LinearLayout>
 

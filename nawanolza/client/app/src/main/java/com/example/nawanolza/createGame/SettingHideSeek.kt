@@ -54,21 +54,6 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         var time = 60
         var gameTime = 300
-//        plusButton.setOnClickListener {
-//            time += 10
-//            var minute = if(time%60==0) "00" else time%60
-//            binding.hideTime.text = "${time/60}:${minute}"
-//        }
-//        minusButton.setOnClickListener {
-//            if(time > 10){
-//                time -= 10
-//                var minute = if(time%60==0) "00" else time%60
-//                binding.hideTime.text = "${time/60}:${minute}"
-//            }
-//            else{
-//                binding.hideTime.text = "0:10"
-//            }
-//        }
 
         gamePlus.setOnClickListener {
             gameTime += 30

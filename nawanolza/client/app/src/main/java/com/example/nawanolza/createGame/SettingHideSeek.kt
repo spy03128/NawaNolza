@@ -24,6 +24,7 @@ import com.google.gson.GsonBuilder
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.CircleOverlay
+import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_setting_hide_seek.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,6 +40,8 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
     private lateinit var naverMap: NaverMap
     private lateinit var createRoomRequest: CreateRoomRequest
+    private lateinit var locationSource: FusedLocationSource
+
 
 
 
@@ -156,6 +159,7 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
                 fm.beginTransaction().add(R.id.map, it).commit()
             } //권한
         mapFragment.getMapAsync(this)
+        locationSource = FusedLocationSource(this, 1000) // 좌표 눌렀을때 현재 위치로 이동
     }
 
     @UiThread
@@ -167,6 +171,12 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
             16.0 // 줌 레벨
         )
         naverMap.cameraPosition = cameraPosition
+
+        val uiSettings = naverMap.uiSettings
+        uiSettings.isLocationButtonEnabled = true //위치 버튼 활성화
+
+        naverMap.locationSource = locationSource // 좌표 눌렀을때 현재 위치로 이동
+
 
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(this) //gps 자동으로 받아오기
@@ -221,8 +231,7 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
     private fun setPolyline(latLng:LatLng){
         if(!check){
             circle.center = latLng
-            val color = Color.parseColor("#e3f2fd")
-            circle.outlineWidth = 1
+            val color = Color.parseColor("#80D6E6F2")
             circle.color = color
             circle.radius = rangeText.text.toString().toDouble()
             circle.map = naverMap

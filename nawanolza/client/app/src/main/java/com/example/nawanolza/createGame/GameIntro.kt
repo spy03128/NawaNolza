@@ -27,7 +27,7 @@ class GameIntro : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.tvCreateRoom.setOnClickListener {
-            val intent = Intent(this, SelectGame::class.java)
+            val intent = Intent(this, SettingHideSeek::class.java)
             startActivity(intent)
         }
 

@@ -1,8 +1,8 @@
 package com.example.nawanolza.hideandseek
 
-import com.example.nawanolza.retrofit.Member
 import com.example.nawanolza.stomp.SocketChatDTO
-import com.example.nawanolza.stomp.SocketType
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ChatDTO(dto: SocketChatDTO, viewType: Int) {
     val entryCode: String
@@ -11,6 +11,7 @@ class ChatDTO(dto: SocketChatDTO, viewType: Int) {
     val senderImage: String
     val message: String
     val viewType: Int
+    val chatTime : LocalDateTime
 
     init {
         this.senderId = dto.senderId
@@ -19,5 +20,6 @@ class ChatDTO(dto: SocketChatDTO, viewType: Int) {
         this.entryCode = dto.entryCode
         this.message = dto.message
         this.viewType = viewType
+        chatTime = LocalDateTime.parse(dto.chatTime, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"))
     }
 }

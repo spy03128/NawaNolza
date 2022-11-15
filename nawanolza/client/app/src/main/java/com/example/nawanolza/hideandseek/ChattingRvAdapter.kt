@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.nawanolza.databinding.ChattingRvItemLeftBinding
 import com.example.nawanolza.databinding.ChattingRvItemRightBinding
+import java.time.format.DateTimeFormatter
 
 
 class ChattingRvAdapter(
@@ -43,19 +44,23 @@ class ChattingRvAdapter(
         var content: TextView
         var name: TextView
         var image: ImageView
+        var time: TextView
 
         init {
             content = itemView.content
             name = itemView.name
             image = itemView.profileImg
+            time = itemView.time
         }
     }
 
     inner class RightViewHolder(itemView: ChattingRvItemRightBinding) : ViewHolder(itemView.root) {
         var content: TextView
+        var time: TextView
 
         init {
             content = itemView.content
+            time = itemView.time
         }
     }
 
@@ -64,9 +69,11 @@ class ChattingRvAdapter(
         if (viewHolder is LeftViewHolder) {
             viewHolder.name.setText(chatInfo.senderName)
             viewHolder.content.setText(chatInfo.message)
+            viewHolder.time.setText(chatInfo.chatTime.format(DateTimeFormatter.ofPattern("HH:mm")))
             Glide.with(application).load(chatInfo.senderImage).into(viewHolder.image)
         } else {
             (viewHolder as RightViewHolder).content.setText(chatInfo.message)
+            viewHolder.time.setText(chatInfo.chatTime.format(DateTimeFormatter.ofPattern("HH:mm")))
         }
     }
 

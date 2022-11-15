@@ -1,5 +1,6 @@
 package com.example.nawanolza.hideandseek
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -27,8 +28,15 @@ class ChattingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WaitingStompClient.connect()
-
         val entryCode = intent.getStringExtra("entryCode")
+        val flag = intent.getBooleanExtra("flag", false)
+
+        if (flag) {
+            val intent = Intent(this@ChattingActivity, MainHideSeek::class.java)
+            intent.putExtra("entryCode", entryCode)
+            startActivity(intent)
+        }
+
         val member = LoginUtil.getMember(this)!!
         chatData = ChattingUtil.getChatData(entryCode!!)
 

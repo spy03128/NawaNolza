@@ -4,42 +4,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/result_background"
+
     tools:context=".hideandseek.FinishGame">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="140dp"
+
+    <LinearLayout
+        android:id="@+id/RecyclerView"
+        android:layout_width="301dp"
+        android:layout_height="495dp"
+        android:background="@drawable/round"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:padding="40dp"/>
+        app:layout_constraintVertical_bias="0.568">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="52dp"
+            android:text="승리!"
+            android:textAlignment="center"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/RecyclerView"
+            app:layout_constraintStart_toStartOf="@+id/RecyclerView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mRecyclerView"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:padding="30dp"
+            android:layout_gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView12"
+        android:layout_width="84dp"
+        android:layout_height="78dp"
+        android:src="@drawable/winner"
+        app:layout_constraintBottom_toTopOf="@+id/winner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:id="@+id/winner"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="winner!"
+        android:layout_marginTop="112dp"
+        android:background="@drawable/blueround"
+        android:text="WINNER!"
         android:textAlignment="center"
-        android:textColor="@color/black"
+        android:textColor="#ffff00"
         android:textSize="40sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/mRecyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/RecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/ExitBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="122dp"
+        android:layout_height="63dp"
         android:backgroundTint="#769FCD"
         android:gravity="center"
         android:text="종료"
         android:textStyle="bold"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mRecyclerView" />
+        app:layout_constraintTop_toBottomOf="@+id/RecyclerView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

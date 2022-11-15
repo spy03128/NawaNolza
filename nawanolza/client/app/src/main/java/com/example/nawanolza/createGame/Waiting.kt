@@ -82,7 +82,7 @@ class Waiting : AppCompatActivity() {
     private fun setAdapter() {
         adapter = WaitingRvAdapter(this)
         binding.mRecyclerView.adapter = adapter
-        binding.mRecyclerView.layoutManager = GridLayoutManager(this, 3)
+        binding.mRecyclerView.layoutManager = GridLayoutManager(this, 5)
     }
 
     private fun startGame(

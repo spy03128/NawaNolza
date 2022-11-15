@@ -67,6 +67,7 @@ class ChattingActivity : AppCompatActivity() {
             }
 
             runOnUiThread {
+                binding.chattingRecyclerView.scrollToPosition(chatData.size-1)
                 adapter.notifyDataSetChanged()
             }
         }

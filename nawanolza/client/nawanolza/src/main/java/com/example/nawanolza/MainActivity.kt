@@ -165,6 +165,7 @@ class MainActivity : Activity() {
                     vibrator.vibrate(VibrationEffect.createOneShot(500, 100));
 
                     progressBarAlarm.visibility = View.VISIBLE
+                    Toast.makeText(this@MainActivity,"영역을 벗어났습니다!", Toast.LENGTH_SHORT).show();
                     Handler().postDelayed(Runnable {
                         progressBarAlarm.visibility = View.GONE
                     }, 500)

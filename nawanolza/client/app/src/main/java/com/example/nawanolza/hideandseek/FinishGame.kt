@@ -30,7 +30,12 @@ class FinishGame : AppCompatActivity() {
 
         adapter = FinishRvAdapter(this)
         binding.mRecyclerView.adapter = adapter
-        binding.mRecyclerView.layoutManager = GridLayoutManager(this, 4)
+
+        if(WaitingStompClient.winTagger) {
+            binding.mRecyclerView.layoutManager = GridLayoutManager(this, 1)
+        } else{
+            binding.mRecyclerView.layoutManager = GridLayoutManager(this, 3)
+        }
     }
 
     override fun onPause() {

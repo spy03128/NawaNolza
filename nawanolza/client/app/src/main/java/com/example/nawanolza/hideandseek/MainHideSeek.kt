@@ -107,9 +107,14 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             startActivity(intent)
         }
 
+        if(!isTagger){
+            binding.bulb.visibility = View.INVISIBLE
+            binding.flag.visibility = View.INVISIBLE
+        }
+
         binding.bulb.setOnClickListener {
             isHintOn = true
-            Timer().schedule(1500) {
+            Timer().schedule(3000) {
                 isHintOn = false
             }
         }
@@ -245,6 +250,20 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         WaitingStompClient.subFinish(entryCode, this)
     }
 
+    override fun onBackPressed() {
+        val builder = AlertDialog.Builder(this@MainHideSeek, R.style.AppAlertDialogTheme)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_main_back_finish, null)
+
+        builder.setView(dialogView)
+            .setPositiveButton("나가기") {dialogInterface, i ->
+                finishAffinity()
+            }
+            .setNegativeButton("돌아가기") { dialogInterface, i ->
+
+            }
+        builder.show()
+    }
+
     //내 위치를 가져오는 코드
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient //자동으로 gps값을 받아온다.
     lateinit var locationCallback: LocationCallback //gps응답 값을 가져온다.
@@ -307,10 +326,10 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         val circle = CircleOverlay()
         circle.center = latLng
-        val color = Color.parseColor("#ef5350")
+        val color = Color.parseColor("#80D6E6F2")
         circle.outlineColor = color
-        circle.outlineWidth = 1
-        circle.radius = 100.0
+//        circle.outlineWidth = 1
+        circle.radius = WaitingStompClient.roomInfo.range.toDouble()
         circle.map = naverMap
     }
 

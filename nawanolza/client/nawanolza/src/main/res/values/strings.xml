@@ -7,4 +7,6 @@
     <string name="hello_world">Hello Square World!</string>
     <string name="logo">나와, 놀자</string>
     <string name="waiting_text">게임 대기 중</string>
+    <string name="textView_result2">숨는팀 승리!</string>
+    <string name="textView_result1">술래팀 승리!</string>
 </resources>

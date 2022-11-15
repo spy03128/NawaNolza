@@ -10,6 +10,7 @@ import com.example.nawanolza.retrofit.MemberResponse
 import com.kakao.sdk.user.UserApiClient
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.activity_login.*
+import java.time.LocalDateTime
 
 private const val TAG = "HomeActivity_싸피"
 class HomeActivity : AppCompatActivity() {
@@ -41,13 +42,27 @@ class HomeActivity : AppCompatActivity() {
         button.setOnClickListener {
             Log.i("WearableMainActivity", "Send Message Button Clicked")
             dummyNumber += 1
-            MessageSenderService.sendMessageToWearable(messagePath, "Message from Wearable $dummyNumber", this)
+            MessageSenderService.sendMessageToWearable(messagePath, "a", this)
+        }
+
+        val time: LocalDateTime = LocalDateTime.of(2022, 11, 15, 9, 36, 0)
+        button2.setOnClickListener {
+            Log.i("WearableMainActivity", "Send Message Button Clicked")
+            dummyNumber += 1
+            MessageSenderService.sendMessageToWearable(messagePath, "s/$time/7", this)
+        }
+
+        button3.setOnClickListener {
+            Log.i("WearableMainActivity", "Send Message Button Clicked")
+            dummyNumber += 1
+            MessageSenderService.sendMessageToWearable(messagePath, "g/6/김땡땡", this)
         }
 
         Log.d(TAG, "init: ${memberInfo}")
     }
 
-
-
-
+    override fun onBackPressed() {
+//        super.onBackPressed()
+        finishAffinity()
+    }
 }

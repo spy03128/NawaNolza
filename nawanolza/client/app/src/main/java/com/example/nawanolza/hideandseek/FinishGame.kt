@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.nawanolza.HomeActivity
+import com.example.nawanolza.LoginUtil
+import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.databinding.ActivityFinishGameBinding
 import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import kotlinx.android.synthetic.main.activity_finish_game.*
@@ -31,4 +33,8 @@ class FinishGame : AppCompatActivity() {
         binding.mRecyclerView.layoutManager = GridLayoutManager(this, 4)
     }
 
+    override fun onPause() {
+        super.onPause()
+        println("================Pause LAST===============")
+    }
 }

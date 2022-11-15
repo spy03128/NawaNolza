@@ -10,6 +10,7 @@ import android.os.CountDownTimer
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AlertDialog
@@ -17,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.bumptech.glide.Glide
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.R
@@ -102,7 +105,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         updateTime()
         setRecycleView()
 
-        binding.memberDetail.setOnClickListener {
+        binding.memberDetailBtn.setOnClickListener {
             val intent = Intent(this@MainHideSeek, MemberDetail::class.java )
             startActivity(intent)
         }
@@ -110,6 +113,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         if(!isTagger){
             binding.bulb.visibility = View.INVISIBLE
             binding.flag.visibility = View.INVISIBLE
+            binding.title.text = "숨는 팀"
         }
 
         binding.bulb.setOnClickListener {
@@ -144,7 +148,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     private fun setRecycleView() {
         adapter = HideSeekRvAdapter(this)
         binding.mRecyclerView.adapter = adapter
-        binding.mRecyclerView.layoutManager = GridLayoutManager(this, 4)
+        binding.mRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         adapter.setItemClickListener(object: HideSeekRvAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
 

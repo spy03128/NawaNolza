@@ -4,7 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".hideandseek.MainHideSeek">
+    tools:context=".hideandseek.MainHideSeek"
+    android:background="#C1D2E4">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="술래팀"
+        android:textColor="#343C83"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/memberDetail"
+        app:layout_constraintEnd_toEndOf="@id/guideline4"
+        app:layout_constraintHorizontal_bias="0.003"
+        app:layout_constraintStart_toStartOf="@id/guideline3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.725" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -29,40 +45,45 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mRecyclerView"
-        android:layout_width="231dp"
-        android:layout_height="132dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="116dp"
+        android:background="@drawable/round"
         android:padding="5dp"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="@id/guideline4"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="@id/guideline3"
         app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/map"
         android:name="com.naver.maps.map.MapFragment"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/mRecyclerView"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/mRecyclerView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/guideline2" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="@id/guideline2"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="70dp"
+        android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="#e0e0e0">
+        android:background="@drawable/round"
+        android:backgroundTint="#D9B2BDC9">
 
 
         <ImageView
             android:id="@+id/bulb"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
-            android:src="@drawable/bulb" />
+            android:src="@drawable/my_hint" />
 
         <View
             android:layout_width="0dp"
@@ -71,10 +92,10 @@
 
         <ImageView
             android:id="@+id/flag"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
-            android:src="@drawable/flag" />
+            android:src="@drawable/my_flag" />
 
         <View
             android:layout_width="0dp"
@@ -83,37 +104,33 @@
 
         <ImageView
             android:id="@+id/talk"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
-            android:src="@drawable/chat" />
+            android:src="@drawable/my_chat" />
 
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/timerWrap"
-        android:layout_width="115dp"
-        android:layout_height="140dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="145dp"
+        android:layout_height="50dp"
+        android:background="@drawable/round"
+        android:backgroundTint="#769FCD"
         android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toEndOf="@+id/mRecyclerView"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/memberDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="참여자 목록 보기" />
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/mRecyclerView"
+        app:layout_constraintEnd_toEndOf="@id/guideline4"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@id/guideline3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.361">
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="57dp"
-            android:layout_height="41dp"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:src="@drawable/timer" />
 
@@ -122,12 +139,43 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="center"
+            android:layout_marginEnd="5dp"
             android:text="01:53"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/memberDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="참여자 목록"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/mRecyclerView"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="0.003"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.938" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/memberDetailBtn"
+        android:layout_width="60dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/member_round"
+        android:text="전체보기"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/mRecyclerView"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="0.033"
+        app:layout_constraintStart_toEndOf="@+id/memberDetail"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.989" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

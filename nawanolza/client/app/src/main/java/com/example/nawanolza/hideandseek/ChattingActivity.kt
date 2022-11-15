@@ -2,22 +2,16 @@ package com.example.nawanolza.hideandseek
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.nawanolza.CharacterRvAdapter
 import com.example.nawanolza.LoginUtil
-import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.databinding.ActivityChattingBinding
-import com.example.nawanolza.retrofit.Member
-import com.example.nawanolza.retrofit.createroom.MemberList
 import com.example.nawanolza.stomp.SocketChatDTO
 import com.example.nawanolza.stomp.SocketType
-import com.example.nawanolza.stomp.StompClient
 import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_chatting.*
+import java.time.LocalDateTime
 
 class ChattingActivity : AppCompatActivity() {
     lateinit var binding: ActivityChattingBinding
@@ -45,7 +39,7 @@ class ChattingActivity : AppCompatActivity() {
         messageSubscribe(entryCode!!, member.id)
 
         sendButton.setOnClickListener {
-            val socketChatDTO = SocketChatDTO(member!!, entryCode, messageInput.text.toString())
+            val socketChatDTO = SocketChatDTO(member!!, entryCode, messageInput.text.toString(), LocalDateTime.now())
             sendMessage(socketChatDTO)
             binding.messageInput.setText("")
         }
@@ -75,11 +69,6 @@ class ChattingActivity : AppCompatActivity() {
 
     private fun sendMessage(dto: SocketChatDTO) {
         val data = GsonBuilder().create().toJson(dto)
-        println(dto.type)
-        println(dto.senderId)
-        println(dto.senderName)
-        println(dto.senderImage)
-        println(dto.message)
         chatData.add(ChatDTO(dto, ChatType.RIGHT))
         WaitingStompClient.stompClient.send("/pub/"+ SocketType.CHAT.value, data).subscribe()
     }

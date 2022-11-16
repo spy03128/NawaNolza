@@ -1,9 +1,12 @@
 package com.example.nawanolza.createGame
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.databinding.ActivityGameIntroBinding
@@ -52,7 +55,8 @@ class GameIntro : AppCompatActivity() {
                             intent.putExtra("data", GsonBuilder().create().toJson(response.body()))
                             startActivity(intent)
                         }
-                        else -> Toast.makeText(this@GameIntro, "잘못된 정보입니다", Toast.LENGTH_SHORT).show()
+                        400 -> Toast.makeText(this@GameIntro, "이미 진행 중인 게임입니다.", Toast.LENGTH_SHORT).show()
+                        else -> Toast.makeText(this@GameIntro, "게임 정보를 확인해주세요", Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -64,4 +68,11 @@ class GameIntro : AppCompatActivity() {
             })
         }
     }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        return true
+    }
+
 }

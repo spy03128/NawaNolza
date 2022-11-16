@@ -152,7 +152,8 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         adapter.setItemClickListener(object: HideSeekRvAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
-                if(isTagger){
+
+                if(isTagger && WaitingStompClient.markerMap.size >= 1){
                     val builder = AlertDialog.Builder(this@MainHideSeek, R.style.AppAlertDialogTheme)
                     val dialogView = layoutInflater.inflate(R.layout.dialog_catch_check, null)
 
@@ -161,6 +162,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                     Glide.with(this@MainHideSeek).load(user?.image).circleCrop().into(dialogView.userImage)
                     println("=======markerMap======")
                     println(WaitingStompClient.markerMap)
+
 
                     val userLat = WaitingStompClient.markerMap[Waiting.runnerList[position]]!!.position.latitude
                     val userLng = WaitingStompClient.markerMap[Waiting.runnerList[position]]!!.position.longitude
@@ -179,7 +181,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                         builder.show()
                     }
                 } else {
-                    println("숨는 팀입니다! back")
+                    println("back")
                 }
 
 

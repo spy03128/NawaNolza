@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".hideandseek.RoleCheckActivity"
-    android:background="@drawable/role_back">
+    android:background="@drawable/background_role">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -34,7 +34,7 @@
         android:letterSpacing="0.05"
         android:textStyle="bold"
         android:textColor="@color/black"
-        android:textSize="40sp"
+        android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

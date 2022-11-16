@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.example.nawanolza.hideandseek.MainHideSeek
 import com.example.nawanolza.minigame.CalcGameActivity
 import com.example.nawanolza.minigame.CardGameActivity
 import com.example.nawanolza.minigame.GameBoomActivity
@@ -75,7 +76,11 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
 
     var currentMarker by Delegates.notNull<Long>()
 
+    lateinit var clickMarkerInfo: Marker
+
     lateinit var activityResult: ActivityResultLauncher<Intent>
+
+    lateinit var curMyLocation: Location
 
     //캐릭터 받아오기
     var retrofit = Retrofit.Builder()
@@ -177,8 +182,6 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
 
             }
             else{
-
-
                 val dialog = AlertDialog.Builder(this@MapActivity).apply {
 
                 }.create()
@@ -222,6 +225,7 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                     println((marker.tag as CharacterLocationResponseItem))
 
                     currentMarker = (marker.tag as CharacterLocationResponseItem).characterId
+                    clickMarkerInfo = marker
 
 
                     var service = retrofit.create(QuestService::class.java)
@@ -245,10 +249,10 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                             println(quizInfo.accessible)
 
                             checkQuestType()
-
                         }
 
                         private fun checkQuestType() {
+
                             if (!quizInfo.accessible) {
                                 val dialog = AlertDialog.Builder(this@MapActivity).apply {
 
@@ -333,7 +337,7 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
 
 
                                     activityResult.launch(intent)
-                                }else if (markerInfo.questType == 4) {
+                                } else if (markerInfo.questType == 4) {
                                     val intent =
                                         Intent(this@MapActivity, NumberPuzzleGameActivity::class.java)
 
@@ -363,7 +367,27 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                     true
 
                 }
-                marker.setOnClickListener(function)
+                marker.setOnClickListener {
+                    val lat = (it.tag as CharacterLocationResponseItem).lat
+                    val lng = (it.tag as CharacterLocationResponseItem).lng
+                    if (MainHideSeek.DistanceManager.getDistance(curMyLocation.latitude, curMyLocation.longitude, lat, lng) <= 10)
+                        function(it)
+                    else{
+                        val dialog = AlertDialog.Builder(this@MapActivity).apply {
+                        }.create()
+
+                        dialog.window?.apply {
+                            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        }
+
+                        dialog.apply {
+                            setView(layoutInflater.inflate(R.layout.dialog_distance_notice,null))
+                            show()
+                        }
+                    }
+
+                    true
+                }
             }
         }
     }
@@ -427,6 +451,7 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                 locationResult ?: return
                 for ((i, location) in locationResult.locations.withIndex()) {
                     Log.d("location: ", "${location.latitude}, ${location.longitude}")
+                    curMyLocation = location
                     setLastLocation(location)
                 }
             }

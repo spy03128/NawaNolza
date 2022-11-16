@@ -68,8 +68,8 @@
 
     <LinearLayout
         android:layout_width="300dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="70dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="20dp"
         android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -80,8 +80,8 @@
 
         <ImageView
             android:id="@+id/bulb"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:src="@drawable/my_hint" />
 
@@ -92,8 +92,8 @@
 
         <ImageView
             android:id="@+id/flag"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:src="@drawable/my_flag" />
 
@@ -104,8 +104,8 @@
 
         <ImageView
             android:id="@+id/talk"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:src="@drawable/my_chat" />
 

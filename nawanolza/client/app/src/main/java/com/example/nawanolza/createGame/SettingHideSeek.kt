@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import com.example.nawanolza.*
 import com.example.nawanolza.R
 import com.example.nawanolza.databinding.ActivitySettingHideSeekBinding
+import com.example.nawanolza.hideandseek.MessageSenderService
 import com.example.nawanolza.retrofit.RetrofitConnection
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideResponse
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideService
@@ -41,9 +42,6 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
     private lateinit var naverMap: NaverMap
     private lateinit var createRoomRequest: CreateRoomRequest
     private lateinit var locationSource: FusedLocationSource
-
-
-
 
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,7 +104,10 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
                         intent.putExtra("data", GsonBuilder().create().toJson(response.body()))
 
                         when(response.code()){
-                            200 -> startActivity(intent)
+                            200 -> {
+                                startActivity(intent)
+                                MessageSenderService.sendMessageToWearable("/message_path", "w", this@SettingHideSeek)
+                            }
                             else -> Toast.makeText(this@SettingHideSeek, "잘못된 정보입니다.", Toast.LENGTH_SHORT).show()
                         }
                     }

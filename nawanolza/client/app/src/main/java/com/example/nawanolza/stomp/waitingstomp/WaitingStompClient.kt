@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Log
+import android.widget.Toast
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.MainActivity
 import com.example.nawanolza.createGame.Waiting
@@ -131,28 +132,19 @@ class WaitingStompClient {
                         if(markerMap.containsKey(subDto.senderId)) {
                             markerMap.get(subDto.senderId)?.map = null
                         }
+                        val myLocation = LatLng(subDto.lat, subDto.lng)
+                        val marker = Marker()
+                        //마커
+
+                        marker.position= myLocation
+                        marker.icon = OverlayImage.fromBitmap(image)
+                        marker.width  = 75
+                        marker.height = 75
+
+                        markerMap.put(subDto.senderId, marker)
 
                         if(!MainHideSeek.isTagger || MainHideSeek.isHintOn) {
-                            val myLocation = LatLng(subDto.lat, subDto.lng)
-                            val marker = Marker()
-                            //마커
-
-                            marker.position= myLocation
-                            marker.icon = OverlayImage.fromBitmap(image)
-                            marker.width  = 75
-                            marker.height = 75
-
-                            markerMap.put(subDto.senderId, marker)
                             marker.map = naverMap
-//                    var timeFlag: Boolean = false
-
-//                    timer(initialDelay = 0L, period = 1000L) {
-//                        activity.runOnUiThread{
-////                            marker.map = null
-//                            timeFlag = true
-//                        }
-//                        if (timeFlag) cancel()
-//                    }
                         }
                     }
                 }
@@ -208,7 +200,7 @@ class WaitingStompClient {
         }
 
         //참가자 잡기
-        fun pubEvent(pubEventRequest: PubEventRequest){
+        fun pubEvent(pubEventRequest: PubEventRequest, context: Context){
             val data = GsonBuilder().create().toJson(pubEventRequest)
             stompClient.send("/pub/event", data).subscribe()
         }

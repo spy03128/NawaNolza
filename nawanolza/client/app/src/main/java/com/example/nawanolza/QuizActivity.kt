@@ -42,7 +42,7 @@ class QuizActivity : AppCompatActivity() {
             .build()
 
         var service = retrofit.create(QuestService::class.java)
-//
+
         binding.title.text = quizInfo.quiz.context
 
 
@@ -63,31 +63,6 @@ class QuizActivity : AppCompatActivity() {
                 finish()
             }
         }.start()
-//
-//        service.GetQuiz(mapOf("markerId" to markerId.toString(), "questType" to "0")).enqueue(object: Callback<QuestResponse> {
-//
-//            override fun onResponse(
-//                call: Call<QuestResponse>,
-//                response: Response<QuestResponse>
-//            ) {
-//                val body = response.body()
-//
-//                quizInfo = response.body() ?: QuestResponse()
-//
-//
-//                println(quizInfo)
-//                println("=====quiz!!!!======")
-//
-//                binding.title.text = body?.quiz?.context
-//            }
-//
-//            override fun onFailure(call: Call<QuestResponse>, t: Throwable) {
-//                println(call)
-//                println(t)
-//                println("====quiz 에러 ===")
-//            }
-//
-//        })
 
 
 

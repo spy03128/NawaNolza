@@ -10,16 +10,13 @@ import android.os.CountDownTimer
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.bumptech.glide.Glide
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.R
@@ -42,7 +39,7 @@ import retrofit2.Response
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Timer
+import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.math.*
 
@@ -64,6 +61,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     companion object {
         var isTagger: Boolean = true
         var isHintOn: Boolean = false
+        lateinit var taggerLocation: LatLng
 
         var caughtMember = 0
         fun finishGame() {
@@ -93,11 +91,12 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         entryCode = intent.getStringExtra("entryCode").toString()
         senderId = LoginUtil.getMember(this)?.id!!
 
+        //권한 확인
         if (isPermitted()) {
             startProcess()
         } else {
             ActivityCompat.requestPermissions(this, permissions, permission_request)
-        }//권한 확인
+        }
 
         if(Waiting.tagger != senderId)
             isTagger = false
@@ -149,29 +148,45 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         adapter = HideSeekRvAdapter(this)
         binding.mRecyclerView.adapter = adapter
         binding.mRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+
         adapter.setItemClickListener(object: HideSeekRvAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
+                if(isTagger){
+                    val builder = AlertDialog.Builder(this@MainHideSeek, R.style.AppAlertDialogTheme)
+                    val dialogView = layoutInflater.inflate(R.layout.dialog_catch_check, null)
 
-                val builder = AlertDialog.Builder(this@MainHideSeek, R.style.AppAlertDialogTheme)
-                val dialogView = layoutInflater.inflate(R.layout.dialog_catch_check, null)
+                    val user = Waiting.memberHash[Waiting.runnerList[position]]
+                    dialogView.username.text = user?.name
+                    Glide.with(this@MainHideSeek).load(user?.image).circleCrop().into(dialogView.userImage)
+                    println("=======markerMap======")
+                    println(WaitingStompClient.markerMap)
 
-                val user = Waiting.memberHash[Waiting.runnerList[position]]
-                dialogView.username.text = user?.name
-                Glide.with(this@MainHideSeek).load(user?.image).circleCrop().into(dialogView.userImage)
+                    val userLat = WaitingStompClient.markerMap[Waiting.runnerList[position]]!!.position.latitude
+                    val userLng = WaitingStompClient.markerMap[Waiting.runnerList[position]]!!.position.longitude
+                    val close: Boolean = DistanceManager.getDistance(userLat, userLng, taggerLocation.latitude, taggerLocation.longitude) <= 10
 
-                if(Waiting.tagger == LoginUtil.getMember(this@MainHideSeek)?.id){
-                    builder.setView(dialogView)
-                        .setPositiveButton("확인") {dialogInterface, i ->
-                            val pubEventRequest = PubEventRequest(user!!.memberId, entryCode, "CATCH", Waiting.tagger, "EVENT")
-                            WaitingStompClient.pubEvent(pubEventRequest)
-                        }
-                        .setNegativeButton("돌아가기") { dialogInterface, i ->
-                        }
-                    builder.show()
+                    if(!close){
+                        Toast.makeText(this@MainHideSeek, "거리가 너무 멀어요", Toast.LENGTH_SHORT).show()
+                    } else{
+                        builder.setView(dialogView)
+                            .setPositiveButton("확인") {dialogInterface, i ->
+                                val pubEventRequest = PubEventRequest(user!!.memberId, entryCode, "CATCH", Waiting.tagger, "EVENT")
+                                WaitingStompClient.pubEvent(pubEventRequest, this@MainHideSeek)
+                            }
+                            .setNegativeButton("돌아가기") { dialogInterface, i ->
+                            }
+                        builder.show()
+                    }
+                } else {
+                    println("숨는 팀입니다! back")
                 }
+
 
             }
         })
+
+
     }
 
     private fun updateTime() {
@@ -185,6 +200,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         val end = start.plusMinutes(plusTime)
 
         val duration: Duration = Duration.between(LocalDateTime.now(), end)
+        println(LocalDateTime.now())
         val seconds = duration.seconds
 
         /** 타이머 **/
@@ -195,17 +211,18 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                 val sec = (millisUntilFinished / 1000).toInt() % 60
 
                 val textMin = if(minutes < 10) "0$minutes" else minutes.toString()
-                val textSec = if(sec < 10) "0$seconds" else sec.toString()
+                val textSec = if(sec < 10) "0$sec" else sec.toString()
+
                 val textTime = "$textMin:$textSec"
                 binding.tvTime.text = textTime
             }
             override fun onFinish() {
-                /** 끝났을 때 **/
                 finishGame()
             }
         }.start()
     }
 
+    //권한 허락
     fun isPermitted(): Boolean {
         for (perm in permissions) {
             if (ContextCompat.checkSelfPermission(this, perm) != PackageManager.PERMISSION_GRANTED) {
@@ -213,7 +230,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             }
         }
         return true
-    }//권한을 허락 받아야함
+    }
 
     fun startProcess(){
         val fm = supportFragmentManager
@@ -260,6 +277,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         builder.setView(dialogView)
             .setPositiveButton("나가기") {dialogInterface, i ->
+                WaitingStompClient.disconnect()
                 finishAffinity()
             }
             .setNegativeButton("돌아가기") { dialogInterface, i ->
@@ -286,7 +304,9 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                 for ((i, location) in locationResult.locations.withIndex()) {
                     Log.d("location: ", "${location.latitude}, ${location.longitude}")
 //                    setLastLocation(location)
-
+                    if(isTagger){
+                        taggerLocation = LatLng(location.latitude, location.longitude)
+                    }
                     sendMyLocation(location)
                 }
             }
@@ -319,7 +339,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     }
 
     private fun setLocationOverlay(){
-//        val myLocation = LatLng(location.latitude, location.longitude)
         val locationOverlay = naverMap.locationOverlay
 
         locationOverlay.position = LatLng(36.1071562, 128.4164185)

@@ -149,6 +149,11 @@ class WaitingStompClient {
                     }
                 }
                 Waiting.memberHash[subDto.senderId]?.location = roomInfo.range < MainHideSeek.DistanceManager.getDistance(subDto.lat, subDto.lng, roomInfo.lat, roomInfo.lng)
+
+                if(Waiting.memberHash[subDto.senderId]?.location!!) {
+                    MessageSenderService.sendMessageToWearable("/message_path", "a", activity)
+                }
+
                 activity.runOnUiThread{
                     adapter.notifyDataSetChanged()
                 }
@@ -165,12 +170,16 @@ class WaitingStompClient {
                 Waiting.memberHash[data.catchMemberId]?.location = true
                 MainHideSeek.caughtMember += 1
 
+                val caughtName = Waiting.memberHash[data.catchMemberId]?.name
+                MessageSenderService.sendMessageToWearable("/message_path", "g/$caughtName", activity)
+
                 activity.runOnUiThread {
                     adapter.notifyDataSetChanged()
                 }
 
                 if(MainHideSeek.caughtMember == Waiting.runnerList.size && MainHideSeek.isTagger) {
                     println("============check 똑같================")
+                    MessageSenderService.sendMessageToWearable("/message_path", "r/0", activity)
                     MainHideSeek.finishGame()
                 }
             }

@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.RingtoneManager
 import android.os.*
 import android.util.Log
 import android.view.View
@@ -22,7 +23,7 @@ import java.time.format.DateTimeFormatter
 /*
 * w : 대기화면
 * s/2022-09-30-06-30(종료시간)/7(인원) : 게임 시작 초기 세팅 (10분-7명)
-* g/6/김땡땡 : 6명 남음, 김땡땡 잡힘
+* g/김땡땡 : 김땡땡 잡힘
 * a : 영역 밖 알람
 * r/0 : 술래팀 승리
 * r/1 : 숨는팀 승리
@@ -31,6 +32,8 @@ import java.time.format.DateTimeFormatter
 class MainActivity : Activity() {
 
     private lateinit var binding: ActivityMainBinding
+    private var countPeople = 0
+    val uriRingTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +63,6 @@ class MainActivity : Activity() {
             val textViewResult2: TextView = findViewById(R.id.textView_result2)
             val testViewEnd: TextView = findViewById(R.id.textView_end)
 
-
-
             if (message != null) {
                 val str = message.split("/")
 
@@ -87,7 +88,9 @@ class MainActivity : Activity() {
                     textViewResult2.visibility = View.GONE
                     testViewEnd.visibility = View.GONE
 
-                    textViewStart1.text = "남은 인원" + str[2] + "명"
+                    countPeople = Integer.parseInt(str[2])
+
+                    textViewStart1.text = "남은 인원" + countPeople + "명"
                     val duration: Duration = Duration.between(LocalDateTime.now(), LocalDateTime.parse(str[1], DateTimeFormatter.ISO_DATE_TIME))
                     object : CountDownTimer(duration.seconds*1000, 1000) {
                         override fun onFinish() {
@@ -121,8 +124,16 @@ class MainActivity : Activity() {
                     textViewResult2.visibility = View.GONE
                     testViewEnd.visibility = View.GONE
 
-                    textViewStart1.text = "남은 인원" + str[1] + "명"
-                    Toast.makeText(this@MainActivity,str[2] + "님이 잡혔습니다!", Toast.LENGTH_SHORT).show();
+                    Log.i("ringTone", uriRingTone.toString())
+
+                    val ringTone = RingtoneManager.getRingtone(this@MainActivity, uriRingTone)
+                    Log.i("ringTone", ringTone.toString())
+
+                    ringTone.play()
+
+                    countPeople -= 1
+                    textViewStart1.text = "남은 인원" + countPeople + "명"
+                    Toast.makeText(this@MainActivity,str[1] + "님이 잡혔습니다!", Toast.LENGTH_SHORT).show();
                     
                 }else if(str[0]=="r"){
                     if(str[1]=="0"){
@@ -163,6 +174,11 @@ class MainActivity : Activity() {
 
                     val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator;
                     vibrator.vibrate(VibrationEffect.createOneShot(500, 100));
+
+                    Log.i("ringTone", uriRingTone.toString())
+                    val ringTone = RingtoneManager.getRingtone(this@MainActivity, uriRingTone)
+                    Log.i("ringTone", ringTone.toString())
+                    ringTone.play()
 
                     progressBarAlarm.visibility = View.VISIBLE
                     Toast.makeText(this@MainActivity,"영역을 벗어났습니다!", Toast.LENGTH_SHORT).show();

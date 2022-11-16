@@ -152,7 +152,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         adapter.setItemClickListener(object: HideSeekRvAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
-                if(isTagger){
+                if(isTagger && WaitingStompClient.markerMap.size >= 1){
                     val builder = AlertDialog.Builder(this@MainHideSeek, R.style.AppAlertDialogTheme)
                     val dialogView = layoutInflater.inflate(R.layout.dialog_catch_check, null)
 
@@ -202,6 +202,9 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         val duration: Duration = Duration.between(LocalDateTime.now(), end)
         println(LocalDateTime.now())
         val seconds = duration.seconds
+
+        val participantCount = Waiting.runnerList.size
+        MessageSenderService.sendMessageToWearable("/message_path", "s/$end/$participantCount", this)
 
         /** 타이머 **/
         object : CountDownTimer(seconds*1000, 1000) {

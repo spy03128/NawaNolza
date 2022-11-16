@@ -186,6 +186,7 @@ class WaitingStompClient {
                 winnerList = data.winnerList
                 winTagger = data.winTagger
                 stompClient.disconnect()
+                ChattingUtil.clearChatData(entryCode)
                 val intent = Intent(context, FinishGame::class.java)
                 context.startActivity(intent)
             }

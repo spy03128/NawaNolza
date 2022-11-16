@@ -24,19 +24,19 @@ class ChattingActivity : AppCompatActivity() {
         WaitingStompClient.connect()
         val entryCode = intent.getStringExtra("entryCode")
         val flag = intent.getBooleanExtra("flag", false)
+        val member = LoginUtil.getMember(this)!!
+        chatData = ChattingUtil.getChatData(entryCode!!)
 
         if (flag) {
             val intent = Intent(this@ChattingActivity, MainHideSeek::class.java)
             intent.putExtra("entryCode", entryCode)
             startActivity(intent)
+        } else {
+            messageSubscribe(entryCode!!, member.id)
         }
-
-        val member = LoginUtil.getMember(this)!!
-        chatData = ChattingUtil.getChatData(entryCode!!)
 
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        messageSubscribe(entryCode!!, member.id)
 
         sendButton.setOnClickListener {
             val socketChatDTO = SocketChatDTO(member!!, entryCode, messageInput.text.toString(), LocalDateTime.now())
@@ -56,9 +56,11 @@ class ChattingActivity : AppCompatActivity() {
         WaitingStompClient.stompClient.topic("/sub/chat/" + entryCode).subscribe { topicMessage ->
             val fromJson = GsonBuilder().create().fromJson(topicMessage.payload, SocketChatDTO::class.java)
 
-            if(fromJson.senderId.toString() != memberId.toString()) {
+            if(fromJson.senderId.toString() != memberId.toString())
                 chatData.add(ChatDTO(fromJson, ChatType.LEFT))
-            }
+
+            println("=======Sub=======")
+            println(chatData)
 
             runOnUiThread {
                 binding.chattingRecyclerView.scrollToPosition(chatData.size-1)

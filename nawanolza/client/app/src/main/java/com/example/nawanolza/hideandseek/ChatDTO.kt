@@ -20,6 +20,6 @@ class ChatDTO(dto: SocketChatDTO, viewType: Int) {
         this.entryCode = dto.entryCode
         this.message = dto.message
         this.viewType = viewType
-        chatTime = LocalDateTime.parse(dto.chatTime, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"))
+        chatTime = LocalDateTime.parse(dto.chatTime.split(".").get(0), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
     }
 }

@@ -1,7 +1,6 @@
 package com.example.nawanolza
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -16,6 +15,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -48,11 +48,14 @@ import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_main_hide_seek.*
 import kotlinx.android.synthetic.main.activity_map.*
+import kotlinx.android.synthetic.main.dialog_success.*
+import kotlinx.android.synthetic.main.dialog_success.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.properties.Delegates
 
 private const val TAG = "MapActivity_맵에서"
 
@@ -69,6 +72,8 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
     var characterInfo = CharacterLocationResponse()
 
     var memberInfo: MemberResponse? = null
+
+    var currentMarker by Delegates.notNull<Long>()
 
     lateinit var activityResult: ActivityResultLauncher<Intent>
 
@@ -160,7 +165,10 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                 }
 
                 dialog.apply {
-                    setView(layoutInflater.inflate(R.layout.dialog_success,null))
+
+                    val dialogView = layoutInflater.inflate(R.layout.dialog_success,null)
+                    dialogView.character.setImageResource(MarkerImageUtil.getImage(currentMarker))
+                    setView(dialogView)
 
                     show()
                 }
@@ -212,6 +220,8 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
 
                     println("====마커====")
                     println((marker.tag as CharacterLocationResponseItem))
+
+                    currentMarker = (marker.tag as CharacterLocationResponseItem).characterId
 
 
                     var service = retrofit.create(QuestService::class.java)

@@ -17,8 +17,7 @@ class ChattingUtil {
         }
 
         fun clearChatData(entryCode: String) {
-            chatMap.get(entryCode)!!.clear()
-            chatMap.remove(entryCode)
+            if (!existChatData(entryCode))  chatMap.remove(entryCode)
         }
     }
 }

@@ -117,7 +117,6 @@ class CharacterActivity : AppCompatActivity() {
                     binding.charRecyclerView.layoutManager =
                         GridLayoutManager(this@CharacterActivity, 3)
 
-
                 }
 
                 override fun onFailure(call: Call<CharacterResponse>, t: Throwable) {

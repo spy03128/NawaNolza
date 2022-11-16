@@ -28,15 +28,17 @@ class CharacterRvAdapter(
         val characterInfo = characterInfo[position]
 
 
-        if (characterInfo.currentLevel.equals(0)){
+        if (characterInfo.currentLevel.equals(0))
             holder.characterImg.setImageDrawable(application.getDrawable(MarkerImageUtil.getDarkImage(characterInfo.characterId)))
-        }else{
+        else
             holder.characterImg.setImageDrawable(application.getDrawable(MarkerImageUtil.getImage(characterInfo.characterId)))
-        }
+
         holder.level.text = "Lv." + characterInfo.currentLevel
     }
 
     override fun getItemCount(): Int {
         return characterInfo.size
     }
+
+
 }

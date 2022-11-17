@@ -36,8 +36,7 @@ class CharacterRvAdapter(
             holder.characterImg.setImageDrawable(application.getDrawable(MarkerImageUtil.getImage(characterInfo.characterId)))
 
         holder.characterImg.setOnClickListener {
-            println("===클릭==")
-            println(characterInfo.characterId)
+
             intent.putExtra("characterId", characterInfo.characterId.toInt())
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             application.startActivity(intent)

@@ -1,7 +1,11 @@
 package com.example.nawanolza
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.nawanolza.databinding.ActivityCharacterBinding
+import com.example.nawanolza.databinding.ActivityCharacterDetailBinding
 import com.example.nawanolza.retrofit.CharacterDetailResponse
 import kotlinx.android.synthetic.main.activity_character.*
 import kotlinx.android.synthetic.main.activity_character_detail.*
@@ -15,11 +19,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 class CharacterDetailActivity : AppCompatActivity() {
 
     var characterDetailInfo = CharacterDetailResponse()
+    lateinit var binding: ActivityCharacterDetailBinding
+    lateinit var adapter: CharacterDetailRvAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character_detail)
-
+        binding = ActivityCharacterDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val characterId = intent.getIntExtra("characterId", -1)
         val memberId = LoginUtil.getMember(this)!!.id
@@ -48,6 +56,13 @@ class CharacterDetailActivity : AppCompatActivity() {
                 chTitle.text = characterDetailInfo.name
                 chContent.text = characterDetailInfo.description
                 chLv.text = "Lv." + characterDetailInfo.level
+
+                println(characterDetailInfo.history)
+                adapter = CharacterDetailRvAdapter(characterDetailInfo.history.asReversed(), application)
+                binding.mRecyclerView.adapter = adapter
+                binding.mRecyclerView.layoutManager =
+                    GridLayoutManager(this@CharacterDetailActivity, 1)
+
 
             }
 

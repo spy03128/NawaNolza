@@ -10,12 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat

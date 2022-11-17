@@ -1,5 +1,6 @@
 package com.example.nawanolza.hideandseek
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,8 +16,13 @@ class FinishGame : AppCompatActivity() {
     lateinit var binding: ActivityFinishGameBinding
     lateinit var adapter: FinishRvAdapter
 
+    companion object {
+        var _Finish_Game: Activity? = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        _Finish_Game = this@FinishGame
 
         binding = ActivityFinishGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -25,7 +31,8 @@ class FinishGame : AppCompatActivity() {
 
         ExitBtn.setOnClickListener{
             val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
+            this.startActivity(intent)
+            finish()
         }
 
         adapter = FinishRvAdapter(this)
@@ -41,5 +48,11 @@ class FinishGame : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         println("================Pause LAST===============")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        MainHideSeek._MainHiddSeek_Activity?.finish()
     }
 }

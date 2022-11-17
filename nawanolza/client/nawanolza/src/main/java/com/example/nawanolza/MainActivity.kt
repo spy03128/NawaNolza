@@ -11,6 +11,7 @@ import android.os.*
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -41,9 +42,6 @@ class MainActivity : Activity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-//        Toast.makeText(this,"김땡떙님이 잡혔습니다!", Toast.LENGTH_SHORT).show();
-
-
     }
 
     private val messageReceiver = object : BroadcastReceiver() {
@@ -54,6 +52,10 @@ class MainActivity : Activity() {
             val path = intent?.getStringExtra(MessageConstants.path)
             Log.i("Main Activity", "Broadcast Received. message: $message, path: $path")
 
+            val imageViewMain: ImageView = findViewById(R.id.imageView_main);
+            val textViewMain: TextView = findViewById(R.id.textView_main);
+            val imageViewLogo: ImageView = findViewById(R.id.imageView_logo);
+            val textViewLogo: TextView = findViewById(R.id.textView_logo);
             val progressBarWaiting: ProgressBar = findViewById(R.id.progressbar_waiting)
             val progressBarAlarm: ProgressBar = findViewById(R.id.progressbar_alarm)
             val textViewWaiting: TextView = findViewById(R.id.textView_waiting)
@@ -65,6 +67,10 @@ class MainActivity : Activity() {
 
             if (message != null) {
                 val str = message.split("/")
+                imageViewMain.visibility = View.GONE
+                textViewMain.visibility = View.GONE
+                imageViewLogo.visibility = View.VISIBLE
+                textViewLogo.visibility = View.VISIBLE
 
                 if(str[0]=="w"){
                     Log.i("Main Activity", "Waiting display")
@@ -172,7 +178,7 @@ class MainActivity : Activity() {
                 }else if(str[0]=="a"){
                     Log.i("Main Activity", "alarm display")
 
-                    val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator;
+                    val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator;
                     vibrator.vibrate(VibrationEffect.createOneShot(500, 100));
 
                     Log.i("ringTone", uriRingTone.toString())

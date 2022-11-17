@@ -38,11 +38,31 @@
         app:layout_boxedEdges="all">
 
         <ImageView
+            android:id="@+id/imageView_main"
+            android:layout_width="126dp"
+            android:layout_height="49dp"
+            android:contentDescription="@string/logo"
+            android:src="@drawable/logo"
+            android:layout_marginTop="25dp"/>
+
+
+        <TextView
+            android:id="@+id/textView_main"
+            android:layout_width="126dp"
+            android:layout_height="22dp"
+            android:gravity="center"
+            android:text="@string/logo"
+            android:textAlignment="center"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <ImageView
             android:id="@+id/imageView_logo"
             android:layout_width="126dp"
             android:layout_height="30dp"
             android:contentDescription="@string/logo"
-            android:src="@drawable/logo" />
+            android:src="@drawable/logo"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/textView_logo"
@@ -52,7 +72,8 @@
             android:text="@string/logo"
             android:textAlignment="center"
             android:textSize="10sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <!--  대기화면 메시지  -->
         <TextView

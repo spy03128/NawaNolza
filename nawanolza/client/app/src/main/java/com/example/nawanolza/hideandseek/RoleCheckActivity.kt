@@ -17,6 +17,10 @@ class RoleCheckActivity : AppCompatActivity() {
     lateinit var binding: ActivityRoleCheckAcitivityBinding
     lateinit var entryCode: String
 
+    companion object {
+        val countdown = 2000L
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRoleCheckAcitivityBinding.inflate(layoutInflater)
@@ -31,7 +35,7 @@ class RoleCheckActivity : AppCompatActivity() {
 
     //카운트 시작
     private fun countStart() {
-        object : CountDownTimer(2000, 1000) {
+        object : CountDownTimer(countdown, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 var time = (millisUntilFinished / 1000).toInt()
@@ -44,6 +48,7 @@ class RoleCheckActivity : AppCompatActivity() {
                 intent.putExtra("entryCode", entryCode)
                 intent.putExtra("flag", true)
                 startActivity(intent)
+                finish()
             }
         }.start()
     }

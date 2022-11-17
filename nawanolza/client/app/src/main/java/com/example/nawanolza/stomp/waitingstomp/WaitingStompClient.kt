@@ -6,11 +6,13 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
+import com.example.nawanolza.HomeActivity
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.MainActivity
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.createGame.WaitingRvAdapter
 import com.example.nawanolza.hideandseek.*
+import com.example.nawanolza.retrofit.createroom.DeleteRoomResponse
 import com.example.nawanolza.retrofit.createroom.MemberList
 import com.example.nawanolza.retrofit.enterroom.GetRoomResponse
 import com.example.nawanolza.stomp.*
@@ -30,7 +32,7 @@ class WaitingStompClient {
         val stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, url)
         var stopFlag = true
         lateinit var roomInfo: GetRoomResponse
-        val markerMap: HashMap<Int, Marker> = HashMap()
+        var markerMap: HashMap<Int, Marker> = HashMap()
         lateinit var winnerList: List<Winner>
         var winTagger = false
 
@@ -143,7 +145,7 @@ class WaitingStompClient {
 
                         markerMap.put(subDto.senderId, marker)
 
-                        if(!MainHideSeek.isTagger || MainHideSeek.isHintOn) {
+                        if(!MainHideSeek.isTagger) {
                             marker.map = naverMap
                         }
                     }
@@ -198,6 +200,27 @@ class WaitingStompClient {
                 ChattingUtil.clearChatData(entryCode)
                 val intent = Intent(context, FinishGame::class.java)
                 context.startActivity(intent)
+            }
+        }
+
+        // 방 삭제 받기
+        fun subRoomDelete(entryCode: String, context: Context) {
+            stompClient.topic("/sub/game/end/$entryCode").subscribe { topicMessage ->
+                Log.i("subRoomDelete", topicMessage.payload)
+
+                val data = GsonBuilder().create().fromJson(topicMessage.payload, DeleteRoomResponse::class.java)
+
+//                Toast.makeText(context, data.message, Toast.LENGTH_SHORT).show()
+                val intent = Intent(context, HomeActivity::class.java)
+                context.startActivity(intent)
+
+                if(FinishGame._Finish_Game != null) {
+                    FinishGame._Finish_Game?.finish()
+                } else if (MainHideSeek._MainHiddSeek_Activity != null) {
+                    MainHideSeek._MainHiddSeek_Activity?.finish()
+                } else if(Waiting._Waiting_Activity != null) {
+                    Waiting._Waiting_Activity?.finish()
+                }
             }
         }
 

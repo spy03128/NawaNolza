@@ -12,18 +12,19 @@ import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_chatting.*
 import java.time.LocalDateTime
+import kotlin.properties.Delegates
 
 class ChattingActivity : AppCompatActivity() {
     lateinit var binding: ActivityChattingBinding
     lateinit var chatData: ArrayList<ChatDTO>
     lateinit var adapter: ChattingRvAdapter
-
+    var flag by Delegates.notNull<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WaitingStompClient.connect()
         val entryCode = intent.getStringExtra("entryCode")
-        val flag = intent.getBooleanExtra("flag", false)
+        flag = intent.getBooleanExtra("flag", false)
         val member = LoginUtil.getMember(this)!!
         chatData = ChattingUtil.getChatData(entryCode!!)
 
@@ -31,9 +32,9 @@ class ChattingActivity : AppCompatActivity() {
             val intent = Intent(this@ChattingActivity, MainHideSeek::class.java)
             intent.putExtra("entryCode", entryCode)
             startActivity(intent)
-        } else {
-            messageSubscribe(entryCode!!, member.id)
         }
+
+        messageSubscribe(entryCode!!, member.id)
 
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -56,15 +57,17 @@ class ChattingActivity : AppCompatActivity() {
         WaitingStompClient.stompClient.topic("/sub/chat/" + entryCode).subscribe { topicMessage ->
             val fromJson = GsonBuilder().create().fromJson(topicMessage.payload, SocketChatDTO::class.java)
 
-            if(fromJson.senderId.toString() != memberId.toString())
+            if(flag && fromJson.senderId.toString() != memberId.toString())
                 chatData.add(ChatDTO(fromJson, ChatType.LEFT))
 
             println("=======Sub=======")
             println(chatData)
 
-            runOnUiThread {
-                binding.chattingRecyclerView.scrollToPosition(chatData.size-1)
-                adapter.notifyDataSetChanged()
+            if (!flag) {
+                runOnUiThread {
+                    binding.chattingRecyclerView.scrollToPosition(chatData.size-1)
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
     }

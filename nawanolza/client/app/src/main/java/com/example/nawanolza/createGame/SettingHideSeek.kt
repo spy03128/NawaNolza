@@ -91,7 +91,7 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
         btnCreateRoom.setOnClickListener {
             if(check){
                 val hostId = LoginUtil.getMember(this@SettingHideSeek)!!.id
-                createRoomRequest = CreateRoomRequest(lat, lng, gameTime, time, 100, hostId)
+                createRoomRequest = CreateRoomRequest(lat, lng, gameTime, time, range, hostId)
                 println("=====게임만들기======")
                 println(createRoomRequest)
                 retrofitAPI.postCreateRoomHide(createRoomRequest).enqueue(object:Callback<CreateRoomHideResponse> {

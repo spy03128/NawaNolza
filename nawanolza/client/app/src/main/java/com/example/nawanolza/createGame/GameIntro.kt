@@ -4,17 +4,17 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.example.nawanolza.retrofit.ErrorResponse
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.databinding.ActivityGameIntroBinding
-import com.example.nawanolza.databinding.ActivitySelectGameBinding
 import com.example.nawanolza.retrofit.RetrofitConnection
 import com.example.nawanolza.retrofit.enterroom.EnterRoomRequest
 import com.example.nawanolza.retrofit.enterroom.EnterRoomResponse
 import com.example.nawanolza.retrofit.enterroom.EnterRoomService
+import com.example.nawanolza.stomp.SubGpsDto
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -55,7 +55,11 @@ class GameIntro : AppCompatActivity() {
                             intent.putExtra("data", GsonBuilder().create().toJson(response.body()))
                             startActivity(intent)
                         }
-                        400 -> Toast.makeText(this@GameIntro, "이미 진행 중인 게임입니다.", Toast.LENGTH_SHORT).show()
+                        400 -> {
+                            val errorBody = GsonBuilder().create().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
+
+                            Toast.makeText(this@GameIntro, errorBody.message, Toast.LENGTH_SHORT).show()
+                        }
                         else -> Toast.makeText(this@GameIntro, "게임 정보를 확인해주세요", Toast.LENGTH_SHORT).show()
                     }
                 }

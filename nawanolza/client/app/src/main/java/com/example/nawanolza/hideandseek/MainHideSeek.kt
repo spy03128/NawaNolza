@@ -109,7 +109,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             startActivity(intent)
         }
 
-        if(!isTagger){
+        if(Waiting.tagger != senderId){
             binding.bulb.visibility = View.INVISIBLE
             binding.flag.visibility = View.INVISIBLE
             binding.title.text = "숨는 팀"

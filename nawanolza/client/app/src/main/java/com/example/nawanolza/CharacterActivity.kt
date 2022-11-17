@@ -1,5 +1,6 @@
 package com.example.nawanolza
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -84,11 +85,6 @@ class CharacterActivity : AppCompatActivity() {
 
 
 
-
-
-
-
-
     }
 
     private fun displayCollectionBySort(
@@ -112,13 +108,14 @@ class CharacterActivity : AppCompatActivity() {
                     println("=====캐릭터 정보======")
 
 
-                    adapter = CharacterRvAdapter(characterInfo.collection, application)
+                    adapter = CharacterRvAdapter(characterInfo.collection, application, Intent(this@CharacterActivity, CharacterDetailActivity::class.java))
                     binding.charRecyclerView.adapter = adapter
                     binding.charRecyclerView.layoutManager =
                         GridLayoutManager(this@CharacterActivity, 3)
 
-
                 }
+
+
 
                 override fun onFailure(call: Call<CharacterResponse>, t: Throwable) {
                     println(call)

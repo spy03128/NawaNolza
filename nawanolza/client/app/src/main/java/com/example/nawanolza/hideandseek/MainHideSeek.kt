@@ -1,6 +1,7 @@
 package com.example.nawanolza.hideandseek
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -51,7 +52,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     private lateinit var naverMap: NaverMap
     var senderId = 0
 
-
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
 
     lateinit var binding: ActivityMainHideSeekBinding
@@ -59,6 +59,8 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     lateinit var entryCode: String
 
     companion object {
+        var _MainHiddSeek_Activity: Activity? = null
+
         var isTagger: Boolean = true
         var isHintOn: Boolean = false
         lateinit var taggerLocation: LatLng
@@ -86,6 +88,8 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        _MainHiddSeek_Activity = this@MainHideSeek
+
         binding = ActivityMainHideSeekBinding.inflate(layoutInflater)
         setContentView(binding.root)
         entryCode = intent.getStringExtra("entryCode").toString()
@@ -370,5 +374,17 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             val c = 2 * asin(sqrt(a))
             return (R * c).toInt()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        isTagger = true
+        isHintOn = false
+        caughtMember = 0
+
+        ChattingActivity._Chatting_Activity?.finish()
+
+        Waiting._Waiting_Activity?.finish()
     }
 }

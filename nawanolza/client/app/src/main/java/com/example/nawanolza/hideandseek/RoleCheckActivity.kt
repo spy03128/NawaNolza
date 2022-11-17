@@ -44,6 +44,7 @@ class RoleCheckActivity : AppCompatActivity() {
                 intent.putExtra("entryCode", entryCode)
                 intent.putExtra("flag", true)
                 startActivity(intent)
+                finish()
             }
         }.start()
     }

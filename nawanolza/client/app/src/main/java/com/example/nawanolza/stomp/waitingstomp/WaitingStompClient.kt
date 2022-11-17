@@ -145,7 +145,7 @@ class WaitingStompClient {
 
                         markerMap.put(subDto.senderId, marker)
 
-                        if(!MainHideSeek.isTagger || MainHideSeek.isHintOn) {
+                        if(!MainHideSeek.isTagger) {
                             marker.map = naverMap
                         }
                     }

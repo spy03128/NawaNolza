@@ -41,6 +41,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.concurrent.schedule
 import kotlin.math.*
 
@@ -62,7 +63,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         var _MainHiddSeek_Activity: Activity? = null
 
         var isTagger: Boolean = true
-        var isHintOn: Boolean = false
         lateinit var taggerLocation: LatLng
 
         var caughtMember = 0
@@ -95,6 +95,8 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         entryCode = intent.getStringExtra("entryCode").toString()
         senderId = LoginUtil.getMember(this)?.id!!
 
+        var hintCount = 3;
+
         //권한 확인
         if (isPermitted()) {
             startProcess()
@@ -120,9 +122,20 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         }
 
         binding.bulb.setOnClickListener {
-            isHintOn = true
-            Timer().schedule(3000) {
-                isHintOn = false
+            if(hintCount > 0) {
+                hintCount--
+
+                val markerMapCopy = HashMap(WaitingStompClient.markerMap)
+
+                for(marker in markerMapCopy)
+                    marker.value.map = naverMap
+
+                Timer().schedule(2000) {
+                    runOnUiThread {
+                        for(marker in markerMapCopy)
+                            marker.value.map = null
+                    }
+                }
             }
         }
 
@@ -197,11 +210,11 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         val startTime = WaitingStompClient.roomInfo.startTime.slice(0..22)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
         val start = LocalDateTime.parse(startTime, formatter)
-        val plusTime = WaitingStompClient.roomInfo.playTime/60 + 1
+        val plusTime = WaitingStompClient.roomInfo.playTime + RoleCheckActivity.countdown/1000
         println("==========check")
         println(plusTime)
         println(WaitingStompClient.roomInfo.playTime)
-        val end = start.plusMinutes(plusTime)
+        val end = start.plusSeconds(plusTime)
 
         val duration: Duration = Duration.between(LocalDateTime.now(), end)
         println(LocalDateTime.now())
@@ -380,7 +393,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         super.onDestroy()
 
         isTagger = true
-        isHintOn = false
         caughtMember = 0
 
         ChattingActivity._Chatting_Activity?.finish()

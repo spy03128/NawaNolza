@@ -23,8 +23,6 @@ class HomeActivity : AppCompatActivity() {
     }
     
     private fun init() {
-        val memberInfo: MemberResponse = LoginUtil.getMemberInfo(this)
-
         characterButton.setOnClickListener{
             val intent = Intent(this@HomeActivity, MapActivity::class.java)
 
@@ -35,30 +33,6 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this@HomeActivity, GameIntro::class.java)
             startActivity(intent)
         }
-
-        var dummyNumber = 0
-        val messagePath = "/message_path"
-
-        button.setOnClickListener {
-            Log.i("WearableMainActivity", "Send Message Button Clicked")
-            dummyNumber += 1
-            MessageSenderService.sendMessageToWearable(messagePath, "a", this)
-        }
-
-        val time: LocalDateTime = LocalDateTime.of(2022, 11, 15, 9, 36, 0)
-        button2.setOnClickListener {
-            Log.i("WearableMainActivity", "Send Message Button Clicked")
-            dummyNumber += 1
-            MessageSenderService.sendMessageToWearable(messagePath, "s/$time/7", this)
-        }
-
-        button3.setOnClickListener {
-            Log.i("WearableMainActivity", "Send Message Button Clicked")
-            dummyNumber += 1
-            MessageSenderService.sendMessageToWearable(messagePath, "g/6/김땡땡", this)
-        }
-
-        Log.d(TAG, "init: ${memberInfo}")
     }
 
     override fun onBackPressed() {

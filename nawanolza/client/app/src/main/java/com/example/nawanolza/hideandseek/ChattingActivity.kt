@@ -53,6 +53,10 @@ class ChattingActivity : AppCompatActivity() {
             binding.messageInput.setText("")
         }
 
+        beforeButton.setOnClickListener{
+            finish()
+        }
+
         adapter = ChattingRvAdapter(chatData, application)
         binding.chattingRecyclerView.adapter = adapter
         binding.chattingRecyclerView.layoutManager = GridLayoutManager(this@ChattingActivity, 1)

@@ -198,6 +198,13 @@ class WaitingStompClient {
                 winTagger = data.winTagger
                 stompClient.disconnect()
                 ChattingUtil.clearChatData(entryCode)
+
+                if(winTagger) {
+                    MessageSenderService.sendMessageToWearable("/message_path", "r/0", context)
+                } else {
+                    MessageSenderService.sendMessageToWearable("/message_path", "r/1", context)
+                }
+
                 val intent = Intent(context, FinishGame::class.java)
                 context.startActivity(intent)
             }

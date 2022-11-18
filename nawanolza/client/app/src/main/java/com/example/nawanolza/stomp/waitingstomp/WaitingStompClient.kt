@@ -152,7 +152,7 @@ class WaitingStompClient {
                 }
                 Waiting.memberHash[subDto.senderId]?.location = roomInfo.range < MainHideSeek.DistanceManager.getDistance(subDto.lat, subDto.lng, roomInfo.lat, roomInfo.lng)
 
-                if(Waiting.memberHash[subDto.senderId]?.location!!) {
+                if(Waiting.memberHash[senderId]?.location!!) {
                     MessageSenderService.sendMessageToWearable("/message_path", "a", activity)
                 }
 

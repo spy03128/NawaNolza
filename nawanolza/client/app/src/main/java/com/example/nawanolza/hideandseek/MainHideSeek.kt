@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.nawanolza.HomeActivity
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.R
 import com.example.nawanolza.createGame.Waiting
@@ -298,7 +299,9 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         builder.setView(dialogView)
             .setPositiveButton("나가기") {dialogInterface, i ->
                 WaitingStompClient.disconnect()
-                finishAffinity()
+                val intent = Intent(this@MainHideSeek, HomeActivity::class.java)
+                startActivity(intent)
+
             }
             .setNegativeButton("돌아가기") { dialogInterface, i ->
 
@@ -369,8 +372,11 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         val circle = CircleOverlay()
         circle.center = latLng
-        val color = Color.parseColor("#80D6E6F2")
+        val color = Color.parseColor("#80ce93d8")
+        val outlineColor = Color.parseColor("#8e24aa")
         circle.color = color
+        circle.outlineColor = outlineColor
+        circle.outlineWidth = 2
         circle.radius = WaitingStompClient.roomInfo.range.toDouble()
         circle.map = naverMap
     }

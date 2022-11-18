@@ -152,11 +152,11 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
     override fun onMapReady(naverMap: NaverMap){
         this.naverMap = naverMap
 
-        val cameraPosition = CameraPosition(
-            LatLng(36.1071562, 128.4164185),  // 위치 지정
-            16.0 // 줌 레벨
-        )
-        naverMap.cameraPosition = cameraPosition
+//        val cameraPosition = CameraPosition(
+//            LatLng(36.1071562, 128.4164185),  // 위치 지정
+//            16.0 // 줌 레벨
+//        )
+//        naverMap.cameraPosition = cameraPosition
 
         val uiSettings = naverMap.uiSettings
         uiSettings.isLocationButtonEnabled = true //위치 버튼 활성화
@@ -178,8 +178,8 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
     //내 위치를 가져오는 코드
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient //자동으로 gps값을 받아온다.
     lateinit var locationCallback: LocationCallback //gps응답 값을 가져온다.
-    //lateinit: 나중에 초기화 해주겠다는 의미
 
+    //lateinit: 나중에 초기화 해주겠다는 의미
     @SuppressLint("MissingPermission")
     fun setUpdateLocationListener() {
         val locationRequest = LocationRequest.create()
@@ -192,13 +192,12 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
                 for ((i, location) in locationResult.locations.withIndex()) {
-//                    Log.d("location: ", "${location.latitude}, ${location.longitude}")
                     setLastLocation(location)
                 }
             }
         }
-        //location 요청 함수 호출 (locationRequest, locationCallback)
 
+        //location 요청 함수 호출 (locationRequest, locationCallback)
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest,
             locationCallback,

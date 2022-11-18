@@ -152,7 +152,7 @@ class WaitingStompClient {
                 }
                 Waiting.memberHash[subDto.senderId]?.location = roomInfo.range < MainHideSeek.DistanceManager.getDistance(subDto.lat, subDto.lng, roomInfo.lat, roomInfo.lng)
 
-                if(Waiting.memberHash[subDto.senderId]?.location!!) {
+                if(Waiting.memberHash[senderId]?.location!!) {
                     MessageSenderService.sendMessageToWearable("/message_path", "a", activity)
                 }
 
@@ -198,6 +198,13 @@ class WaitingStompClient {
                 winTagger = data.winTagger
                 stompClient.disconnect()
                 ChattingUtil.clearChatData(entryCode)
+
+                if(winTagger) {
+                    MessageSenderService.sendMessageToWearable("/message_path", "r/0", context)
+                } else {
+                    MessageSenderService.sendMessageToWearable("/message_path", "r/1", context)
+                }
+
                 val intent = Intent(context, FinishGame::class.java)
                 context.startActivity(intent)
             }

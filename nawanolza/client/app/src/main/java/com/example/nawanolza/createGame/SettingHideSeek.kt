@@ -210,13 +210,16 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
         val cameraUpdate = CameraUpdate.scrollTo(myLocation)
         naverMap.moveCamera(cameraUpdate)
         naverMap.maxZoom = 18.0
-        naverMap.minZoom = 5.0
+        naverMap.minZoom = 16.0
     }
 
     private fun setPolyline(latLng:LatLng){
         if(!check){
             circle.center = latLng
-            val color = Color.parseColor("#80D6E6F2")
+            val color = Color.parseColor("#80ce93d8")
+            val outlineColor = Color.parseColor("#8e24aa")
+            circle.outlineColor = outlineColor
+            circle.outlineWidth = 2
             circle.color = color
             circle.radius = rangeText.text.toString().toDouble()
             circle.map = naverMap

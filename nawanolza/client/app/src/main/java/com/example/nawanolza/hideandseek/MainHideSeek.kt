@@ -284,7 +284,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         setUpdateLocationListener() //내위치를 가져오는 코드
 
 
-        setLocationOverlay() // overlay 설정
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
         setPolyline(LatLng(WaitingStompClient.roomInfo.lat, WaitingStompClient.roomInfo.lng))
 
         WaitingStompClient.subGPS(entryCode, naverMap, this, senderId, adapter)
@@ -331,6 +331,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                         taggerLocation = LatLng(location.latitude, location.longitude)
                     }
                     sendMyLocation(location)
+//                    setLastLocation(location)
                 }
             }
         }
@@ -350,26 +351,17 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         WaitingStompClient.pubGPS(pubGpsRequest)
     }
 
-    fun setLastLocation(location: Location) {
-        val myLocation = LatLng(location.latitude, location.longitude)
-        val marker = Marker()
-        //마커
-        val cameraUpdate = CameraUpdate.scrollTo(myLocation)
-        naverMap.moveCamera(cameraUpdate)
-        naverMap.maxZoom = 18.0
-        naverMap.minZoom = 5.0
+//    // 위치 카메라 갱신
+//    fun setLastLocation(location: Location) {
+//        val myLocation = LatLng(location.latitude, location.longitude)
+//        val cameraUpdate = CameraUpdate.scrollTo(myLocation)
+//        naverMap.moveCamera(cameraUpdate)
+//        naverMap.maxZoom = 18.0
+//        naverMap.minZoom = 16.0
+//    }
 
-    }
-
-    private fun setLocationOverlay(){
-        val locationOverlay = naverMap.locationOverlay
-
-        locationOverlay.position = LatLng(36.1071562, 128.4164185)
-        locationOverlay.isVisible = true
-    }
-
+    // 반경 표시
     private fun setPolyline(latLng: LatLng) {
-
         val circle = CircleOverlay()
         circle.center = latLng
         val color = Color.parseColor("#80ce93d8")

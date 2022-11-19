@@ -8,7 +8,6 @@ import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.R
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.databinding.ActivityRoleCheckAcitivityBinding
-import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import kotlinx.android.synthetic.main.activity_role_check_acitivity.*
 import kotlinx.android.synthetic.main.fragment_participants.*
 
@@ -18,7 +17,7 @@ class RoleCheckActivity : AppCompatActivity() {
     lateinit var entryCode: String
 
     companion object {
-        val countdown = 2000L
+        val countdown = 5000L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

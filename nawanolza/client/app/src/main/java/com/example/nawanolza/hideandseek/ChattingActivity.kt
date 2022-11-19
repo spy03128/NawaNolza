@@ -48,9 +48,16 @@ class ChattingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sendButton.setOnClickListener {
-            val socketChatDTO = SocketChatDTO(member!!, entryCode, messageInput.text.toString(), LocalDateTime.now())
-            sendMessage(socketChatDTO)
-            binding.messageInput.setText("")
+            if (!messageInput.text.isNullOrBlank()) {
+                val socketChatDTO = SocketChatDTO(
+                    member!!,
+                    entryCode,
+                    messageInput.text.toString(),
+                    LocalDateTime.now()
+                )
+                sendMessage(socketChatDTO)
+                binding.messageInput.setText("")
+            }
         }
 
         beforeButton.setOnClickListener{

@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.example.nawanolza.hideandseek.ChatDTO
+import com.example.nawanolza.hideandseek.ChatType
 import com.example.nawanolza.hideandseek.MainHideSeek
 import com.example.nawanolza.minigame.CalcGameActivity
 import com.example.nawanolza.minigame.CardGameActivity
@@ -26,6 +28,9 @@ import com.example.nawanolza.retrofit.CharacterLocationResponse
 import com.example.nawanolza.retrofit.CharacterLocationResponseItem
 import com.example.nawanolza.retrofit.MemberResponse
 import com.example.nawanolza.retrofit.QuestResponse
+import com.example.nawanolza.stomp.MarkerDTO
+import com.example.nawanolza.stomp.SocketChatDTO
+import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import com.google.android.gms.location.*
 import com.google.gson.GsonBuilder
 import com.naver.maps.geometry.LatLng
@@ -43,14 +48,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.properties.Delegates
 
-private const val TAG = "MapActivity_맵에서"
-
 class MapActivity :OnMapReadyCallback, AppCompatActivity() {
     val permission_request = 99
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
     var quizInfo = QuestResponse()
 
+    val markerMap: HashMap<Long, Marker> = HashMap()
 
 
     var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -80,13 +84,11 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
 
 
         setContentView(R.layout.activity_map)
+        WaitingStompClient.connect()
+        messageSubscribe()
 
         memberInfo = LoginUtil.getMemberInfo(this)
         val url = memberInfo!!.member.image
-
-
-        Log.d(TAG, "init: ${memberInfo!!.member}")
-
 
         if (isPermitted()) {
             startProcess()
@@ -191,6 +193,8 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                 marker.icon = OverlayImage.fromResource(MarkerImageUtil.getImage(current.characterId) as Int)
                 marker.map = naverMap
                 marker.tag = current
+
+                markerMap[current.markerId] = marker
 
 
                 val function: (Overlay) -> Boolean = { o ->
@@ -448,6 +452,19 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
         val myLocation = LatLng(location.latitude, location.longitude)
         naverMap.locationOverlay.position = LatLng(myLocation.latitude, myLocation.longitude)
         naverMap.locationOverlay.isVisible = true
+    }
+
+    private fun messageSubscribe(
+    ) {
+        WaitingStompClient.stompClient.topic("/sub/collection").subscribe { topicMessage ->
+            val fromJson = GsonBuilder().create().fromJson(topicMessage.payload, MarkerDTO::class.java)
+            if (markerMap.containsKey(fromJson.markerId)){
+                runOnUiThread {
+                    markerMap[fromJson.markerId]!!.map = null
+                }
+            }
+
+        }
     }
 
 }

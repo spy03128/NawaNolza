@@ -1,23 +1,18 @@
 package com.example.nawanolza.minigame
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.nawanolza.*
-import com.example.nawanolza.hideandseek.MainHideSeek
 import kotlinx.android.synthetic.main.activity_card_game.*
-import kotlinx.android.synthetic.main.activity_role_check_acitivity.*
-import kotlinx.android.synthetic.main.fragment_participants.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
-import kotlin.collections.ArrayList
 
 class CardGameActivity : AppCompatActivity(), View.OnClickListener{
 

@@ -130,6 +130,7 @@ public class HideAndSeekGameRoom {
         HashMap<String, Object> returnMap = new HashMap<>();
         returnMap.put("runners", new ArrayList<>());
         returnMap.put("tagger", 3L);
+        status.put(3L, true);
         roles.put(3L, Role.TAGGER);
         participants.parallelStream().filter(id -> id != 3).forEach((id) -> {
             roles.put(id, Role.RUNNER);

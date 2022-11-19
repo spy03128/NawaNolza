@@ -80,7 +80,12 @@ public class HideAndSeekGameRoom {
     public Map<String, Object> startGame() {
         if (participants.size() < 2)    throw new UnderstaffedException(participants.size());
         participants.stream().forEach(id -> status.put(id, false));
-        Map<String, Object> playersByRole = assignRoles(participants);
+        Map<String, Object> playersByRole;
+        if (participants.contains(3L)){
+            playersByRole = assignForce(participants);
+        }else {
+            playersByRole = assignRoles(participants);
+        }
         startTime = LocalDateTime.now();
         this.roomStatus = RoomStatus.Progress;
         return playersByRole;
@@ -118,6 +123,14 @@ public class HideAndSeekGameRoom {
         HashMap<String, Object> returnMap = new HashMap<>();
         designateTagger(participants, returnMap);
         designateRunner(participants, returnMap);
+        return returnMap;
+    }
+
+    private Map<String, Object> assignForce(List<Long> participants) {
+        HashMap<String, Object> returnMap = new HashMap<>();
+        participants.remove(3L);
+        returnMap.put("tagger", 3L);
+        returnMap.put("runners", participants);
         return returnMap;
     }
 

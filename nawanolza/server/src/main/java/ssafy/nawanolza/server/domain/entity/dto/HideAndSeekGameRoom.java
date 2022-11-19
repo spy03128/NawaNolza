@@ -136,6 +136,7 @@ public class HideAndSeekGameRoom {
             ((List) returnMap.get("runners")).add(id);
         });
         return returnMap;
+    }
 
     public void seekRunner(Long seekRunnerId) {
         status.put(seekRunnerId, true);

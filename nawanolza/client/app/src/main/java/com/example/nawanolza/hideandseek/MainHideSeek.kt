@@ -126,8 +126,10 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
                 val markerMapCopy = HashMap(WaitingStompClient.markerMap)
 
-                for(marker in markerMapCopy)
-                    marker.value.map = naverMap
+                for(marker in markerMapCopy) {
+                    if(!Waiting.memberHash.get(marker.key)!!.status)
+                        marker.value.map = naverMap
+                }
 
                 Timer().schedule(2000) {
                     runOnUiThread {
@@ -173,26 +175,29 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                     val dialogView = layoutInflater.inflate(R.layout.dialog_catch_check, null)
 
                     val user = Waiting.memberHash[Waiting.runnerList[position]]
-                    dialogView.username.text = user?.name
-                    Glide.with(this@MainHideSeek).load(user?.image).circleCrop().into(dialogView.userImage)
-                    println("=======markerMap======")
-                    println(WaitingStompClient.markerMap)
 
-                    val userLat = WaitingStompClient.markerMap[Waiting.runnerList[position]]!!.position.latitude
-                    val userLng = WaitingStompClient.markerMap[Waiting.runnerList[position]]!!.position.longitude
-                    val close: Boolean = DistanceManager.getDistance(userLat, userLng, taggerLocation.latitude, taggerLocation.longitude) <= 10
+                    if(!user!!.status) {
+                        dialogView.username.text = user?.name
+                        Glide.with(this@MainHideSeek).load(user?.image).circleCrop().into(dialogView.userImage)
+                        println("=======markerMap======")
+                        println(WaitingStompClient.markerMap)
 
-                    if(!close){
-                        Toast.makeText(this@MainHideSeek, "거리가 너무 멀어요", Toast.LENGTH_SHORT).show()
-                    } else{
-                        builder.setView(dialogView)
-                            .setPositiveButton("확인") {dialogInterface, i ->
-                                val pubEventRequest = PubEventRequest(user!!.memberId, entryCode, "CATCH", Waiting.tagger, "EVENT")
-                                WaitingStompClient.pubEvent(pubEventRequest, this@MainHideSeek)
-                            }
-                            .setNegativeButton("돌아가기") { dialogInterface, i ->
-                            }
-                        builder.show()
+                        val userLat = WaitingStompClient.markerMap[Waiting.runnerList[position]]!!.position.latitude
+                        val userLng = WaitingStompClient.markerMap[Waiting.runnerList[position]]!!.position.longitude
+                        val close: Boolean = DistanceManager.getDistance(userLat, userLng, taggerLocation.latitude, taggerLocation.longitude) <= 10
+
+                        if(!close){
+                            Toast.makeText(this@MainHideSeek, "거리가 너무 멀어요", Toast.LENGTH_SHORT).show()
+                        } else{
+                            builder.setView(dialogView)
+                                .setPositiveButton("확인") {dialogInterface, i ->
+                                    val pubEventRequest = PubEventRequest(user!!.memberId, entryCode, "CATCH", Waiting.tagger, "EVENT")
+                                    WaitingStompClient.pubEvent(pubEventRequest, this@MainHideSeek)
+                                }
+                                .setNegativeButton("돌아가기") { dialogInterface, i ->
+                                }
+                            builder.show()
+                        }
                     }
                 } else {
                     println("숨는 팀입니다! back")

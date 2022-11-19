@@ -27,14 +27,14 @@
         android:id="@+id/guideline1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.05"
+        app:layout_constraintGuide_percent="0.1"
         android:orientation="vertical" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.95"
+        app:layout_constraintGuide_percent="0.9"
         android:orientation="vertical" />
 
     <LinearLayout
@@ -50,8 +50,8 @@
 
         <ImageButton
             android:id="@+id/Obutton"
-            android:layout_width="177dp"
-            android:layout_height="247dp"
+            android:layout_width="150dp"
+            android:layout_height="220dp"
             android:layout_marginRight="10dp"
             android:padding="0sp"
             android:scaleType="centerCrop"
@@ -62,8 +62,8 @@
 
         <ImageButton
             android:id="@+id/Xbutton"
-            android:layout_width="177dp"
-            android:layout_height="247dp"
+            android:layout_width="150dp"
+            android:layout_height="220dp"
             android:padding="0sp"
             android:scaleType="centerCrop"
             android:src="@drawable/cal_no"
@@ -79,7 +79,7 @@
         android:id="@+id/imageView10"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/a1"
+        android:src="@drawable/a2"
         android:translationZ="2dp"
         app:layout_constraintBottom_toBottomOf="@+id/title"
         app:layout_constraintEnd_toEndOf="parent"

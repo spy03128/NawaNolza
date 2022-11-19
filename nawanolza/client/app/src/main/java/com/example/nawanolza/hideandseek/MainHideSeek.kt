@@ -126,8 +126,10 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
                 val markerMapCopy = HashMap(WaitingStompClient.markerMap)
 
-                for(marker in markerMapCopy)
-                    marker.value.map = naverMap
+                for(marker in markerMapCopy) {
+                    if(!Waiting.memberHash.get(marker.key)!!.status)
+                        marker.value.map = naverMap
+                }
 
                 Timer().schedule(2000) {
                     runOnUiThread {

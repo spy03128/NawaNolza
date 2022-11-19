@@ -211,17 +211,21 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     }
 
     private fun updateTime() {
+//        val startTime = WaitingStompClient.roomInfo.startTime.slice(0..22)
+//        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+//        val start = LocalDateTime.parse(startTime, formatter)
+//        val plusTime = WaitingStompClient.roomInfo.playTime + RoleCheckActivity.countdown/1000
+//        println("==========check")
+//        println(plusTime)
+//        println(WaitingStompClient.roomInfo.playTime)
+
         val startTime = WaitingStompClient.roomInfo.startTime.slice(0..22)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
         val start = LocalDateTime.parse(startTime, formatter)
         val plusTime = WaitingStompClient.roomInfo.playTime + RoleCheckActivity.countdown/1000
-        println("==========check")
-        println(plusTime)
-        println(WaitingStompClient.roomInfo.playTime)
         val end = start.plusSeconds(plusTime)
 
-        val duration: Duration = Duration.between(LocalDateTime.now(), end)
-        println(LocalDateTime.now())
+        val duration: Duration = Duration.between(start, end)
         val seconds = duration.seconds
 
         val participantCount = Waiting.runnerList.size

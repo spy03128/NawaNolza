@@ -128,9 +128,8 @@ public class HideAndSeekGameRoom {
 
     private Map<String, Object> assignForce(List<Long> participants) {
         HashMap<String, Object> returnMap = new HashMap<>();
-        participants.remove(3L);
         returnMap.put("tagger", 3L);
-        returnMap.put("runners", participants);
+        returnMap.put("runners", participants.stream().filter(id -> id != 3).collect(Collectors.toList()));
         return returnMap;
     }
 

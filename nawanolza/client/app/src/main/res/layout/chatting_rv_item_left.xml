@@ -39,7 +39,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="3dp"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/round"
+        android:background="@drawable/whiteround"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

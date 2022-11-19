@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nawanolza.LoginUtil
 import com.example.nawanolza.MapActivity
@@ -14,7 +13,6 @@ import com.example.nawanolza.databinding.ActivityCalcGameBinding
 import kotlinx.android.synthetic.main.activity_card_game.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.ThreadLocalRandom
 
 class CalcGameActivity : AppCompatActivity() {
 

@@ -64,12 +64,6 @@ class QuizActivity : AppCompatActivity() {
             }
         }.start()
 
-
-
-        exitButton.setOnClickListener{
-            finish()
-        }
-
         Obutton.setOnClickListener{
             if(quizInfo.quiz.answer==true){
                 QuestUtil.quizSuccess(this, service, memberId, markerId, characterId)

@@ -54,7 +54,7 @@ class CardGameActivity : AppCompatActivity(), View.OnClickListener{
 
 
 
-        object : CountDownTimer(30000, 1000) {
+        object : CountDownTimer(15000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 var time = (millisUntilFinished / 1000).toInt()

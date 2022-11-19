@@ -40,9 +40,6 @@ class CharacterDetailActivity : AppCompatActivity() {
 
         var service = retrofit.create(CharacterDetailService::class.java)
 
-
-
-
         service.GetCharacterDetail(memberId, characterId).enqueue(object: Callback<CharacterDetailResponse> {
 
             override fun onResponse(
@@ -73,6 +70,10 @@ class CharacterDetailActivity : AppCompatActivity() {
             }
 
         })
+
+        binding.ExitBtn.setOnClickListener {
+            finish()
+        }
 
         close.setOnClickListener(){
             finish()

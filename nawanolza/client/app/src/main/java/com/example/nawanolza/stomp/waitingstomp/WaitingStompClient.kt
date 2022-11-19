@@ -131,9 +131,6 @@ class WaitingStompClient {
                     )
 
                     activity.runOnUiThread {
-                        if(markerMap.containsKey(subDto.senderId)) {
-                            markerMap.get(subDto.senderId)?.map = null
-                        }
                         val myLocation = LatLng(subDto.lat, subDto.lng)
                         val marker = Marker()
                         //마커

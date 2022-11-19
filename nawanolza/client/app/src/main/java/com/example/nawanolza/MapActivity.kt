@@ -6,15 +6,14 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -27,26 +26,15 @@ import com.example.nawanolza.retrofit.CharacterLocationResponse
 import com.example.nawanolza.retrofit.CharacterLocationResponseItem
 import com.example.nawanolza.retrofit.MemberResponse
 import com.example.nawanolza.retrofit.QuestResponse
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.MapFragment
-import com.naver.maps.map.NaverMap
-
 import com.google.android.gms.location.*
 import com.google.gson.GsonBuilder
-
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
-import kotlinx.android.synthetic.main.activity_main_hide_seek.*
 import kotlinx.android.synthetic.main.activity_map.*
-import kotlinx.android.synthetic.main.dialog_success.*
 import kotlinx.android.synthetic.main.dialog_success.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -123,20 +111,14 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                 call: Call<CharacterLocationResponse>,
                 response: Response<CharacterLocationResponse>
             ) {
-                val body = response.body()
-
                 characterInfo = response.body() ?: CharacterLocationResponse()
-//                println(characterInfo)
 
-                println(characterInfo)
                 updateMapMarkers(characterInfo)
-                println("=====okay======")
             }
 
             override fun onFailure(call: Call<CharacterLocationResponse>, t: Throwable) {
                 println(call)
                 println(t)
-                println("====ㅇ[러디===")
             }
 
         })
@@ -212,14 +194,6 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
 
 
                 val function: (Overlay) -> Boolean = { o ->
-                    Toast.makeText(
-                        this.applicationContext,
-                        "${(marker.tag as CharacterLocationResponseItem).markerId}번 마커입니다.",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                    println("====마커====")
-                    println((marker.tag as CharacterLocationResponseItem))
 
                     currentMarker = (marker.tag as CharacterLocationResponseItem).characterId
                     clickMarkerInfo = marker
@@ -236,14 +210,8 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                             call: Call<QuestResponse>,
                             response: Response<QuestResponse>
                         ) {
-                            val body = response.body()
 
                             quizInfo = response.body() ?: QuestResponse()
-                            println("=======quizInfo======")
-                            println(quizInfo)
-
-                            println("=====quiz info accessible====")
-                            println(quizInfo.accessible)
 
                             checkQuestType()
                         }

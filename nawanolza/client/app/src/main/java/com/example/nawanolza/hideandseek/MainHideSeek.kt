@@ -119,7 +119,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         if(Waiting.tagger != senderId){
             binding.bulb.visibility = View.INVISIBLE
             binding.flag.visibility = View.INVISIBLE
-            binding.title.text = "숨는 팀"
+            binding.title.text = "숨는팀"
         }
 
         binding.bulb.setOnClickListener {
@@ -275,7 +275,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         val cameraPosition = CameraPosition(
             LatLng(36.1071562, 128.4164185),  // 위치 지정
-            16.0 // 줌 레벨
+            17.0 // 줌 레벨
         )
         naverMap.cameraPosition = cameraPosition
 

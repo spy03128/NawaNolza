@@ -32,6 +32,7 @@ import com.google.android.gms.location.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.CircleOverlay
+import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.dialog_catch_check.view.*
 import retrofit2.Call
@@ -41,6 +42,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.concurrent.schedule
 import kotlin.math.*
 
@@ -57,8 +59,6 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     lateinit var binding: ActivityMainHideSeekBinding
     lateinit var adapter: HideSeekRvAdapter
     lateinit var entryCode: String
-
-    var pubFlag = true;
 
     companion object {
         var _MainHiddSeek_Activity: Activity? = null
@@ -96,7 +96,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
         entryCode = intent.getStringExtra("entryCode").toString()
         senderId = LoginUtil.getMember(this)?.id!!
 
-        var hintCount = 3;
+        var hintCount = 99;
 
         //권한 확인
         if (isPermitted()) {
@@ -126,11 +126,23 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
             if(hintCount > 0) {
                 hintCount--
 
-                val markerMapCopy = HashMap(WaitingStompClient.markerMap)
+                val markerMapCopy: HashMap<Int, Marker> = HashMap()
+
+                for(marker in WaitingStompClient.markerMap) {
+                    if(!Waiting.memberHash.get(marker.key)!!.status) {
+                        val markerCopy = Marker()
+
+                        markerCopy.position = marker.value.position
+                        markerCopy.icon = marker.value.icon
+                        markerCopy.width = marker.value.width
+                        markerCopy.height = marker.value.height
+
+                        markerMapCopy.put(marker.key, markerCopy)
+                    }
+                }
 
                 for(marker in markerMapCopy) {
-                    if(!Waiting.memberHash.get(marker.key)!!.status)
-                        marker.value.map = naverMap
+                    marker.value.map = naverMap
                 }
 
                 Timer().schedule(2000) {
@@ -335,12 +347,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                     if(isTagger){
                         taggerLocation = LatLng(location.latitude, location.longitude)
                     }
-
-                    if(pubFlag) {
-                        pubFlag = false;
-                        sendMyLocation(location)
-                    }
-
+                    sendMyLocation(location)
 //                    setLastLocation(location)
                 }
             }

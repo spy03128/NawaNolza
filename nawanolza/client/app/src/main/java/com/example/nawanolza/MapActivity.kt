@@ -335,7 +335,7 @@ class MapActivity :OnMapReadyCallback, AppCompatActivity() {
                 marker.setOnClickListener {
                     val lat = (it.tag as CharacterLocationResponseItem).lat
                     val lng = (it.tag as CharacterLocationResponseItem).lng
-                    if (MainHideSeek.DistanceManager.getDistance(curMyLocation.latitude, curMyLocation.longitude, lat, lng) <= 10)
+                    if (MainHideSeek.DistanceManager.getDistance(curMyLocation.latitude, curMyLocation.longitude, lat, lng) <= 250)
                         function(it)
                     else{
                         val dialog = AlertDialog.Builder(this@MapActivity).apply {

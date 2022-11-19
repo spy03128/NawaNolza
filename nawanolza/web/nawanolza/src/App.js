@@ -1,12 +1,11 @@
 import "./App.css";
-import { useState } from "react";
 import styled from "styled-components";
 
 // 이미지
 import logoImg from "./assets/logo.png";
 import googleImgDark from "./assets/btnGoogle.png";
-import googleImg from "./assets/btnGoogleLight.png";
-import phoneImg from "./assets/phone.png";
+import characterImg from "./assets/capture/character.png";
+import mainhideImg from "./assets/capture/hidemain.png";
 import backImg from "./assets/backgroundsub.png";
 
 const Container = styled.div`
@@ -18,10 +17,6 @@ const Container = styled.div`
 const Box = styled.div`
   background-image: url(${backImg});
   background-size: cover;
-`;
-
-const Navbar = styled.div`
-  background-color: ${(props) => props.back};
 `;
 
 const Banner = styled.div`
@@ -38,18 +33,17 @@ const Content = styled.div`
   margin-top: 100px;
 `;
 
-const Footer = styled.div`
-  display: flex;
-  padding: 0 20vw;
-  flex-direction: column;
-  background-color: #373737;
-  color: white;
+const PhoneImg = styled.img`
+  width: 50%;
 `;
 
-const FooterContent = styled.div`
+const Footer = styled.div`
   display: flex;
-  justify-content: center;
+  margin-top: 50px;
   flex-direction: column;
+  align-items: end;
+  background-color: #373737;
+  color: white;
 `;
 
 const ContentItem = styled.div`
@@ -63,10 +57,6 @@ const ContentItem = styled.div`
 const LogoImg = styled.img`
   width: 150px;
   height: 150px;
-`;
-
-const PhoneImg = styled.img`
-  width: 100%;
 `;
 
 const GoogleBtn = styled.img`
@@ -91,8 +81,6 @@ const Title = styled.p`
 `;
 
 function App() {
-  const [active, setActive] = useState(false);
-
   const clickGoogle = () => {
     window.alert("준비 중인 서비스입니다.");
   };
@@ -101,7 +89,6 @@ function App() {
       <Container className="App">
         <Box>
           <Banner>
-            {/* <Navbar back={active ? "black" : "white"}>나와, 놀자</Navbar> */}
             <LogoImg src={logoImg} alt="logo" />
             <TitleContainer>
               <Title>
@@ -117,32 +104,29 @@ function App() {
         </Box>
         <Content>
           <ContentItem>
-            <PhoneImg src={phoneImg} alt="phone" />
+            <PhoneImg src={mainhideImg} alt="phone" />
             <Title>
-              지도 기반의
+              다양한 게임으로
               <br />
-              숨바꼭질부터
+              캐릭터를
               <br />
-              멘트 뭐하죠
+              수집해보세요
             </Title>
           </ContentItem>
           <ContentItem>
             <Title>
-              지도 기반의
+              실시간 위치를
               <br />
-              숨바꼭질부터
+              활용한
               <br />
-              멘트 뭐할까
+              숨바꼭질 게임
             </Title>
-            <PhoneImg src={phoneImg} alt="phone" />
+            <PhoneImg src={characterImg} alt="phone" />
           </ContentItem>
         </Content>
       </Container>
       <Footer>
-        <h1>나와, 놀자!</h1>
-        <FooterContent>
-          <p>Footer 할꺼야?</p>
-        </FooterContent>
+        <p style={{ marginRight: "20px" }}>D103</p>
       </Footer>
     </>
   );

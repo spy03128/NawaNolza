@@ -58,6 +58,8 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
     lateinit var adapter: HideSeekRvAdapter
     lateinit var entryCode: String
 
+    var pubFlag = true;
+
     companion object {
         var _MainHiddSeek_Activity: Activity? = null
 
@@ -333,7 +335,12 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                     if(isTagger){
                         taggerLocation = LatLng(location.latitude, location.longitude)
                     }
-                    sendMyLocation(location)
+
+                    if(pubFlag) {
+                        pubFlag = false;
+                        sendMyLocation(location)
+                    }
+
 //                    setLastLocation(location)
                 }
             }

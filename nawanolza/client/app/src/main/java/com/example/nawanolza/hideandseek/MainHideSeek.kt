@@ -145,7 +145,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
                     marker.value.map = naverMap
                 }
 
-                Timer().schedule(2000) {
+                Timer().schedule(1000) {
                     runOnUiThread {
                         for(marker in markerMapCopy)
                             marker.value.map = null
@@ -287,7 +287,7 @@ class MainHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         val cameraPosition = CameraPosition(
             LatLng(36.1071562, 128.4164185),  // 위치 지정
-            17.0 // 줌 레벨
+            18.0 // 줌 레벨
         )
         naverMap.cameraPosition = cameraPosition
 

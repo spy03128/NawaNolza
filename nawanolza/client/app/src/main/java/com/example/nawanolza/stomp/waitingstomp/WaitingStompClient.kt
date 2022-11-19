@@ -166,7 +166,7 @@ class WaitingStompClient {
                 Log.i("message Receive", topicMessage.payload)
                 val data = GsonBuilder().create().fromJson(topicMessage.payload, CatchResponse::class.java)
                 Waiting.memberHash[data.catchMemberId]?.status = true
-                Waiting.memberHash[data.catchMemberId]?.location = true
+//                Waiting.memberHash[data.catchMemberId]?.location = true
                 MainHideSeek.caughtMember += 1
 
                 val caughtName = Waiting.memberHash[data.catchMemberId]?.name

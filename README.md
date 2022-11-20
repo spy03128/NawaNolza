@@ -106,7 +106,7 @@ Git Flow는 최종 배포를 위한 Master, 배포 및 테스트를 위한 devel
 
 # 배포
 
-포팅메뉴얼에 포함되어있습니다. 참고하세요!
+[포팅메뉴얼](https://lab.ssafy.com/s07-final/S07P31D103/-/blob/develop/exec/%EC%9E%90%EC%9C%A8PJT_%EA%B5%AC%EB%AF%B81%EB%B0%98_D103_%ED%8F%AC%ED%8C%85%EB%A7%A4%EB%89%B4%EC%96%BC.pdf) 을 참고하세요.
 
 # 팀원 소개
 

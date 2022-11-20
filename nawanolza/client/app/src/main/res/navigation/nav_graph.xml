@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/loadingFragment"
+        android:name="com.example.nawanolza.fragment.LoadingFragment"
+        android:label="fragment_loading"
+        tools:layout="@layout/fragment_loading" >
+        <action
+            android:id="@+id/action_loadingFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.nawanolza.fragment.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameRoomIntro"
+        android:name="com.example.nawanolza.fragment.GameRoomIntro"
+        android:label="fragment_game_room_intro"
+        tools:layout="@layout/fragment_game_room_intro" >
+        <action
+            android:id="@+id/action_gameRoomIntro_to_hideAndSeek"
+            app:destination="@id/hideAndSeek" />
+        <action
+            android:id="@+id/action_gameRoomIntro_to_selectGame"
+            app:destination="@id/selectGame" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.nawanolza.fragment.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_gameRoomIntro"
+            app:destination="@id/gameRoomIntro" />
+        <action
+            android:id="@+id/action_homeFragment_to_mapActivity"
+            app:destination="@id/mapActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/hideAndSeek"
+        android:name="com.example.nawanolza.fragment.HideAndSeek"
+        android:label="fragment_hide_and_seek"
+        tools:layout="@layout/fragment_hide_and_seek" />
+    <fragment
+        android:id="@+id/selectGame"
+        android:name="com.example.nawanolza.fragment.SelectGame"
+        android:label="fragment_select_game"
+        tools:layout="@layout/fragment_select_game" >
+        <action
+            android:id="@+id/action_selectGame_to_settingActivity"
+            app:destination="@id/settingActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/mapActivity"
+        android:name="com.example.nawanolza.MapActivity"
+        android:label="activity_map"
+        tools:layout="@layout/activity_map" />
+    <activity
+        android:id="@+id/settingActivity"
+        android:name="com.example.nawanolza.createGame.SettingActivity"
+        android:label="activity_setting"
+        tools:layout="@layout/activity_setting" />
+
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.nawanolza.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" >
+        <action
+            android:id="@+id/action_loginActivity_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </activity>
+</navigation>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_character"
+    tools:context=".CharacterActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.07"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.93"/>
+
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="38dp"
+        android:layout_height="40dp"
+        android:src="@drawable/close"
+        app:layout_constraintBottom_toTopOf="@+id/category_all"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.957"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.175" />
+
+    <LinearLayout
+        android:id="@+id/category_all"
+        android:layout_width="0dp"
+        android:layout_height="112dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="@drawable/category"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.163"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp">
+
+        <ImageView
+            android:id="@+id/cBtnAll"
+            android:layout_width="0dp"
+            android:layout_height="121dp"
+            android:padding="0sp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/category_all"
+            tools:layout_editor_absoluteX="63dp"
+            tools:layout_editor_absoluteY="71dp"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:id="@+id/category_each"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1.7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.202"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.087">
+
+            <LinearLayout
+                android:id="@+id/category_1"
+                android:layout_width="190dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.202"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.087"
+                >
+
+                <ImageView
+                    android:id="@+id/cBtn1"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:padding="0sp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/category_1"
+                    tools:layout_editor_absoluteX="63dp"
+                    tools:layout_editor_absoluteY="71dp"
+                    android:layout_weight="0.95"/>
+
+                <ImageView
+                    android:id="@+id/cBtn2"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:padding="0sp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/category_2"
+                    tools:layout_editor_absoluteX="63dp"
+                    tools:layout_editor_absoluteY="71dp"
+                    android:layout_weight="0.95"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/category_2"
+                android:layout_width="190dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.202"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.087">
+
+                <ImageView
+                    android:id="@+id/cBtn3"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:padding="0sp"
+                    android:scaleType="fitCenter"
+                    android:layout_weight="0.95"
+                    android:src="@drawable/category_3"
+                    tools:layout_editor_absoluteX="104dp"
+                    tools:layout_editor_absoluteY="160dp" />
+
+                <ImageView
+                    android:id="@+id/cBtn4"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:padding="0sp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/category_4"
+                    tools:layout_editor_absoluteX="204dp"
+                    tools:layout_editor_absoluteY="163dp"
+                    android:layout_weight="0.95" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/sortDogam"
+        android:layout_width="73dp"
+        android:layout_height="29dp"
+        android:src="@drawable/dogam_on"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/sortLevel"
+        app:layout_constraintHorizontal_bias="0.736"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintTop_toBottomOf="@+id/category_all"
+        app:layout_constraintVertical_bias="0.01" />
+
+    <ImageView
+        android:id="@+id/sortLevel"
+        android:layout_width="73dp"
+        android:layout_height="26dp"
+        android:src="@drawable/level_off"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.328"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/category_all"
+        app:layout_constraintVertical_bias="0.011" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/charRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/category"
+        android:elevation="20dp"
+        android:padding="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintTop_toBottomOf="@+id/sortLevel"
+        app:layout_constraintVertical_bias="0.115" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

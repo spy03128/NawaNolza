@@ -111,7 +111,7 @@ function App() {
             />
             <a
               ref={downloadRef}
-              href="/assets/app-release.apk"
+              href="/app-release.apk"
               download
               style={{ display: "none" }}
             >

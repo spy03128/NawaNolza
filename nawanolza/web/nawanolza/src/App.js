@@ -1,4 +1,5 @@
 import "./App.css";
+import { useRef } from "react";
 import styled from "styled-components";
 
 // 이미지
@@ -7,6 +8,7 @@ import googleImgDark from "./assets/btnGoogle.png";
 import characterImg from "./assets/capture/character.png";
 import mainhideImg from "./assets/capture/hidemain.png";
 import backImg from "./assets/backgroundsub.png";
+import apkImg from "./assets/apkdownload.png";
 
 const Container = styled.div`
   display: flex;
@@ -59,7 +61,7 @@ const LogoImg = styled.img`
   height: 150px;
 `;
 
-const GoogleBtn = styled.img`
+const SBtn = styled.img`
   width: 200px;
   height: 80px;
   cursor: pointer;
@@ -81,9 +83,11 @@ const Title = styled.p`
 `;
 
 function App() {
-  const clickGoogle = () => {
-    window.alert("준비 중인 서비스입니다.");
+  const downloadRef = useRef();
+  const goGoogle = () => {
+    window.alert("출시 준비 중인 서비스입니다.");
   };
+
   return (
     <>
       <Container className="App">
@@ -99,7 +103,20 @@ function App() {
                 나와, 놀자!
               </Title>
             </TitleContainer>
-            <GoogleBtn src={googleImgDark} alt="google" onClick={clickGoogle} />
+            <SBtn src={googleImgDark} alt="google" onClick={goGoogle} />
+            <SBtn
+              src={apkImg}
+              alt="apkImg"
+              onClick={() => downloadRef.current.click()}
+            />
+            <a
+              ref={downloadRef}
+              href="/assets/app-release.apk"
+              download
+              style={{ display: "none" }}
+            >
+              Click Download
+            </a>
           </Banner>
         </Box>
         <Content>

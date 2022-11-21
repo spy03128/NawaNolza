@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.nawanolza.LoginUtil
+import com.example.nawanolza.login.LoginUtil
 import com.example.nawanolza.databinding.ActivityChattingBinding
 import com.example.nawanolza.stomp.SocketChatDTO
 import com.example.nawanolza.stomp.SocketType

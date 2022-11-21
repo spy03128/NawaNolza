@@ -1,4 +1,4 @@
-package com.example.nawanolza
+package com.example.nawanolza.character
 
 import com.example.nawanolza.retrofit.CharacterLocationResponse
 import okhttp3.ResponseBody

@@ -1,4 +1,4 @@
-package com.example.nawanolza
+package com.example.nawanolza.character
 
 import android.app.Application
 import android.content.Intent
@@ -31,9 +31,17 @@ class CharacterRvAdapter(
         val characterInfo = characterInfo[position]
 
         if (characterInfo.currentLevel.equals(0))
-            holder.characterImg.setImageDrawable(application.getDrawable(MarkerImageUtil.getDarkImage(characterInfo.characterId)))
+            holder.characterImg.setImageDrawable(application.getDrawable(
+                MarkerImageUtil.getDarkImage(
+                    characterInfo.characterId
+                )
+            ))
         else
-            holder.characterImg.setImageDrawable(application.getDrawable(MarkerImageUtil.getImage(characterInfo.characterId)))
+            holder.characterImg.setImageDrawable(application.getDrawable(
+                MarkerImageUtil.getImage(
+                    characterInfo.characterId
+                )
+            ))
 
         holder.characterImg.setOnClickListener {
 

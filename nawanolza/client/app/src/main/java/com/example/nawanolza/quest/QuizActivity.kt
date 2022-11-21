@@ -1,18 +1,16 @@
-package com.example.nawanolza
+package com.example.nawanolza.quest
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import com.example.nawanolza.character.MapActivity
 import com.example.nawanolza.databinding.ActivityQuizBinding
+import com.example.nawanolza.login.LoginUtil
 import com.example.nawanolza.retrofit.*
 import com.google.gson.GsonBuilder
-import kotlinx.android.synthetic.main.activity_card_game.*
 import kotlinx.android.synthetic.main.activity_quiz.*
 import kotlinx.android.synthetic.main.activity_quiz.timer
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

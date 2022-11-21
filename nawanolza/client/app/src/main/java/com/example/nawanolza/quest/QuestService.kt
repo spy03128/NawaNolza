@@ -1,4 +1,4 @@
-package com.example.nawanolza
+package com.example.nawanolza.quest
 
 import android.app.appsearch.StorageInfo
 import com.example.nawanolza.retrofit.CharacterResponse

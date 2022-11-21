@@ -1,4 +1,4 @@
-package com.example.nawanolza
+package com.example.nawanolza.login
 
 import com.example.nawanolza.retrofit.MemberResponse
 import okhttp3.ResponseBody

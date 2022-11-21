@@ -1,9 +1,10 @@
-package com.example.nawanolza
+package com.example.nawanolza.character
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.nawanolza.R
 import com.example.nawanolza.databinding.ActivityCharacterBinding
 import com.example.nawanolza.retrofit.CharacterResponse
 import com.example.nawanolza.retrofit.MemberResponse

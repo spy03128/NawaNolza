@@ -1,4 +1,4 @@
-package com.example.nawanolza
+package com.example.nawanolza.login
 
 import android.content.Context
 import com.example.nawanolza.retrofit.Member

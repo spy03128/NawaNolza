@@ -16,6 +16,7 @@ import com.example.nawanolza.*
 import com.example.nawanolza.R
 import com.example.nawanolza.databinding.ActivitySettingHideSeekBinding
 import com.example.nawanolza.hideandseek.MessageSenderService
+import com.example.nawanolza.login.LoginUtil
 import com.example.nawanolza.retrofit.RetrofitConnection
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideResponse
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideService

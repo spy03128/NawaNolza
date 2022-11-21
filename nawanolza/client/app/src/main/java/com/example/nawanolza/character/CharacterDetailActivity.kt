@@ -1,13 +1,12 @@
-package com.example.nawanolza
+package com.example.nawanolza.character
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.nawanolza.databinding.ActivityCharacterBinding
+import com.example.nawanolza.R
 import com.example.nawanolza.databinding.ActivityCharacterDetailBinding
+import com.example.nawanolza.login.LoginUtil
 import com.example.nawanolza.retrofit.CharacterDetailResponse
-import kotlinx.android.synthetic.main.activity_character.*
 import kotlinx.android.synthetic.main.activity_character_detail.*
 import kotlinx.android.synthetic.main.activity_character_detail.close
 import retrofit2.Call

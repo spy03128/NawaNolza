@@ -20,7 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.nawanolza.HomeActivity
-import com.example.nawanolza.LoginUtil
+import com.example.nawanolza.login.LoginUtil
 import com.example.nawanolza.R
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.databinding.ActivityMainHideSeekBinding

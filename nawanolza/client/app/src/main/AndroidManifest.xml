@@ -29,28 +29,28 @@
 
         </activity>
         <activity
-            android:name=".minigame.GameBoomActivity"
+            android:name=".quest.minigame.GameBoomActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".minigame.CardGameActivity"
+            android:name=".quest.minigame.CardGameActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".minigame.CalcGameActivity"
+            android:name=".quest.minigame.CalcGameActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".minigame.NumberPuzzleGameActivity"
+            android:name=".quest.minigame.NumberPuzzleGameActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -78,7 +78,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".quest.QuizActivity"
+            android:name=".quest.quiz.QuizActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

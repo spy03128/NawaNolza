@@ -1,4 +1,4 @@
-package com.example.nawanolza.quest
+package com.example.nawanolza.quest.quiz
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,8 @@ import android.os.CountDownTimer
 import com.example.nawanolza.character.MapActivity
 import com.example.nawanolza.databinding.ActivityQuizBinding
 import com.example.nawanolza.login.LoginUtil
+import com.example.nawanolza.quest.QuestService
+import com.example.nawanolza.quest.QuestUtil
 import com.example.nawanolza.retrofit.*
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_quiz.*
@@ -30,8 +32,6 @@ class QuizActivity : AppCompatActivity() {
         val characterId = intent.getLongExtra("characterId",-1)
         val quizInfo : QuestResponse = GsonBuilder().create().fromJson(intent.getStringExtra("quizInfo"), QuestResponse::class.java)
 
-        println("===============quizactivity quizinfo")
-        println(quizInfo)
 
         //퀴즈 받아오기
         var retrofit = Retrofit.Builder()

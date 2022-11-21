@@ -1,4 +1,4 @@
-package com.example.nawanolza.minigame
+package com.example.nawanolza.quest.minigame
 
 import android.content.Intent
 import android.os.Bundle

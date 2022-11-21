@@ -1,4 +1,4 @@
-package com.example.nawanolza.minigame
+package com.example.nawanolza.quest.minigame
 
 class MemoryCard(image: Int, isFaceUp: Boolean, isMatched: Boolean) {
     var imageId : Int

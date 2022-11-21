@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/cal_background"
-    tools:context=".minigame.CalcGameActivity">
+    tools:context=".quest.minigame.CalcGameActivity">
 
 
   <ImageView

@@ -36,7 +36,6 @@ class Waiting : AppCompatActivity() {
         var tagger: Int = 0
         var runnerList: List<Int> = ArrayList()
         lateinit var entryCode: String
-
         var _Waiting_Activity: Activity? = null
     }
 
@@ -120,8 +119,6 @@ class Waiting : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        Log.i("Waiting", "Waiting onDestroy")
-
         if(hostId == LoginUtil.getMember(this@Waiting)?.id) {
             val retrofitAPI = RetrofitConnection.getInstance().create(
                 DeleteRoomService::class.java
@@ -142,25 +139,8 @@ class Waiting : AppCompatActivity() {
                 }
             })
         }
-
-
-        Log.i("GameEnd", "before memberList size: ${memberList.size}")
-        Log.i("GameEnd", "before memberHash size: ${memberHash.size}")
-        Log.i("GameEnd", "before runnerList size: ${runnerList.size}")
-
         memberList = ArrayList()
         memberHash = HashMap()
         runnerList = ArrayList()
-
-        Log.i("GameEnd", "after memberList size: ${memberList.size}")
-        Log.i("GameEnd", "after memberHash size: ${memberHash.size}")
-        Log.i("GameEnd", "after runnerList size: ${runnerList.size}")
-
-
-        Log.i("GameEnd", "before markerMap size: ${WaitingStompClient.markerMap.size}")
-
-        WaitingStompClient.markerMap = HashMap()
-
-        Log.i("GameEnd", "after markerMap size: ${WaitingStompClient.markerMap.size}")
-    }
+        WaitingStompClient.markerMap = HashMap() }
 }

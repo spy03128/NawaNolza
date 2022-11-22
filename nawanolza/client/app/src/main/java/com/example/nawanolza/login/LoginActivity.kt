@@ -1,10 +1,12 @@
-package com.example.nawanolza
+package com.example.nawanolza.login
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.nawanolza.HomeActivity
+import com.example.nawanolza.R
 import com.example.nawanolza.retrofit.MemberResponse
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause

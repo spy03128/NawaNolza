@@ -1,14 +1,14 @@
-package com.example.nawanolza.minigame
+package com.example.nawanolza.quest.minigame
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.example.nawanolza.LoginUtil
-import com.example.nawanolza.MapActivity
-import com.example.nawanolza.QuestService
-import com.example.nawanolza.QuestUtil
+import com.example.nawanolza.login.LoginUtil
+import com.example.nawanolza.character.MapActivity
+import com.example.nawanolza.quest.QuestService
+import com.example.nawanolza.quest.QuestUtil
 import com.example.nawanolza.databinding.ActivityCalcGameBinding
 import kotlinx.android.synthetic.main.activity_card_game.*
 import retrofit2.Retrofit

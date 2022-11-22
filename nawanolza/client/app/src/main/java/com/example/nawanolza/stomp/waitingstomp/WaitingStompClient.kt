@@ -5,10 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Log
-import android.widget.Toast
 import com.example.nawanolza.HomeActivity
-import com.example.nawanolza.LoginUtil
-import com.example.nawanolza.MainActivity
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.createGame.WaitingRvAdapter
 import com.example.nawanolza.hideandseek.*

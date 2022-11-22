@@ -1,14 +1,10 @@
-package com.example.nawanolza
+package com.example.nawanolza.character
 
 import android.app.Application
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nawanolza.databinding.CharacterDetailRvItemBinding
-import com.example.nawanolza.databinding.CharacterRvItemBinding
-import com.example.nawanolza.retrofit.CharacterDetailResponse
-import com.example.nawanolza.retrofit.CollectionItem
 import com.example.nawanolza.retrofit.History
 
 class CharacterDetailRvAdapter(

@@ -1,4 +1,6 @@
-package com.example.nawanolza
+package com.example.nawanolza.quest.minigame
+
+import com.example.nawanolza.R
 
 class NumberCardImageUtil {
     companion object {

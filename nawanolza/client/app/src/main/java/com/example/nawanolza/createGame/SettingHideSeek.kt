@@ -16,6 +16,7 @@ import com.example.nawanolza.*
 import com.example.nawanolza.R
 import com.example.nawanolza.databinding.ActivitySettingHideSeekBinding
 import com.example.nawanolza.hideandseek.MessageSenderService
+import com.example.nawanolza.login.LoginUtil
 import com.example.nawanolza.retrofit.RetrofitConnection
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideResponse
 import com.example.nawanolza.retrofit.createroom.CreateRoomHideService
@@ -52,81 +53,113 @@ class SettingHideSeek : OnMapReadyCallback, AppCompatActivity() {
 
         var time = 60
         var gameTime = 300
-
-        gamePlus.setOnClickListener {
-            gameTime += 30
-            var gameMinute = if(gameTime%60==0) "00" else gameTime%60
-            binding.gameTime.text = "${gameTime/60}:${gameMinute}"
-        }
-        gameMinus.setOnClickListener {
-            if(gameTime > 30){
-                gameTime -= 30
-                var gameMinute = if(gameTime%60==0) "00" else gameTime%60
-                binding.gameTime.text = "${gameTime/60}:${gameMinute}"
-            }
-            else{
-                binding.gameTime.text = "0:30"
-            }
-        }
-
         var range = 100
-        rangeMinus.setOnClickListener {
-            if(range <= 50) {
-            }else{
-                range -= 50
-                binding.rangeText.text = range.toString()
-            }
-        }
-        rangePlus.setOnClickListener {
-            if(range <= 150.0){
-                range += 50
-                binding.rangeText.text = range.toString()
-            }
-        }
+
+        gameTime = setGameTime(gameTime, binding)
+        range = setRange(range, binding)
 
         val retrofitAPI = RetrofitConnection.getInstance().create(
             CreateRoomHideService::class.java
         )
+        postGameInfo(gameTime, time, range, retrofitAPI)
 
-        btnCreateRoom.setOnClickListener {
-            if(check){
-                val hostId = LoginUtil.getMember(this@SettingHideSeek)!!.id
-                createRoomRequest = CreateRoomRequest(lat, lng, gameTime, time, range, hostId)
-                println("=====게임만들기======")
-                println(createRoomRequest)
-                retrofitAPI.postCreateRoomHide(createRoomRequest).enqueue(object:Callback<CreateRoomHideResponse> {
-                    override fun onResponse(
-                        call: Call<CreateRoomHideResponse>,
-                        response: Response<CreateRoomHideResponse>
-                    ) {
-                        val intent = Intent(this@SettingHideSeek, Waiting::class.java)
-                        intent.putExtra("entryCode", "${response.body()?.entryCode}" )
-                        intent.putExtra("data", GsonBuilder().create().toJson(response.body()))
-
-                        when(response.code()){
-                            200 -> {
-                                startActivity(intent)
-                                MessageSenderService.sendMessageToWearable("/message_path", "w", this@SettingHideSeek)
-                            }
-                            else -> Toast.makeText(this@SettingHideSeek, "잘못된 정보입니다.", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<CreateRoomHideResponse>, t: Throwable) {
-                        println(call)
-                        println(t)
-                    }
-                } )
-            }else{
-                Toast.makeText(this,"영역을 설정해주세요", Toast.LENGTH_LONG).show()
-            }
-        }
-
+        //권한 확인
         if (isPermitted()) {
             startProcess()
         } else {
             ActivityCompat.requestPermissions(this, permissions, permission_request)
-        }//권한 확인
+        }
+    }
+
+    private fun postGameInfo(
+        gameTime: Int,
+        time: Int,
+        range: Int,
+        retrofitAPI: CreateRoomHideService
+    ) {
+        btnCreateRoom.setOnClickListener {
+            if (check) {
+                val hostId = LoginUtil.getMember(this@SettingHideSeek)!!.id
+                createRoomRequest = CreateRoomRequest(lat, lng, gameTime, time, range, hostId)
+                retrofitAPI.postCreateRoomHide(createRoomRequest)
+                    .enqueue(object : Callback<CreateRoomHideResponse> {
+                        override fun onResponse(
+                            call: Call<CreateRoomHideResponse>,
+                            response: Response<CreateRoomHideResponse>
+                        ) {
+                            val intent = Intent(this@SettingHideSeek, Waiting::class.java)
+                            intent.putExtra("entryCode", "${response.body()?.entryCode}")
+                            intent.putExtra("data", GsonBuilder().create().toJson(response.body()))
+
+                            when (response.code()) {
+                                200 -> {
+                                    startActivity(intent)
+                                    MessageSenderService.sendMessageToWearable(
+                                        "/message_path",
+                                        "w",
+                                        this@SettingHideSeek
+                                    )
+                                }
+                                else -> Toast.makeText(
+                                    this@SettingHideSeek,
+                                    "잘못된 정보입니다.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<CreateRoomHideResponse>, t: Throwable) {
+                            println(call)
+                            println(t)
+                        }
+                    })
+            } else {
+                Toast.makeText(this, "영역을 설정해주세요", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun setRange(
+        range: Int,
+        binding: ActivitySettingHideSeekBinding
+    ): Int {
+        var range1 = range
+        rangeMinus.setOnClickListener {
+            if (range1 <= 50) {
+            } else {
+                range1 -= 50
+                binding.rangeText.text = range1.toString()
+            }
+        }
+        rangePlus.setOnClickListener {
+            if (range1 <= 150.0) {
+                range1 += 50
+                binding.rangeText.text = range1.toString()
+            }
+        }
+        return range1
+    }
+
+    private fun setGameTime(
+        gameTime: Int,
+        binding: ActivitySettingHideSeekBinding
+    ): Int {
+        var gameTime1 = gameTime
+        gamePlus.setOnClickListener {
+            gameTime1 += 30
+            var gameMinute = if (gameTime1 % 60 == 0) "00" else gameTime1 % 60
+            binding.gameTime.text = "${gameTime1 / 60}:${gameMinute}"
+        }
+        gameMinus.setOnClickListener {
+            if (gameTime1 > 30) {
+                gameTime1 -= 30
+                var gameMinute = if (gameTime1 % 60 == 0) "00" else gameTime1 % 60
+                binding.gameTime.text = "${gameTime1 / 60}:${gameMinute}"
+            } else {
+                binding.gameTime.text = "0:30"
+            }
+        }
+        return gameTime1
     }
 
     fun isPermitted(): Boolean {

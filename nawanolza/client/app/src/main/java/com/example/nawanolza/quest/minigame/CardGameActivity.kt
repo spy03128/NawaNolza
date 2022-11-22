@@ -1,4 +1,4 @@
-package com.example.nawanolza.minigame
+package com.example.nawanolza.quest.minigame
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +9,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nawanolza.*
+import com.example.nawanolza.character.MapActivity
+import com.example.nawanolza.login.LoginUtil
+import com.example.nawanolza.quest.QuestService
+import com.example.nawanolza.quest.QuestUtil
 import kotlinx.android.synthetic.main.activity_card_game.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -1,8 +1,9 @@
-package com.example.nawanolza
+package com.example.nawanolza.quest
 
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import com.example.nawanolza.character.MapActivity
 import com.example.nawanolza.retrofit.QuestFailResponse
 import com.example.nawanolza.retrofit.QuestSuccessResponse
 import retrofit2.Call

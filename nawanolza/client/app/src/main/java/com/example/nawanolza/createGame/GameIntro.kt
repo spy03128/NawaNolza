@@ -2,19 +2,18 @@ package com.example.nawanolza.createGame
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.example.nawanolza.retrofit.ErrorResponse
-import com.example.nawanolza.LoginUtil
+import androidx.appcompat.app.AppCompatActivity
 import com.example.nawanolza.databinding.ActivityGameIntroBinding
+import com.example.nawanolza.login.LoginUtil
+import com.example.nawanolza.retrofit.ErrorResponse
 import com.example.nawanolza.retrofit.RetrofitConnection
 import com.example.nawanolza.retrofit.enterroom.EnterRoomRequest
 import com.example.nawanolza.retrofit.enterroom.EnterRoomResponse
 import com.example.nawanolza.retrofit.enterroom.EnterRoomService
-import com.example.nawanolza.stomp.SubGpsDto
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback

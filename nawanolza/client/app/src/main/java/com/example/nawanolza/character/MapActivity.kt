@@ -1,4 +1,4 @@
-package com.example.nawanolza
+package com.example.nawanolza.character
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -17,19 +17,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import com.example.nawanolza.hideandseek.ChatDTO
-import com.example.nawanolza.hideandseek.ChatType
+import com.example.nawanolza.R
 import com.example.nawanolza.hideandseek.MainHideSeek
+import com.example.nawanolza.login.LoginUtil
 import com.example.nawanolza.minigame.CalcGameActivity
 import com.example.nawanolza.minigame.CardGameActivity
 import com.example.nawanolza.minigame.GameBoomActivity
 import com.example.nawanolza.minigame.NumberPuzzleGameActivity
+import com.example.nawanolza.quest.QuestService
+import com.example.nawanolza.quest.QuizActivity
 import com.example.nawanolza.retrofit.CharacterLocationResponse
 import com.example.nawanolza.retrofit.CharacterLocationResponseItem
 import com.example.nawanolza.retrofit.MemberResponse
 import com.example.nawanolza.retrofit.QuestResponse
 import com.example.nawanolza.stomp.MarkerDTO
-import com.example.nawanolza.stomp.SocketChatDTO
 import com.example.nawanolza.stomp.waitingstomp.WaitingStompClient
 import com.google.android.gms.location.*
 import com.google.gson.GsonBuilder

@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.appcompat.app.AppCompatActivity
-import com.example.nawanolza.LoginUtil
+import com.example.nawanolza.login.LoginUtil
 import com.example.nawanolza.R
 import com.example.nawanolza.createGame.Waiting
 import com.example.nawanolza.databinding.ActivityRoleCheckAcitivityBinding

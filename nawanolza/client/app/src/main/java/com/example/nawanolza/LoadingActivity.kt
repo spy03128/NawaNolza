@@ -3,6 +3,8 @@ package com.example.nawanolza
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.nawanolza.login.LoginActivity
+import com.example.nawanolza.login.LoginUtil
 
 class LoadingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,5 @@
 # 서비스 소개
+<img src="https://user-images.githubusercontent.com/57143818/203796905-7e78b382-067a-43ff-bb4c-c6220a8e0f39.png" width="400" height="400"/>
 
 ## 1. 서비스 설명
 

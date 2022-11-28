@@ -2,7 +2,7 @@
 <img src="https://user-images.githubusercontent.com/57143818/203796905-7e78b382-067a-43ff-bb4c-c6220a8e0f39.png" width="400" height="400"/>
 
 ## 1. 서비스 설명
-
+### 서비스 소개 영상([나와놀자 UCC - YouTube](https://youtu.be/u0dM2Und0II))
 **개요**
 
 - 한줄소개 : 아이들이 스마트폰을 이용하여 친구들과 밖에서 뛰어놀 수 있는 액티비티 컨텐츠를 제공하는 App
